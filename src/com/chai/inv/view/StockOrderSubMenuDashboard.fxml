@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.StockOrdersSubMenuController">
+   <bottom>
+      <HBox fillHeight="false" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" text="Home">
+               <graphic>
+                  <ImageView fitHeight="31.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button alignment="CENTER" contentDisplay="TOP" layoutX="40.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleBackToStockOrdersSubMenu" text="Back">
+               <graphic>
+                  <ImageView fitHeight="31.0" fitWidth="47.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <center>
+      <GridPane alignment="CENTER" hgap="20.0" BorderPane.alignment="CENTER" fx:id="x_GRID_PANE">
+        <columnConstraints>
+            <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+          <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" />
+            <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints fillHeight="false" valignment="BASELINE" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handlePurchaseOrderDashBoardBtn" prefHeight="125.0" prefWidth="125.0" style="-fx-background-color: none;" text="Stock Ordering">
+               <graphic>
+                  <ImageView fitHeight="89.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Orders.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleSalesOrderDashBoardBtn" prefHeight="125.0" prefWidth="125.0" style="-fx-background-color: none;" text="Order Fulfillment" GridPane.columnIndex="1">
+               <graphic>
+                  <ImageView fitHeight="89.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Orders.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="152.0" prefWidth="125.0" style="-fx-background-color: none;" text="State Manual Stock Ordering from National" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2">
+               <graphic>
+                  <ImageView fitHeight="89.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/State-Store-Order-Now.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>

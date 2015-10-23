@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.StockManagementSubMenuController">
+	<bottom>
+		<HBox fillHeight="false" spacing="10.0" BorderPane.alignment="CENTER">
+			<children>
+				<Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="44.0" prefWidth="61.0" text="Home">
+					<graphic>
+						<ImageView fitHeight="27.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+							<image>
+								<Image url="@../../../../resources/icons/home.png" />
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
+			</children>
+			<padding>
+				<Insets bottom="10.0" left="30.0" top="10.0" />
+			</padding>
+		</HBox>
+	</bottom>
+	<center>
+		<GridPane alignment="CENTER" hgap="40.0" BorderPane.alignment="CENTER">
+			<columnConstraints>
+				<ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" />
+				<ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+				<ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints fillHeight="false" valignment="CENTER" vgrow="NEVER" />
+				<RowConstraints fillHeight="false" maxHeight="1.7976931348623157E308" valignment="CENTER" />
+			</rowConstraints>
+			<children>
+				<Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleTransactionsDashBoardBtn" style="-fx-background-color: none;" text="Transaction History" GridPane.columnIndex="2">
+					<graphic>
+						<ImageView fitHeight="82.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+							<image>
+								<Image url="@../../../../resources/icons/Transaction-History.png" />
+							</image>
+						</ImageView>
+					</graphic>
+					<cursor>
+						<Cursor fx:constant="HAND" />
+					</cursor>
+				</Button>
+            <HBox GridPane.columnIndex="1">
+               <children>
+      				<Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleOrdersDashBoardBtn" style="-fx-background-color: none;" text="Stock Order" textAlignment="CENTER" wrapText="true" fx:id="x_STOCK_ORDER_BTN">
+      					<graphic>
+      						<ImageView fitHeight="90.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+      							<image>
+      								<Image url="@../../../../resources/icons/Stock_Order.png" />
+      							</image>
+      						</ImageView>
+      					</graphic>
+      					<cursor>
+      						<Cursor fx:constant="HAND" />
+      					</cursor>
+      				</Button>
+               </children>
+            </HBox>
+				<Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBinCardsDashBoardBtn" style="-fx-background-color: none;" text="Bin Cards">
+					<graphic>
+						<ImageView fitHeight="82.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true">
+							<image>
+								<Image url="@../../../../resources/icons/BinCards.png" />
+							</image>
+						</ImageView>
+					</graphic>
+					<cursor>
+						<Cursor fx:constant="HAND" />
+					</cursor>
+				</Button>
+			</children>
+		</GridPane>
+	</center>
+</BorderPane>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.HomePageController">
+   <center>
+      <GridPane alignment="CENTER" hgap="15.0" layoutX="85.0" layoutY="100.0" fx:id="x_GRID_PANE">
+        <columnConstraints>
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+          <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+          <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="155.0" minWidth="10.0" prefWidth="149.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <VBox spacing="20.0" fx:id="x_VBOX0">
+               <children>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleStockManagementDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Stock Management" fx:id="x_STOCK_MANAGE_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Stock_Management.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox spacing="20.0" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_VBOX1">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleReportsDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Reports" fx:id="x_REPORTS_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Reports.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="147.0" prefWidth="128.0" spacing="20.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" fx:id="x_VBOX2">
+               <children>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleOrdersDashBoardBtn" prefHeight="141.0" prefWidth="143.0" text="Stock Order" textAlignment="CENTER" wrapText="true" fx:id="x_STOCK_ORDER_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Stock_Order.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" fillWidth="false" GridPane.columnIndex="3" GridPane.rowIndex="1" fx:id="x_VBOX3">
+               <children>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleAdminDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Administration" fx:id="x_CCO_ADMIN_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Admin.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+                  <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleAdminDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Administration" fx:id="x_OTHER_ADMINS_BTN">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Admin_Except_CCO.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </VBox>
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="4" GridPane.halignment="LEFT" fx:id="x_VBOX4">
+               <children>
+                  <Button contentDisplay="TOP" layoutX="10.0" layoutY="754.0" mnemonicParsing="false" onAction="#handleIssuesDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Stock Issues" wrapText="true" fx:id="x_STOCK_ISSUES_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Stock_Issue.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" spacing="20.0" GridPane.columnIndex="5" GridPane.rowIndex="1" fx:id="x_VBOX5">
+               <children>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleProductsDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Products" fx:id="x_PRODUCTS_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/products.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox spacing="20.0" GridPane.columnIndex="6" fx:id="x_VBOX6">
+               <children>
+                  <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleReceiptsDashBoardBtn" prefHeight="135.0" prefWidth="141.0" text="Stock Receipts" fx:id="x_STOCK_RECEIPTS_BTN">
+                     <graphic>
+                        <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/Stock_Receipt.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLGAStockEntryDashBoardBtn" prefHeight="141.0" prefWidth="143.0" text="LGA Stock Entry" textAlignment="CENTER" wrapText="true" fx:id="x_LGA_STOCK_ENTRY_BTN">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/data-entry125x95.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </GridPane>
+   </center>
+</BorderPane>

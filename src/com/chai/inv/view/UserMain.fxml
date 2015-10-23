@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="624.0" prefWidth="1201.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.UserMainController">
+   <top>
+      <VBox>
+         <children>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ToolBar fx:id="x_TOOL_BAR">
+                    <items>
+                        <Button mnemonicParsing="false" onAction="#handleAddAction" text="Add" textFill="#000000b2" fx:id="x_ADD_USER_BTN">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/file_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleEditAction" text="Edit" fx:id="x_EDIT_USER_BTN">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/file_edit.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleSearchAction" text="Search">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/file_search.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/file_history.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/Export_load_upload.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleChangePasswordAction" text="Change Password" fx:id="x_CHANGE_PASSWORD">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/change_password.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#handleWarehouseAssignmentsAction" visible="false" fx:id="x_WAREHOUSE_ASSIGNMENT_BTN">
+                           <graphic>
+                              <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../../../resources/icons/folder_add.png" />
+                                 </image>
+                              </ImageView>
+                           </graphic>
+                        </Button>
+                    </items>
+                  </ToolBar>
+               </children>
+            </GridPane>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <TableView fx:id="userTable" prefHeight="439.0" prefWidth="969.0" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="firstNameColumn" prefWidth="91.0" text="First Name" />
+          <TableColumn fx:id="lastNameColumn" prefWidth="86.0" text="Last Name" />
+            <TableColumn fx:id="loginNameColumn" prefWidth="86.0" text="Username" />
+            <TableColumn fx:id="passwordColumn" prefWidth="86.0" text="Password" />
+            <TableColumn fx:id="statusColumn" prefWidth="86.0" text="Status" />
+            <TableColumn fx:id="activeStatusColumn" prefWidth="86.0" text="Active" visible="false" />
+            <TableColumn fx:id="loginLevel" prefWidth="91.0" text="Login Level" visible="false" />
+            <TableColumn fx:id="userIdColumn" prefWidth="91.0" text="User Id" visible="false" />
+            <TableColumn fx:id="userType" prefWidth="91.0" text="User Type" />
+            <TableColumn fx:id="activatedOn" prefWidth="91.0" text="Activated On" />
+            <TableColumn fx:id="email" prefWidth="200.0" text="E-mail" />
+            <TableColumn fx:id="telephone_number" prefWidth="130.0" text="Telephone" />
+            <TableColumn fx:id="startDate" prefWidth="91.0" text="Start Date" />
+            <TableColumn fx:id="endDate" prefWidth="91.0" text="End Date" />
+            <TableColumn fx:id="companyIdColumn" prefWidth="91.0" text="Company Id" visible="false" />
+            <TableColumn fx:id="userTypeIdColumn" prefWidth="91.0" text="User Type Id" visible="false" />
+            <TableColumn fx:id="facilityFlag" prefWidth="91.0" text="Facility Flag" />
+            <TableColumn fx:id="userRole" prefWidth="91.0" text="Role" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox prefHeight="73.0" prefWidth="1201.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="44.0" prefWidth="61.0" text="Home">
+               <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToAdminSubMenu" prefHeight="44.0" prefWidth="60.0" text="Back">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+         <padding>
+            <Insets left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

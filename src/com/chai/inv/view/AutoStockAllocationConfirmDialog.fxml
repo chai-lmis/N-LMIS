@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.AutoStockAllocationConfirmDialogController">
+   <top>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#3311dd" strokeType="OUTSIDE" strokeWidth="0.0" text="Stock Confirmation" fx:id="x_TEXT">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <TableView BorderPane.alignment="CENTER" fx:id="x_TABLE">
+        <columns>
+          <TableColumn minWidth="150.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT" />
+          <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Stock Balance" fx:id="x_STOCK_BALANCE" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Quantity to Issue" fx:id="x_QTY_TO_ISSUE" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_LEFT" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOk" prefHeight="25.0" prefWidth="52.0" text="Ok" fx:id="x_OK_BTN" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="10.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

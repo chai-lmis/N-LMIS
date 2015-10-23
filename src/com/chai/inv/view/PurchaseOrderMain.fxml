@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.PurchaseOrderMainController">
+   <top>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <HBox prefHeight="61.0" prefWidth="857.0" spacing="3.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleAddOrderAction" text="Add">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="25.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleEditOrderAction" text="Edit">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleSearchOrderAction" text="Search">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="185.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_history.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="265.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleExportAction" text="Export">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/Export_load_upload.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#refreshOrderTable" text="Refresh">
+                     <graphic>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/refreshIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets left="15.0" top="15.0" />
+               </padding>
+            </HBox>
+         </children>
+      </GridPane>
+   </top>
+   <center>
+      <TableView fx:id="orderTable" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn fx:id="orderNumberColumn" prefWidth="91.0" text="Order Number" />
+          <TableColumn fx:id="orderDateColumn" prefWidth="86.0" text="Order Date" />
+            <TableColumn fx:id="orderFromColumn" prefWidth="86.0" text="Order From" visible="false" />
+            <TableColumn fx:id="orderFromNameColumn" prefWidth="86.0" text="Ship From" />
+            <TableColumn prefWidth="91.0" text="Store Type" fx:id="x_STORE_TYPE_COL" />
+            <TableColumn fx:id="expectedDateColumn" prefWidth="91.0" text="Expected Date" />
+            <TableColumn fx:id="orderStatusColumn" prefWidth="91.0" text="Order Status" />
+            <TableColumn fx:id="commentColumn" prefWidth="91.0" text="Comment" />
+            <TableColumn fx:id="cancelDateColumn" prefWidth="91.0" text="Cancel Date" />
+            <TableColumn fx:id="cancelReasonColumn" prefWidth="91.0" text="Cancel Reason" />
+            <TableColumn prefWidth="87.0" style="-fx-alignment: CENTER-RIGHT;" text="Order Header ID" visible="false" fx:id="x_ORDER_HEADER_ID_COL" />
+            <TableColumn prefWidth="91.0" text="Order From ID" visible="false" fx:id="x_ORDER_FROM_ID_COL" />
+            <TableColumn prefWidth="91.0" text="Order To ID" visible="false" fx:id="x_ORDER_TO_ID_COL" />
+            <TableColumn prefWidth="91.0" text="Order Status ID" visible="false" fx:id="x_ORDER_STATUS_ID_COL" />
+            <TableColumn prefWidth="91.0" text="Store Type ID" visible="false" fx:id="x_STORE_TYPE_ID_COL" />
+            <TableColumn prefWidth="75.0" text="Shipped Quantity" visible="false" fx:id="x_SHIP_QTY_COL" />
+            <TableColumn prefWidth="75.0" text="Shipped Date" visible="false" fx:id="x_SHIP_DATE_COL" />
+            <TableColumn prefWidth="75.0" text="Received Quantity" fx:id="x_RECEIVED_QTY_COL" />
+            <TableColumn prefWidth="75.0" text="Received Date" fx:id="x_RECEIVED_DATE_COL" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox prefHeight="68.0" prefWidth="900.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="44.0" prefWidth="61.0" text="Home">
+               <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToStockOrdersSubMenu" prefHeight="44.0" prefWidth="60.0" text="Back">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+         <padding>
+            <Insets left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

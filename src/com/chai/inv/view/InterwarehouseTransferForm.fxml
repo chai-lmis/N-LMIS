@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="660.0" prefWidth="566.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.InterwarehouseTransferFormController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="45.0" prefWidth="439.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="TOP_LEFT" text="Inter Facility">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox prefHeight="513.0" prefWidth="448.0">
+         <children>
+            <Label text="From:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <GridPane prefHeight="272.0" prefWidth="554.0" style="-fx-border-color: black;">
+               <children>
+                  <Label text="Item:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Locator:" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Lot#:" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Onhand:" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Quantity:" GridPane.rowIndex="6">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="UOM:" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Price:" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <TextField promptText="Quantity" GridPane.rowIndex="7" fx:id="x_QUANTITY">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField editable="false" promptText="UOM" GridPane.columnIndex="1" GridPane.rowIndex="7" fx:id="x_UOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <TextField promptText="Unit Cost" GridPane.columnIndex="2" GridPane.rowIndex="7" fx:id="x_PRICE">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <ComboBox editable="true" onAction="#changeSubinventoryHandle" prefWidth="150.0" promptText="Subinventory" style="-fx-font-size: 15;" GridPane.rowIndex="3" fx:id="x_SUBINVENTORY">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <ComboBox editable="true" onAction="#changeLocatorHandle" prefWidth="150.0" promptText="Locator" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="x_LOCATOR">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <HBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                     <children>
+                        <ComboBox editable="true" onAction="#changeLotHandle" prefHeight="31.0" prefWidth="153.0" promptText="Lot#" style="-fx-font-size: 15;" GridPane.columnIndex="2" GridPane.rowIndex="3" fx:id="x_LOT_NUMBER">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                     </children>
+                  </HBox>
+                  <TextField editable="false" promptText="Onhand Quantity" GridPane.rowIndex="5" fx:id="x_ON_HAND">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Label text="Subinventory:" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#changeItemHandle" prefWidth="150.0" promptText="Item" style="-fx-font-size: 15;" GridPane.rowIndex="1" fx:id="x_ITEM">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label prefHeight="31.0" prefWidth="185.0" text="         " GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_ITEM_DESCRIPTION">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="35.0" valignment="TOP" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Label text="To:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="6.0" />
+               </VBox.margin>
+            </Label>
+            <GridPane prefHeight="86.0" prefWidth="536.0" style="-fx-border-color: black;">
+               <children>
+                  <Label text="Facility:">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#changeToFacilityHandle" prefHeight="33.0" prefWidth="133.0" promptText="Facility" style="-fx-font-size: 15;" GridPane.rowIndex="1" fx:id="x_TO_WAREHOUSE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Subinventory:" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#changeToSubinventoryHandle" prefHeight="32.0" prefWidth="141.0" promptText="SubInventory" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_TO_SUBINVENTORY">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Locator:" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" prefHeight="32.0" prefWidth="132.0" promptText="Locator" style="-fx-font-size: 15;" GridPane.columnIndex="2" GridPane.rowIndex="1" fx:id="x_TO_LOCATOR">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="33.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="38.0" valignment="TOP" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+            <Label text="Comment:">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextArea prefHeight="50.0" prefWidth="408.0" fx:id="x_REASON">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+            </TextArea>
+            <HBox alignment="CENTER_RIGHT" prefHeight="55.0" prefWidth="428.0" spacing="15.0">
+               <children>
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOK" prefHeight="26.0" prefWidth="70.0" text="OK" fx:id="x_OK_BTN">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="70.0" text="Cancel">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets right="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="15.0" right="15.0" />
+         </padding>
+      </VBox>
+   </center>
+   <bottom>
+      <TableView fx:id="onhandItemQuantityTable" prefHeight="138.0" prefWidth="566.0" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn prefWidth="77.0" text="Lot#" fx:id="x_LOT_NUMBER_COLUMN" />
+            <TableColumn prefWidth="59.0" text="Quantity" fx:id="x_ONHAND_QUANTITY_COLUMN" />
+            <TableColumn prefWidth="52.0" text="UOM" fx:id="x_TRANSACTION_UOM_COLUMN" />
+            <TableColumn prefWidth="86.0" text="Exp Date" fx:id="x_EXPIRATION_DATE_COLUMN" />
+            <TableColumn prefWidth="88.0" text="Facility" fx:id="x_WAREHOUSE_NAME_COLUMN" />
+            <TableColumn prefWidth="104.0" text="SubInventory" fx:id="x_SUBINVENTORY_CODE_COLUMN" />
+            <TableColumn prefWidth="98.0" text="Locator" fx:id="x_BIN_LOCATION_CODE_COLUMN" />
+         </columns>
+      </TableView>
+   </bottom>
+</BorderPane>

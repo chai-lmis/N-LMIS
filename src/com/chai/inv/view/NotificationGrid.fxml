@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.NotificationController">
+   <center>
+      <TableView BorderPane.alignment="CENTER" fx:id="x_NOTIFICATON_GRID">
+        <columns>
+          <TableColumn prefWidth="75.0" text="Notification Id" visible="false" fx:id="x_NOTIFICATION_ID_COL" />
+          <TableColumn minWidth="100.0" prefWidth="150.0" text="Notification Type" fx:id="x_NOTIFICATION_TYPE_COL" />
+            <TableColumn minWidth="100.0" prefWidth="500.0" text="Message" fx:id="x_MESSAGE_COL" />
+            <TableColumn prefWidth="75.0" text="Order Type Id" visible="false" fx:id="x_ORDER_TYPE_ID_COL" />
+            <TableColumn prefWidth="75.0" text="Status" visible="false" fx:id="x_STATUS_COL" />
+            <TableColumn minWidth="100.0" prefWidth="120.0" text="Created Date" fx:id="x_CREATED_ON_COL" />
+            <TableColumn prefWidth="75.0" text="Created By" visible="false" fx:id="x_CREATED_BY_COL" />
+            <TableColumn prefWidth="75.0" text="Last Upated Date" visible="false" fx:id="x_LAST_UPDATED_ON_COL" />
+            <TableColumn prefWidth="75.0" text="Updated By" visible="false" fx:id="x_UPDATED_BY_COL" />
+            <TableColumn prefWidth="75.0" text="Sync Flag" visible="false" fx:id="x_SYNC_FLAG_COL" />
+            <TableColumn prefWidth="75.0" text="Warehouse Id" visible="false" fx:id="x_WAREHOUSE_ID_COL" />
+            <TableColumn prefWidth="75.0" text="Order Status Id" visible="false" fx:id="x_ORDER_STATUS_ID_COL" />
+        </columns>
+      </TableView>
+   </center>
+</BorderPane>

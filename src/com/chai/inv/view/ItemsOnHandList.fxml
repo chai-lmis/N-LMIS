@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.ItemsOnHandListController">
+   <center>
+      <TableView fx:id="itemsOnHandListTable" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn minWidth="100.0" prefWidth="-1.0" text="Item" fx:id="x_ITEM_NUMBER" />
+            <TableColumn minWidth="90.0" prefWidth="-1.0" style="-fx-alignment: center-right;" text="Safety Stock" fx:id="x_ITEM_SAFETY_STOCK" />
+            <TableColumn minWidth="110.0" prefWidth="-1.0" style="-fx-alignment: center-right;" text="Onhand Quantity" fx:id="x_ONHAND_QUANTITY" />
+            <TableColumn maxWidth="1000.0" minWidth="100.0" prefWidth="-1.0" text="UOM" fx:id="x_TRANSACTION_UOM" />
+            <TableColumn prefWidth="93.0" text="Start Date" visible="false" fx:id="x_START_DATE" />
+            <TableColumn maxWidth="-1.0" prefWidth="-1.0" text="ITEMS_BELOW_SAFETY_STOCK" visible="false" fx:id="x_ITEMS_BELOW_SAFETY_STOCK_CLM" />
+        </columns>
+         <BorderPane.margin>
+            <Insets top="5.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <GridPane>
+               <children>
+                  <ComboBox editable="true" prefHeight="29.0" prefWidth="158.0" promptText="Select Item" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_ITEM_DROP_DOWN">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Item:" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="13.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Button mnemonicParsing="false" onAction="#handleRefreshAction" prefHeight="29.0" prefWidth="72.0" text="Refresh" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BASELINE">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Button>
+                  <CheckBox mnemonicParsing="false" text="Below safety stock" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="CENTER" fx:id="x_ITEMS_BELOW_SAFETY_STOCK">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" top="-6.0" />
+                     </GridPane.margin>
+                  </CheckBox>
+                  <Button mnemonicParsing="false" onAction="#handleExportAction" prefHeight="27.0" prefWidth="68.0" text="Export" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Button>
+                  <Button layoutX="792.0" layoutY="32.0" mnemonicParsing="false" onAction="#autoOrderItemsBelowSafetyStock" prefHeight="27.0" prefWidth="183.0" text="Order Items Below Safety Stock" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                     <tooltip>
+                        <Tooltip text="Place order of Items below safety stock from default Ordering Store" />
+                     </tooltip>
+                  </Button>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="265.0" minWidth="10.0" prefWidth="163.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="423.0" minWidth="10.0" prefWidth="153.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="470.0" minWidth="1.0" prefWidth="78.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="556.0" minWidth="10.0" prefWidth="75.0" />
+                  <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="668.0" minWidth="10.0" prefWidth="668.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints />
+                  <RowConstraints />
+               </rowConstraints>
+            </GridPane>
+         </children>
+      </VBox>
+   </top>
+   <bottom>
+      <HBox prefHeight="68.0" prefWidth="1152.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="43.0" prefWidth="49.0" text="Home">
+               <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToStockManagementSubMenu" prefHeight="44.0" prefWidth="47.0" text="Back">
+               <graphic>
+                  <ImageView fitHeight="23.0" fitWidth="31.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+         <padding>
+            <Insets left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

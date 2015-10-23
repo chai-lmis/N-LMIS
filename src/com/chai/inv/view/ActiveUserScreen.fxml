@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="255.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.ActiveUserScreenController">
+   <center>
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <ComboBox editable="true" onHidden="#handleOnLGASelected" prefHeight="31.0" prefWidth="260.0" promptText="Select LGA Store" visibleRowCount="5" GridPane.rowIndex="2" fx:id="x_ACTIVE_LGA_LIST" />
+            <TextField prefWidth="260.0" promptText="Username" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER" fx:id="x_USERNAME">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <Label text="Choose a LGA Store from below list" textFill="#240783">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Button mnemonicParsing="false" onAction="#handleOkClicked" prefHeight="34.0" prefWidth="90.0" text="OK" GridPane.halignment="CENTER" GridPane.rowIndex="5" />
+            <TextField layoutX="10.0" layoutY="95.0" prefWidth="260.0" promptText="Password" GridPane.rowIndex="4" fx:id="x_PASSWORD">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <ComboBox editable="true" layoutX="10.0" layoutY="147.0" onHidden="#handleOnStateSelected" prefHeight="31.0" prefWidth="260.0" promptText="Filter by state store" visibleRowCount="5" GridPane.rowIndex="1" fx:id="x_STATE_LIST" />
+         </children>
+      </GridPane>
+   </center>
+   <padding>
+      <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+   </padding>
+</BorderPane>

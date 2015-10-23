@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.DeviceAssociationGridController">
+   <center>
+      <TableView BorderPane.alignment="CENTER" fx:id="x_DEVICE_ASSOCIATION_GRID">
+        <columns>
+          <TableColumn minWidth="200.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT_COL" />
+          <TableColumn minWidth="300.0" prefWidth="-1.0" text="Associated Device(s)" fx:id="x_ASSOCIATED_DEVICES_COL" />
+            <TableColumn minWidth="180.0" prefWidth="-1.0" text="No. of Associated Device(s)" fx:id="x_ASSOCIATED_DEVICES_NUMBER_COL" />
+            <TableColumn minWidth="180.0" prefWidth="-1.0" text="Device Id" visible="false" fx:id="x_ASSOCIATED_DEVICES_ID_COL" />
+            <TableColumn minWidth="180.0" prefWidth="-1.0" text="Product Id" visible="false" fx:id="x_PRODUCT_ID_COL" />
+        </columns>
+      </TableView>
+   </center>
+   <top>
+      <HBox BorderPane.alignment="CENTER">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleDeviceAssociation" text="Device Association" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" top="15.0" />
+         </padding>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox prefHeight="68.0" prefWidth="900.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" text="Home">
+               <graphic>
+                  <ImageView fitHeight="27.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToIssuesSubMenu" text="Back">
+               <graphic>
+                  <ImageView fitHeight="28.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

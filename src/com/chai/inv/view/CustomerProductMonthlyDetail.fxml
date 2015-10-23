@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustProdMonthlyDetailController">
+   <center>
+      <TableView fx:id="mothlyProductDetail" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="cust_product_detail_id" visible="false" fx:id="x_CUST_PROD_DETAIL_ID" />
+            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="ProductId" visible="false" fx:id="x_PRODUCT_ID" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT_NUMBER" />
+            <TableColumn minWidth="120.0" prefWidth="-1.0" text="Product Description" fx:id="x_PRODUCT_DESC" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Product Type" fx:id="x_PRODUCT_TYPE" />
+            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="Product Type Id" visible="false" fx:id="x_PRODUCT_TYPE_ID" />
+            <TableColumn minWidth="75.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Week" visible="false" fx:id="x_WEEK" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Period From Date" fx:id="x_PERIOD_FROM_DATE" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Period To Date" fx:id="x_PERIOD_TO_DATE" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Allocation Type" fx:id="x_ALLOCATION_TYPE" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Minimum Stock Quantity" fx:id="x_MIN_QTY" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Maximum Stock Quantity" fx:id="x_MAX_QTY" />
+            <TableColumn minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Stock Balance" fx:id="x_STOCK_BALANCE" />
+            <TableColumn minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Quantity Issued" fx:id="x_ALLOCATION" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label layoutX="74.0" layoutY="10.0" text="customer_name" textFill="#1d0fb9" fx:id="x_CUSTOMER_NAME_LABEL">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label text=" - Product Allocation Summary" textFill="#1d0fb9">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets bottom="5.0" top="5.0" />
+               </padding>
+            </HBox>
+            <GridPane>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="447.0" minWidth="10.0" prefWidth="151.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="447.0" minWidth="10.0" prefWidth="151.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="733.0" minWidth="10.0" prefWidth="731.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ComboBox editable="true" promptText="Select Month" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_MONTH_FILTER">
+                     <VBox.margin>
+                        <Insets bottom="5.0" left="10.0" />
+                     </VBox.margin>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Month" GridPane.columnIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <Label text="Year">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" promptText="Select Year" GridPane.rowIndex="1" fx:id="x_YEAR_FILTER">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Button mnemonicParsing="false" onAction="#handleRefreshBtnAction" text="Refresh" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin></Button>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Record Count : " GridPane.columnIndex="3" fx:id="x_RECORD_COUNT">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Text>
+                  <Label layoutX="162.0" layoutY="15.0" text="Product Allocation Type" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
+                  <ComboBox editable="true" layoutX="171.0" layoutY="40.0" onAction="#handleOnProductAllocTypeChange" promptText="Select Allocation Period" GridPane.columnIndex="2" GridPane.rowIndex="1" fx:id="x_PRODUCT_ALLOCATION_TYPE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+               </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0" />
+               </VBox.margin>
+            </GridPane>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>

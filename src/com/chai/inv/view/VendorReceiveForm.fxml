@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="650.0" prefWidth="565.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.VendorReceiveController">
+   <top>
+      <VBox alignment="CENTER" prefHeight="36.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="TOP_LEFT" text="Inter LGA Receipts">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox prefHeight="280.0" prefWidth="408.0">
+         <children>
+            <GridPane prefHeight="342.0" prefWidth="554.0" BorderPane.alignment="CENTER">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Select Product" GridPane.rowIndex="2">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Locator:" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Lot#:" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Onhand:" GridPane.rowIndex="6">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Quantity:" GridPane.rowIndex="8">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="UOM:" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Price:" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <TextField promptText="Quantity" GridPane.rowIndex="9" fx:id="x_QUANTITY">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <TextField editable="false" promptText="UOM" GridPane.columnIndex="1" GridPane.rowIndex="9" fx:id="x_UOM">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <TextField promptText="Unit Cost" GridPane.columnIndex="2" GridPane.rowIndex="9" fx:id="x_PRICE">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <ComboBox onAction="#changeSubinventoryHandle" prefWidth="150.0" promptText="Subinventory" style="-fx-font-size: 15;" GridPane.rowIndex="5" fx:id="x_SUBINVENTORY">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <ComboBox onAction="#changeLocatorHandle" prefWidth="150.0" promptText="Locator" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="5" fx:id="x_LOCATOR">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <HBox spacing="5.0" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <children>
+                        <ComboBox onAction="#changeLotHandle" prefHeight="31.0" prefWidth="123.0" promptText="Lot#" style="-fx-font-size: 15;" GridPane.columnIndex="2" GridPane.rowIndex="3" fx:id="x_LOT_NUMBER">
+                           <GridPane.margin>
+                              <Insets left="5.0" />
+                           </GridPane.margin>
+                           <HBox.margin>
+                              <Insets left="5.0" />
+                           </HBox.margin>
+                        </ComboBox>
+                        <Button mnemonicParsing="false" onAction="#handleLotAddAction" text="Add" fx:id="x_ADD_LOT_BTN">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <TextField editable="false" promptText="Onhand Quantity" GridPane.rowIndex="7" fx:id="x_ON_HAND">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </TextField>
+                  <Label text="Subinventory:" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox onAction="#changeItemHandle" prefWidth="150.0" promptText="Select Product" style="-fx-font-size: 15;" GridPane.rowIndex="3" fx:id="x_ITEM">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Reason:" GridPane.rowIndex="10">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label prefHeight="31.0" prefWidth="185.0" text="         " GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="x_ITEM_DESCRIPTION">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="LGAs">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox prefWidth="150.0" promptText="Select LGAs" style="-fx-font-size: 15;" GridPane.rowIndex="1" fx:id="x_VENDORS">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Voucher# :" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <TextField promptText="Voucher#" GridPane.columnIndex="2" GridPane.rowIndex="3" fx:id="x_TRANSACTION_NUMBER">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <BorderPane.margin>
+                  <Insets left="10.0" right="10.0" />
+               </BorderPane.margin>
+            </GridPane>
+            <TextArea prefHeight="50.0" prefWidth="408.0" promptText="Reason" fx:id="x_REASON">
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextArea>
+            <HBox alignment="CENTER_RIGHT" prefHeight="50.0" prefWidth="554.0" spacing="15.0">
+               <children>
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOK" prefWidth="70.0" text="OK" fx:id="x_OK_BTN">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefWidth="70.0" text="Cancel">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets left="5.0" right="6.0" />
+         </padding>
+      </VBox>
+   </center>
+   <bottom>
+      <TableView fx:id="onhandItemQuantityTable" prefHeight="172.0" prefWidth="565.0" BorderPane.alignment="CENTER">
+        <columns>
+			<TableColumn prefWidth="77.0" text="Lot#" fx:id="x_LOT_NUMBER_COLUMN" />
+			<TableColumn prefWidth="59.0" text="Quantity" fx:id="x_ONHAND_QUANTITY_COLUMN" />
+			<TableColumn prefWidth="52.0" text="UOM" fx:id="x_TRANSACTION_UOM_COLUMN" />
+			<TableColumn prefWidth="86.0" text="Exp Date" fx:id="x_EXPIRATION_DATE_COLUMN" />
+			<TableColumn prefWidth="88.0" text="Facility" fx:id="x_WAREHOUSE_NAME_COLUMN" />
+			<TableColumn prefWidth="104.0" text="SubInventory" fx:id="x_SUBINVENTORY_CODE_COLUMN" />
+			<TableColumn prefWidth="98.0" text="Locator" fx:id="x_BIN_LOCATION_CODE_COLUMN" />
+		</columns>
+		<BorderPane.margin>
+            <Insets top="5.0" />
+		</BorderPane.margin>
+      </TableView>
+   </bottom>
+</BorderPane>

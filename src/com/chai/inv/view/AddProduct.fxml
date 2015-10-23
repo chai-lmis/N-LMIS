@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.ItemEditDialogController">
+   <children>
+      <GridPane alignment="CENTER" layoutX="27.0" prefHeight="528.0" prefWidth="580.0" fx:id="x_GRID_PANE">
+         <children>
+            <Label text="Product Number" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField prefHeight="31.0" prefWidth="257.0" promptText="Product Number" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_ITEM_NUMBER">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextField>
+            <Label text="Description" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="Product Type" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextArea prefHeight="33.0" prefWidth="210.0" promptText="Description" wrapText="true" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_ITEM_DESCRIPTION">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextArea>
+            <ComboBox editable="true" onAction="#handleProductTypeChange" prefHeight="30.0" prefWidth="193.0" promptText="Product Type" style="-fx-font-size: 15;" visibleRowCount="5" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_ITEM_TYPE_NAME">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Product Category" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox editable="true" prefHeight="30.0" prefWidth="193.0" promptText="Product Category" style="-fx-font-size: 15;" visibleRowCount="5" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_CATEGORY_NAME">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Primary UOM" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox editable="true" prefHeight="30.0" prefWidth="193.0" promptText="Primary UOM" style="-fx-font-size: 15;" visibleRowCount="5" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_TRANSACTION_BASE_UOM">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Safety Stock" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="Vaccine Presentation" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField promptText="Safety Stock" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_SAFETY_STOCK">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextField>
+            <TextField promptText="(Nos of Doses/Vial)" GridPane.columnIndex="2" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_VACCINE_PRESENTATION">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextField>
+            <Label text="Expiration Date" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label text="Count Date" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <DatePicker prefHeight="31.0" prefWidth="226.0" promptText="Expiration Date" style="-fx-font-size: 15;" GridPane.rowIndex="7" GridPane.valignment="BASELINE" fx:id="x_EXPIRATION_DATE">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <DatePicker prefHeight="31.0" prefWidth="226.0" promptText="Count Date" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="BASELINE" fx:id="x_LAST_COUNTED_DATE">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Label text="Order Multiplier" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField promptText="Order Multiplier" GridPane.rowIndex="9" GridPane.valignment="BASELINE" fx:id="x_ORDER_MULTIPLIER">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextField>
+            <Label text="Wastage Rate" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField promptText="Wastage Rate" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="BASELINE" fx:id="x_WASTAGE_RATE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextField>
+            <Label text="Wastage Factor" GridPane.columnIndex="2" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField editable="false" promptText="Wastage Factor" GridPane.columnIndex="2" GridPane.rowIndex="9" GridPane.valignment="BASELINE" fx:id="x_WASTAGE_FACTOR">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <Label text="Doses Per Schedule" GridPane.columnIndex="2" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField promptText="doses per schedule" GridPane.columnIndex="2" GridPane.rowIndex="7" GridPane.valignment="TOP" fx:id="x_DOSES_PER_SCHEDULE">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <CheckBox mnemonicParsing="false" text="Status" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_STATUS">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </CheckBox>
+            <Label text="Start Date" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="End Date" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <DatePicker prefHeight="31.0" prefWidth="226.0" promptText="Start Date" style="-fx-font-size: 15;" GridPane.rowIndex="11" GridPane.valignment="BASELINE" fx:id="x_START_DATE">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <DatePicker layoutX="10.0" layoutY="276.0" prefHeight="32.0" prefWidth="225.0" promptText="End Date" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.valignment="BASELINE" fx:id="x_END_DATE">
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleSubmitUser" prefHeight="31.0" prefWidth="180.0" text="Ok" GridPane.rowIndex="12" GridPane.valignment="TOP" fx:id="x_OK_BTN">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </Button>
+            <Button cancelButton="true" layoutX="10.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="176.0" text="Cancel" GridPane.columnIndex="2" GridPane.rowIndex="12" GridPane.valignment="BASELINE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </Button>
+            <Label layoutX="207.0" layoutY="506.0" text="Target Coverage" GridPane.columnIndex="2" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField layoutX="398.0" layoutY="236.0" promptText="Target Coverage(%)" GridPane.columnIndex="2" GridPane.rowIndex="11" GridPane.valignment="TOP" fx:id="x_TARGET_COVERAGE">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" />
+               </GridPane.margin>
+            </TextField>
+            <Button cancelButton="true" layoutX="398.0" layoutY="577.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="160.0" text="Close" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.valignment="BASELINE" fx:id="x_VIEW_CLOSE_BTN">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="286.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="320.0" minWidth="10.0" prefWidth="280.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="320.0" minWidth="10.0" prefWidth="280.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints fillHeight="false" vgrow="SOMETIMES" />
+            <RowConstraints prefHeight="58.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="29.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="34.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="21.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="32.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="47.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="-Infinity" prefHeight="35.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+   </children>
+</AnchorPane>

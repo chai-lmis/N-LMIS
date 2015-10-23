@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.SalesOrderFormController">
+   <top>
+      <VBox prefHeight="36.0" prefWidth="300.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label alignment="TOP_LEFT" text="Order Fulfillment">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="245.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </VBox>
+   </top>
+   <center>
+      <VBox prefHeight="310.0" prefWidth="459.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane prefHeight="216.0" prefWidth="539.0">
+               <children>
+                  <Label text="Ship From Store:" GridPane.valignment="TOP">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="Store_Name" GridPane.columnIndex="1" GridPane.valignment="TOP" fx:id="x_ORDER_FROM_STORE_NAME">
+                     <GridPane.margin>
+                        <Insets left="17.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label text="Order#" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField editable="false" prefHeight="29.0" prefWidth="147.0" promptText="Order#" GridPane.rowIndex="2" GridPane.valignment="TOP" fx:id="x_ORDER_NUMBER">
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </TextField>
+                  <Label text="Order Date" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="17.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker prefHeight="33.0" prefWidth="178.0" promptText="Select Order Date" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP" fx:id="x_ORDER_DATE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <Label text="Ship To" GridPane.rowIndex="3" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#handleOrderToChange" prefHeight="30.0" prefWidth="198.0" promptText="Select Ship To" style="-fx-font-size: 13;" visibleRowCount="5" GridPane.rowIndex="4" GridPane.valignment="TOP" fx:id="x_ORDER_TO" />
+                  <ComboBox editable="true" onAction="#handleStoreTypeChange" prefHeight="31.0" prefWidth="198.0" style="-fx-font-size: 15;" GridPane.columnIndex="2" GridPane.rowIndex="4" GridPane.valignment="TOP" fx:id="x_STORE_TYPE">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <ComboBox editable="true" prefHeight="29.0" prefWidth="177.0" visibleRowCount="5" GridPane.columnIndex="1" GridPane.rowIndex="4" fx:id="x_SELECTED_STORE_NAME">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Schedule Ship date" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <DatePicker fx:id="X_SHIP_DATE" prefHeight="30.0" prefWidth="197.0" promptText="Select Ship Date" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+                  <Label text="Order Status" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#handleOrderStatusChange" prefHeight="29.0" prefWidth="200.0" promptText="Select Order Status" style="-fx-font-size: 13;" visibleRowCount="5" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER" fx:id="x_ORDER_STATUS">
+                     <GridPane.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Comment" GridPane.rowIndex="7" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <Label text="Cancel Date" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker prefHeight="32.0" prefWidth="197.0" promptText="Select Cancel Date" GridPane.columnIndex="2" GridPane.rowIndex="6" fx:id="x_CANCEL_DATE">
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <Label text="Cancel Reason" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="5.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="147.0" text="Shipped date" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker disable="true" layoutX="10.0" layoutY="168.0" prefHeight="30.0" prefWidth="176.0" promptText="Shipped Date" GridPane.columnIndex="1" GridPane.rowIndex="6" fx:id="x_SHIPPED_DATE_ON_RECEIVE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+               </children>
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="373.0" minWidth="10.0" prefWidth="156.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="390.0" minWidth="10.0" prefWidth="192.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="390.0" minWidth="10.0" prefWidth="245.0" />
+               </columnConstraints>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <rowConstraints>
+                  <RowConstraints maxHeight="44.0" minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="44.0" minHeight="6.0" prefHeight="25.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="92.0" minHeight="10.0" prefHeight="31.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="133.0" minHeight="10.0" prefHeight="27.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="146.0" minHeight="10.0" prefHeight="31.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="156.0" minHeight="10.0" prefHeight="28.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="165.0" minHeight="10.0" prefHeight="32.0" valignment="TOP" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="140.0" minHeight="10.0" prefHeight="25.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <VBox.margin>
+                  <Insets left="10.0" right="23.0" />
+               </VBox.margin>
+            </GridPane>
+            <HBox prefHeight="52.0" prefWidth="601.0" spacing="30.0">
+               <children>
+                  <TextArea prefHeight="35.0" prefWidth="363.0" promptText="Enter comment about the order here..." wrapText="true" fx:id="x_COMMENT">
+                     <VBox.margin>
+                        <Insets left="11.0" right="27.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </TextArea>
+                  <TextArea prefHeight="35.0" prefWidth="202.0" promptText="Enter Cancel Reason here..." wrapText="true" fx:id="x_CANCEL_REASON">
+                     <VBox.margin>
+                        <Insets left="10.0" right="27.0" />
+                     </VBox.margin>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </TextArea>
+               </children>
+            </HBox>
+            <HBox prefHeight="36.0" prefWidth="601.0" spacing="10.0">
+               <children>
+                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Ship" visible="false" />
+                  <Button mnemonicParsing="false" text="Pending Receipt" visible="false" />
+               </children>
+               <VBox.margin>
+                  <Insets bottom="10.0" left="10.0" top="10.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+   <padding>
+      <Insets left="10.0" right="10.0" />
+   </padding>
+   <bottom>
+      <VBox prefHeight="363.0" spacing="7.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox spacing="5.0">
+               <children>
+                  <TableView prefHeight="324.0" prefWidth="627.0" fx:id="x_ORDER_LINE_ITEMS_TABLE">
+                    <columns>
+                      <TableColumn prefWidth="42.0" style="-fx-alignment:CENTER;" text="Line#" fx:id="x_LINE_NUMBER" />
+                      <TableColumn prefWidth="108.0" text="Item" fx:id="x_LINE_ITEM" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-RIGHT;" text="Quantity to Issue" fx:id="x_LINE_QUANTITY" />
+                        <TableColumn prefWidth="55.0" style="-fx-alignment:CENTER;" text="UOM" fx:id="x_LINE_UOM" />
+                        <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Item Status" fx:id="x_LINE_STATUS_COL" />
+                        <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Cancel Date" fx:id="x_CANCEL_DATE_COL" />
+                        <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Cancel Reason" fx:id="x_CANCEL_REASON_COL" />
+                        <TableColumn prefWidth="110.0" style="-fx-alignment:CENTER;" text="Shipped Qty" visible="false" fx:id="x_SHIPPED_QTY_COL" />
+                        <TableColumn prefWidth="110.0" style="-fx-alignment:CENTER;" text="Shipped Date" visible="false" fx:id="x_SHIPPED_DATE_COL" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="Order Line ID" visible="false" fx:id="x_ORDER_LINE_ID_COL" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="Item Status ID" visible="false" fx:id="x_LINE_STATUS_ID_COL" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="Order Header Id" visible="false" fx:id="x_ORDER_HEADER_ID_COL" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="REFERENCE LINE ID" visible="false" fx:id="x_REFERENCE_LINE_ID_COL" />
+                    </columns>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <Button mnemonicParsing="false" onAction="#handleOpenOrderLineForm" prefHeight="25.0" prefWidth="41.0" text="+" visible="false" fx:id="x_ADD_LINE_ITEM_BTN">
+                     <tooltip>
+                        <Tooltip text="Press to add Order-Line-Item">
+                           <font>
+                              <Font size="21.0" />
+                           </font>
+                        </Tooltip>
+                     </tooltip></Button>
+               </children>
+            </HBox>
+            <HBox prefHeight="33.0" prefWidth="650.0" spacing="10.0">
+               <children>
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleSubmitOrders" prefHeight="27.0" prefWidth="72.0" text="Save" fx:id="x_SAVE_BTN" />
+                  <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" prefHeight="27.0" prefWidth="73.0" text="Cancel">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin></Button>
+               </children>
+               <padding>
+                  <Insets left="450.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </bottom>
+</BorderPane>

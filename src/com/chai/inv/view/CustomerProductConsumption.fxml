@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustomerProductConsumptionController">
+   <center>
+      <TableView fx:id="productConsumptionTable" BorderPane.alignment="CENTER">
+        <columns>
+          <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="consumption_id" visible="false" fx:id="x_CONSUMPTION_ID" />
+            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="CustomerId" visible="false" fx:id="x_CUSTOMER_ID" />            
+          <TableColumn minWidth="100.0" prefWidth="-1.0" text="Health Facility" visible="false" fx:id="x_CUSTOMER_NUMBER" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT_NUMBER" />
+            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="ProductId" visible="false" fx:id="x_PRODUCT_ID" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Date" fx:id="x_DATE" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Stock Balance" fx:id="x_BALANCE" />
+        </columns>
+      </TableView>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER">
+               <children>
+                  <Label text="Health Facility Stock Balance" textFill="#1d0fb9" fx:id="x_TITLE">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="10.0" right="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+</BorderPane>

@@ -1,0 +1,26 @@
+/* .combo-box-base:disabled .list-cell:disabled {
+ *   -fx-opacity: 1;
+ *	}
+ * 
+ * */
+
+.button:hover { 
+    -fx-background-color:  linear-gradient(#61a2b1, #2A5058);
+    -fx-text-fill: rgb(255,128,0);
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+/*.button:default:hover {
+    -fx-background-color: derive(-fx-focus-color,30%);
+    * -fx-background-insets:30.0%, 2.0%, 3.0%, 4.0% ;
+} 
+ * */
+.button{
+	-fx-background-color: none;
+	-fx-font-family: "Arial Narrow";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    
+}

@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefHeight="407.0" prefWidth="397.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.AddOrderLineController">
+   <top>
+      <VBox prefHeight="34.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Order Item">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="152.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox prefHeight="423.0" prefWidth="397.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane prefHeight="232.0" prefWidth="518.0">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="163.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="313.0" minWidth="10.0" prefWidth="180.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <children>
+                  <Label text="Item" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="17.0" text="Quantity" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <Label layoutX="10.0" layoutY="17.0" text="UOM" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#handleSetUomOnItemChng" prefHeight="29.0" prefWidth="168.0" promptText="Select Item" visibleRowCount="6" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_LINE_ITEM" />
+                  <TextField prefHeight="31.0" prefWidth="167.0" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_LINE_QUANTITY">
+                     <GridPane.margin>
+                        <Insets right="18.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <ComboBox layoutX="10.0" layoutY="43.0" prefHeight="29.0" prefWidth="163.0" promptText="Select UOM" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_LINE_UOM">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label layoutX="511.0" layoutY="15.0" text="Line Status" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox editable="true" layoutX="511.0" layoutY="43.0" onAction="#handleLineStatusChange" prefHeight="29.0" prefWidth="168.0" promptText="Select Line Status" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_LINE_STATUS" />
+                  <Label text="Ship Quantity" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" fx:id="x_LINE_SHIP_QTY_LABEL">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <TextField prefHeight="30.0" prefWidth="164.0" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_LINE_SHIP_QTY">
+                     <GridPane.margin>
+                        <Insets left="20.0" right="18.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Label text="Cancel Date" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker prefHeight="29.0" prefWidth="169.0" promptText="Select Cancel Date" GridPane.rowIndex="7" GridPane.valignment="BASELINE" fx:id="x_LINE_CANCEL_DATE">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <Label text="Ship Date" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="6" fx:id="x_LINE_SHIP_DATE_LABEL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <DatePicker prefHeight="29.0" prefWidth="162.0" promptText="Select Ship Date" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="7" fx:id="x_LINE_SHIP_DATE">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <TextField visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_RECEIVED_QTY_HIDDEN_FIELD">
+                     <GridPane.margin>
+                        <Insets left="20.0" right="20.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <Label layoutX="20.0" layoutY="18.0" text="Receiving Quantity" visible="false" GridPane.columnIndex="1">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </GridPane>
+            <Label text="Cancel Reason">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" top="10.0" />
+               </VBox.margin>
+            </Label>
+            <TextArea prefHeight="53.0" prefWidth="751.0" promptText="Enter Cancel Reason Here" fx:id="x_LINE_CANCEL_REASON">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="10.0" right="17.0" />
+               </VBox.margin>
+            </TextArea>
+            <HBox prefHeight="48.0" prefWidth="751.0" spacing="10.0">
+               <children>
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#handleAddLineItem" prefHeight="28.0" prefWidth="65.0" text="Ok" fx:id="x_OK_BTN" />
+                  <Button cancelButton="true" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="27.0" prefWidth="58.0" text="Cancel" />
+               </children>
+               <padding>
+                  <Insets left="246.0" top="8.0" />
+               </padding>
+            </HBox>
+         </children>
+      </VBox>
+   </center>
+</BorderPane>

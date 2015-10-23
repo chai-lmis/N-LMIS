@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustomerMainController">
+   <top>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <HBox spacing="3.0" fx:id="x_HBOX">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#handleAddAction" text="Add" fx:id="x_ADD_CUSTOMER_BTN">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_add.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="25.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleEditAction" text="Edit" fx:id="x_EDIT_CUSTOMER_BTN">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="84.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleCustomerViewAction" prefHeight="31.0" text="Health Facility Overview" fx:id="x_VIEW_CUSTOMER" />
+                  <Button layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleSearchAction" text="Search">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="185.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_history.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="265.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleExportAction" text="Export">
+                     <graphic>
+                        <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/Export_load_upload.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button layoutX="317.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleCustomerProductConsumption" prefHeight="30.0" text="Check HF Stock Balance" fx:id="x_CHECK_STOCK_BALANCE" />
+                  <Button layoutX="1022.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleManualStockEntryAction" prefHeight="30.0" text="Manual HFs Stock Entry" />
+                  <Button layoutX="587.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleProductMonthlyDetail" prefHeight="30.0" text="Product Allocation" wrapText="true" />
+                  <Button layoutX="780.0" layoutY="20.0" mnemonicParsing="false" onAction="#handleAutoGenerateSalesOrder" prefHeight="30.0" text="Auto Generate Order" />
+                  <Button mnemonicParsing="false" onAction="#handleOrderFulfilmentAction" prefHeight="30.0" text="Order Fulfilment" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="6.0" top="10.0" />
+               </padding>
+            </HBox>
+         </children>
+      </GridPane>
+   </top>
+   <center>
+      <TableView fx:id="customerTable" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn fx:id="customerNumberColumn" minWidth="150.0" prefWidth="-1.0" text="Health Facility#" visible="false" />
+            <TableColumn fx:id="customerNameColumn" minWidth="150.0" prefWidth="-1.0" text="Health Facility Name" />
+            <TableColumn fx:id="wardColumn" minWidth="150.0" prefWidth="-1.0" text="Ward" />
+            <TableColumn fx:id="targetPopulationColumn" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center-right;" text="Target Polulation" />
+            <TableColumn fx:id="editDateColumn" minWidth="150.0" prefWidth="-1.0" text="Edit Date" />
+            <TableColumn fx:id="defaultStore" minWidth="150.0" prefWidth="-1.0" text="Default Ordering Store" />
+            <TableColumn fx:id="descriptonColumn" minWidth="150.0" prefWidth="-1.0" text="Description" visible="false" />
+            <TableColumn fx:id="addressColumn" minWidth="150.0" prefWidth="-1.0" text="Address" visible="false" />
+            <TableColumn fx:id="cityColumn" minWidth="100.0" prefWidth="-1.0" text="City" visible="false" />
+            <TableColumn fx:id="stateColumn" minWidth="100.0" prefWidth="-1.0" text="State" visible="false" />
+            <TableColumn fx:id="countryColumn" minWidth="75.0" prefWidth="-1.0" text="Country" visible="false" />
+            <TableColumn fx:id="zipcodeColumn" minWidth="100.0" prefWidth="-1.0" text="Zip Code" visible="false" />
+            <TableColumn fx:id="telephoneColumn" minWidth="100.0" prefWidth="-1.0" text="Telephone" />
+            <TableColumn fx:id="faxColumn" minWidth="-Infinity" prefWidth="-1.0" text="Fax" visible="false" />
+            <TableColumn fx:id="emailColumn" minWidth="200.0" prefWidth="-1.0" text="E-Mail" visible="false" />
+            <TableColumn fx:id="vaccineFlagColumn" maxWidth="1000.0" minWidth="110.0" prefWidth="-1.0" text="Fridge Available" />
+            <TableColumn fx:id="statusColumn" minWidth="75.0" prefWidth="-1.0" text="Active" />
+            <TableColumn fx:id="startDateColumn" minWidth="100.0" prefWidth="-1.0" text="Facility Start Date" />
+            <TableColumn fx:id="endDateColumn" minWidth="100.0" prefWidth="-1.0" text="Facility End Date" />
+            <TableColumn fx:id="companyIdColumn" maxWidth="100.0" minWidth="-Infinity" prefWidth="-1.0" text="Company Id" visible="false" />
+            <TableColumn fx:id="countryIdColumn" maxWidth="100.0" minWidth="-Infinity" prefWidth="-1.0" text="Country Id" visible="false" />
+            <TableColumn fx:id="stateIdColumn" maxWidth="100.0" minWidth="-Infinity" prefWidth="-1.0" text="State Id" visible="false" />
+            <TableColumn fx:id="cityIdColumn" maxWidth="100.0" minWidth="-Infinity" prefWidth="-1.0" text="City Id" visible="false" />
+            <TableColumn fx:id="customerIdColumn" maxWidth="100.0" minWidth="-Infinity" prefWidth="-1.0" text="Customer Id" visible="false" />
+            <TableColumn fx:id="defaultStoreId" maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="Default Ordering StoreID" visible="false" />
+            <TableColumn fx:id="wardIdColumn" maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Ward ID" visible="false" />
+         </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox prefHeight="68.0" prefWidth="900.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="44.0" prefWidth="61.0" text="Home">
+               <graphic>
+                  <ImageView fitHeight="33.0" fitWidth="37.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToMaintenanceSubMenu" prefHeight="44.0" prefWidth="60.0" text="Back">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Row Count : " fx:id="x_ROW_COUNT">
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="25.0" right="10.0" top="25.0" />
+               </HBox.margin>
+            </Text>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="10.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.DeviceAssociationController">
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="15.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#submitSyringesAssociation" prefHeight="25.0" prefWidth="55.0" text="Ok" fx:id="x_OK_BTN" />
+            <Button cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+         </children>
+         <padding>
+            <Insets bottom="10.0" right="42.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <top>
+      <HBox alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Product-Device Association ">
+               <font>
+                  <Font size="19.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <GridPane>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="251.0" minWidth="10.0" prefWidth="237.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="246.0" minWidth="10.0" prefWidth="213.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="15.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <ComboBox editable="true" onAction="#setOnProductSelect" prefHeight="25.0" prefWidth="172.0" promptText="Select Product" visibleRowCount="5" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.valignment="TOP" fx:id="x_PRODUCTS" />
+            <Label text="Product" textFill="#1d1968" GridPane.valignment="BOTTOM" fx:id="x_PRODUCT_LABEL">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" text="AD Syringe" textFill="#1d1968" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="10.0" layoutY="10.0" text="Reconstitution Syringe" textFill="#1d1968" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox editable="true" promptText="Select AD Syringe" visibleRowCount="5" GridPane.rowIndex="3" GridPane.valignment="TOP" fx:id="x_AD_SYRINGE" />
+            <ComboBox editable="true" promptText="Select Reconstitute Syringe" visibleRowCount="5" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="TOP" fx:id="x_RECONSTITUTE_SYRNG" />
+            <CheckBox mnemonicParsing="false" text="Safety Box" textFill="#411c86" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="TOP" fx:id="x_SAFETY_BOX_CHECKBOX">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </CheckBox>
+         </children>
+      </GridPane>
+   </center>
+   <padding>
+      <Insets left="30.0" />
+   </padding>
+</BorderPane>

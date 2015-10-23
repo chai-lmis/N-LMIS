@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="516.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.UserEditDialogController">
+   <children>
+      <GridPane alignment="CENTER" layoutX="32.0" layoutY="14.0" prefHeight="536.0" prefWidth="414.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="306.0" minWidth="10.0" prefWidth="286.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="320.0" minWidth="10.0" prefWidth="280.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="21.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="205.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="27.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="34.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="205.0" minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="37.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="119.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="First Name" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Last Name" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField prefHeight="31.0" prefWidth="257.0" promptText="First Name" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_FIRST_NAME">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="18.0" />
+               </GridPane.margin></TextField>
+            <TextField layoutX="10.0" layoutY="13.0" prefHeight="25.0" prefWidth="257.0" promptText="Last Name" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_LAST_NAME">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font></TextField>
+            <Label text="Username" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="User Type" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField layoutX="110.0" layoutY="13.0" promptText="Login Name" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_LOGIN_NAME">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="18.0" />
+               </GridPane.margin></TextField>
+            <ComboBox editable="true" prefHeight="30.0" prefWidth="193.0" promptText="Login Type" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_USER_TYPE_NAME">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Password" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <Label text="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </Label>
+            <PasswordField promptText="Password" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_PASSWORD">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="18.0" />
+               </GridPane.margin>
+            </PasswordField>
+            <PasswordField promptText="Confirm Password" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_CONFIRM_PASSWORD">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </PasswordField>
+            <Label text="Email" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <TextField prefHeight="31.0" prefWidth="193.0" promptText="Enter Email" GridPane.rowIndex="7" GridPane.valignment="BASELINE" fx:id="x_EMAIL">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="18.0" />
+               </GridPane.margin>
+            </TextField>
+            <Label text="Telephone Number" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField prefHeight="31.0" prefWidth="182.0" promptText="Enter Telephone Number" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="BASELINE" fx:id="x_TELEPHONE_NUMBER">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+               <tooltip>
+                  <Tooltip text="telephone number formats: (123)456-7890, 123-456-7890, 1234567890, (123)-456-7890" />
+               </tooltip>
+            </TextField>
+            <CheckBox mnemonicParsing="false" text="Status" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" fx:id="x_STATUS">
+               <font>
+                  <Font size="15.0" />
+               </font></CheckBox>
+            <CheckBox mnemonicParsing="false" text="Activated" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" fx:id="x_ACTIVATED">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </CheckBox>
+            <Label text="Role" GridPane.rowIndex="9" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox editable="true" prefHeight="31.0" prefWidth="194.0" promptText="User Role" style="-fx-font-size: 15;" GridPane.rowIndex="10" GridPane.valignment="BASELINE" fx:id="x_USER_ROLE">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </ComboBox>
+            <Label text="Activated On" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="BOTTOM">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <DatePicker layoutX="10.0" layoutY="276.0" prefHeight="32.0" prefWidth="191.0" promptText="Activated On" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="BASELINE" fx:id="x_ACTIVATED_ON">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin></DatePicker>
+            <Label text="Start Date" GridPane.rowIndex="11" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <DatePicker prefHeight="31.0" prefWidth="194.0" promptText="Start Date" style="-fx-font-size: 15;" GridPane.rowIndex="12" GridPane.valignment="BASELINE" fx:id="x_START_DATE" />
+            <Label text="End Date" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.valignment="BOTTOM">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </Label>
+            <DatePicker layoutX="10.0" layoutY="276.0" prefHeight="32.0" prefWidth="225.0" promptText="End Date" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.valignment="BASELINE" fx:id="x_END_DATE">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </DatePicker>
+            <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleSubmitUser" prefHeight="31.0" prefWidth="189.0" text="Ok" GridPane.rowIndex="13" GridPane.valignment="TOP">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="30.0" top="20.0" />
+               </GridPane.margin>
+            </Button>
+            <Button cancelButton="true" layoutX="10.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="186.0" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="13" GridPane.valignment="TOP">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="30.0" top="20.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
