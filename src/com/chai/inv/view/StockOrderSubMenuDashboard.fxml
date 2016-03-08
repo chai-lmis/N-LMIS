@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.StockOrdersSubMenuController">
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.StockOrdersSubMenuController">
    <bottom>
       <HBox fillHeight="false" spacing="10.0" BorderPane.alignment="CENTER">
          <children>
@@ -47,7 +47,7 @@
           <RowConstraints fillHeight="false" valignment="BASELINE" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handlePurchaseOrderDashBoardBtn" prefHeight="125.0" prefWidth="125.0" style="-fx-background-color: none;" text="Stock Ordering">
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handlePurchaseOrderDashBoardBtn" prefHeight="125.0" prefWidth="125.0" text="Stock Ordering">
                <graphic>
                   <ImageView fitHeight="89.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -59,7 +59,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleSalesOrderDashBoardBtn" prefHeight="125.0" prefWidth="125.0" style="-fx-background-color: none;" text="Order Fulfillment" GridPane.columnIndex="1">
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleSalesOrderDashBoardBtn" prefHeight="125.0" prefWidth="125.0" text="Order Fulfillment" GridPane.columnIndex="1">
                <graphic>
                   <ImageView fitHeight="89.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -71,7 +71,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="152.0" prefWidth="125.0" style="-fx-background-color: none;" text="State Manual Stock Ordering from National" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2">
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" prefHeight="152.0" prefWidth="125.0" text="State Manual Stock Ordering from National" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2">
                <graphic>
                   <ImageView fitHeight="89.0" fitWidth="117.0" pickOnBounds="true" preserveRatio="true">
                      <image>

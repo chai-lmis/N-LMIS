@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="407.0" prefWidth="397.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.AddOrderLineController">
+<BorderPane prefHeight="407.0" prefWidth="397.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.AddOrderLineController">
    <top>
       <VBox prefHeight="34.0" prefWidth="100.0" BorderPane.alignment="CENTER">
          <children>
@@ -79,7 +79,7 @@
                      </font>
                   </Label>
                   <ComboBox editable="true" layoutX="511.0" layoutY="43.0" onAction="#handleLineStatusChange" prefHeight="29.0" prefWidth="168.0" promptText="Select Line Status" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_LINE_STATUS" />
-                  <Label text="Ship Quantity" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" fx:id="x_LINE_SHIP_QTY_LABEL">
+                  <Label text="Quantity To Issue" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" fx:id="x_LINE_SHIP_QTY_LABEL">
                      <GridPane.margin>
                         <Insets left="20.0" />
                      </GridPane.margin>

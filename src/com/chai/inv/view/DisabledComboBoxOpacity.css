@@ -5,12 +5,13 @@
  * */
 
 .button:hover { 
-    -fx-background-color:  linear-gradient(#61a2b1, #2A5058);
+    -fx-background-color:  #91c46e;
     -fx-text-fill: rgb(255,128,0);
     -fx-text-fill: white;
     -fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
     -fx-font-size: 14px;
+    -fx-cursor: hand;
 }
 /*.button:default:hover {
     -fx-background-color: derive(-fx-focus-color,30%);
@@ -18,9 +19,112 @@
 } 
  * */
 .button{
-	-fx-background-color: none;
+	-fx-background-color:#e2efd9;
 	-fx-font-family: "Arial Narrow";
     -fx-font-weight: bold;
     -fx-font-size: 14px;
+    -fx-background-radius: 20px;
     
 }
+.button:pressed{
+	-fx-translate-x: 5;
+	/*-fx-effect: dropshadow( gaussian , red , 0,0,0,1 );*/
+	-fx-effect: dropshadow(three-pass-box, purple, 10, 0, 0, 0); 
+}
+
+/* Selected row hovered */
+.table-view:focused .table-row-cell:filled:focused:selected:hover {
+    -fx-background: -fx-accent;
+    -fx-background-color: #00acec;
+    -fx-background-insets: 0, 1, 2;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+/* Selected row hovered when table not focused */
+/* 
+.table-view:row-selection .table-row-cell:filled:focused:hover {
+    -fx-background-color: blue;
+    -fx-background-insets: 0, 0 0 1 0, 1 1 2 1, 2 2 3 2, 3 3 4 3;
+    -fx-text-fill: -fx-text-inner-color;
+}
+ */
+
+/*for odd row */
+.table-row-cell:odd:filled {
+  -fx-background: #e2efd9 ;
+}
+/*for even row */
+.table-row-cell:even:filled {
+  -fx-background: #ffffff ;
+}
+.table-row-cell:filled:hover {
+	-fx-effect: innershadow(one-pass-box, #0078d7, 10, 0, 0, 0);
+
+-fx-font-size:15;
+ 
+}
+.table-row-cell:filled:focused:selected {
+  -fx-background: #0078d7 ;
+}
+/*for column header lable color change */
+.table-view .column-header {
+    -fx-background-color: #70ad47;
+    -fx-font-weight: bold;
+}
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+/*combo box css */
+
+.combo-box{
+  	-fx-color: #e2efd9;
+  }.combo-box-popup .list-view .list-cell:filled:hover {
+    -fx-background-color:#00bfff ;
+    -fx-text-fill: -fx-text-inner-color;
+    -fx-font-size: 15;
+    
+    -fx-indeterminate-bar-animation-time:100.5;
+     
+}
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color:#e0ccff ;
+ 
+    
+    -fx-indeterminate-bar-animation-time:100.5;
+     
+}
+.combo-box .list-view .list-cell:odd:filled {
+    -fx-background: #e2efd9 ;
+    
+}
+.combo-box .list-view .list-cell:even:filled {
+     -fx-background: #ffffff ;
+}
+.dark-blue-button {
+    -fx-background-color: 
+        #090a0c,
+        linear-gradient(#38424b 0%, #1f2429 20%, #191d22 100%),
+        linear-gradient(#20262b, #191d22),
+        radial-gradient(center 50% 0%, radius 100%, rgba(114,131,148,0.9), rgba(255,255,255,0));
+    -fx-background-radius: 10,10,10,10;
+    -fx-background-insets: 0,1,2,0;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.6) , 5, 0.0 , 0 , 1 );
+    -fx-font-family: "Arial";
+    -fx-text-fill: linear-gradient(white, #d0d0d0);
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+}
+.dark-blue-button Text {
+    -fx-effect: dropshadow( one-pass-box , rgba(0,0,0,0.9) , 1, 0.0 , 0 , 1 );
+}
+.popupDataEntyAnchor{
+	-fx-border-width: 1px;
+	-fx-border-style: solid ;
+	-fx-border-color: #0078d7;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0.5, 0.0, 0.0);
+   -fx-background-color: #e5e5e5;
+	}
+	

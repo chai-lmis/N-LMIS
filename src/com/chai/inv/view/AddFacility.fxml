@@ -7,7 +7,7 @@
 <?import javafx.scene.text.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.FacilityEditDialogController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.FacilityEditDialogController">
    <children>
       <GridPane alignment="CENTER" layoutX="20.0" layoutY="20.0" prefWidth="414.0">
          <children>
@@ -61,7 +61,7 @@
                   <Insets right="30.0" />
                </GridPane.margin>
             </TextArea>
-            <ComboBox editable="true" prefHeight="30.0" prefWidth="193.0" promptText="Store Type" style="-fx-font-size: 15;" visibleRowCount="4" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_WAREHOUSE_TYPE">
+            <ComboBox editable="true" onAction="#handlleStoreTypeChange" prefHeight="30.0" prefWidth="193.0" promptText="Store Type" style="-fx-font-size: 15;" visibleRowCount="4" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_WAREHOUSE_TYPE">
                <GridPane.margin>
                   <Insets left="10.0" />
                </GridPane.margin>
@@ -121,7 +121,7 @@
                   <Insets right="30.0" />
                </GridPane.margin>
                <tooltip>
-                  <Tooltip text="telephone number formats: (123)456-7890, 123-456-7890, 1234567890, (123)-456-7890" />
+                  <Tooltip text="telephone number format : 0XXXXXXXXXX | e.g. 07755846923" />
                </tooltip>
             </TextField>
             <CheckBox mnemonicParsing="false" text="Status" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="BOTTOM" fx:id="x_STATUS">
@@ -168,7 +168,7 @@
                   <Insets left="10.0" />
                </GridPane.margin>
             </DatePicker>
-            <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleSubmitUser" prefHeight="31.0" prefWidth="182.0" text="Ok" GridPane.rowIndex="12" GridPane.valignment="TOP" fx:id="x_OK_BTN">
+            <Button alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#handleSubmitUser" prefHeight="31.0" prefWidth="182.0" text="Ok" GridPane.rowIndex="14" GridPane.valignment="TOP" fx:id="x_OK_BTN">
                <font>
                   <Font size="15.0" />
                </font>
@@ -176,7 +176,7 @@
                   <Insets right="30.0" top="20.0" />
                </GridPane.margin>
             </Button>
-            <Button cancelButton="true" layoutX="10.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="193.0" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.valignment="TOP">
+            <Button cancelButton="true" layoutX="10.0" layoutY="217.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="31.0" prefWidth="193.0" text="Cancel" GridPane.columnIndex="1" GridPane.rowIndex="14" GridPane.valignment="TOP">
                <font>
                   <Font size="15.0" />
                </font>
@@ -184,6 +184,16 @@
                   <Insets left="10.0" top="20.0" />
                </GridPane.margin>
             </Button>
+            <Label text="Monthly Target Population" GridPane.rowIndex="12">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <TextField prefHeight="32.0" prefWidth="174.0" promptText="Monthly Target Population" GridPane.rowIndex="13" fx:id="x_MTP">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -202,6 +212,8 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="205.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="205.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
          </rowConstraints>

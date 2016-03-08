@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane stylesheets="@reaper.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.LGASummarySheetController">
+   <center>
+      <ScrollPane style="-fx-background-color: white;" BorderPane.alignment="CENTER" fx:id="x_SCROLL_PANE">
+         <content>
+            <GridPane fx:id="x_GRID_PANE">
+               <columnConstraints>
+                  <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="SOMETIMES" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints fillHeight="false" valignment="CENTER" vgrow="SOMETIMES" />
+               </rowConstraints>
+            </GridPane>
+         </content>
+         <BorderPane.margin>
+            <Insets left="10.0" right="10.0" />
+         </BorderPane.margin>
+         <effect>
+            <DropShadow />
+         </effect>
+      </ScrollPane>
+   </center>
+   <bottom>
+      <HBox fillHeight="false" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" text="Home" textAlignment="CENTER">
+               <graphic>
+                  <ImageView fitHeight="32.0" fitWidth="46.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+   <top>
+      <ToolBar BorderPane.alignment="CENTER">
+         <items>
+            <Label text="State Store Filter" fx:id="x_STATE_STORE_LBL">
+               <padding>
+                  <Insets left="10.0" />
+               </padding>
+            </Label>
+            <ComboBox editable="true" onAction="#onSelectStateStoreChange" prefWidth="150.0" promptText="Select State Store" fx:id="x_STATE_STORE_COMBOX" />
+            <Label text="Year">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox onAction="#onYearChange" prefHeight="25.0" prefWidth="103.0" promptText="Select Year" visibleRowCount="1" fx:id="x_YEAR_FILTER" />
+            <Label layoutX="10.0" layoutY="17.0" text="Week">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+            </Label>
+            <ComboBox layoutX="10.0" layoutY="10.0" onAction="#onWeekChange" prefHeight="25.0" prefWidth="107.0" promptText="Select Week" visibleRowCount="3" fx:id="x_WEEK_FILTER" />
+            <Button mnemonicParsing="false" onAction="#handleLGADashboardRefresh" text="Refresh" />
+            <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export" />
+            <Label prefHeight="17.0" prefWidth="106.0" />
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="16.0" prefWidth="15.0" style="-fx-background-color: red;" />
+            <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="228.0" text="3 or more antigens below min stock level">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </Label>
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: green;" />
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="223.0" text="No antigens below minimum stock level" />
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="104.0" text="Sufficient Stock :" />
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #ffc000;" />
+         </items>
+      </ToolBar>
+   </top>
+</BorderPane>

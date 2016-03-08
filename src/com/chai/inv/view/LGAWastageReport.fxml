@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.LGAWastageReportController">
+   <top>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#09861c" strokeType="OUTSIDE" strokeWidth="0.0" text=" Wastage Report">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <ToolBar fx:id="x_TOOL_BAR">
+               <items>
+                  <Label layoutX="10.0" layoutY="14.0" text="LGA : " fx:id="x_LGA_LBL">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <ComboBox editable="true" onAction="#OnLgaChange" prefWidth="150.0" promptText="Select LGA" visibleRowCount="3" fx:id="x_LGA" />
+                  <Label text="Filter By : ">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <ComboBox onAction="#handleChangeFilterBy" prefHeight="25.0" prefWidth="133.0" promptText="Select Filter Type" visibleRowCount="5" fx:id="x_FILTER_BY" />
+                  <Label text="Date : " fx:id="x_DATE_LBL">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <DatePicker onAction="#onDateChange" prefHeight="25.0" prefWidth="130.0" fx:id="x_DATE" />
+                  <Label text="Year : " fx:id="x_YEAR_LBL">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <ComboBox layoutX="377.0" layoutY="11.0" onAction="#onYearChange" prefHeight="25.0" prefWidth="104.0" promptText="Select Year" visibleRowCount="5" fx:id="x_YEAR_DRPDN" />
+                  <Label text="Month : " fx:id="x_MONTH_LBL">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
+                  <ComboBox layoutX="76.0" layoutY="11.0" onAction="#onMonthChange" prefHeight="25.0" prefWidth="117.0" promptText="Select Month" visibleRowCount="5" fx:id="x_MONTH_DRPDN" />
+                  <Button mnemonicParsing="false" onAction="#handleVeiwReport" text="View Report" />
+               </items>
+            </ToolBar>
+            <TableView fx:id="x_WASTAGE_REPORT_TBL">
+              <columns>
+                <TableColumn prefWidth="75.0" text="TRANSACTION ID" visible="false" fx:id="x_TRANSACTION_ID_COL" />
+                <TableColumn prefWidth="75.0" text="STATE ID" visible="false" fx:id="x_STATE_ID_COL" />
+                  <TableColumn prefWidth="75.0" text="STATE NAME" visible="false" fx:id="x_STATE_NAME_COL" />
+                  <TableColumn prefWidth="75.0" text="ITEM ID" visible="false" fx:id="x_ITEM_ID_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" text="PRODUCT" fx:id="x_ITEM_NUMBER_COL" />
+                  <TableColumn prefWidth="75.0" text="LGA ID" visible="false" fx:id="x_LGA_ID_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" text="LGA NAME" fx:id="x_LGA_NAME_COL" />
+                  <TableColumn prefWidth="75.0" text="FROM SOURCE" visible="false" fx:id="x_FROM_SOURCE_COL" />
+                  <TableColumn prefWidth="75.0" text="FROM SOURCE ID" visible="false" fx:id="x_FROM_SOURCE_ID_COL" />
+                  <TableColumn prefWidth="75.0" text="TO SOURCE" visible="false" fx:id="x_TO_SOURCE_COL" />
+                  <TableColumn prefWidth="75.0" text="TO SOURCE ID" visible="false" fx:id="x_TO_SOURCE_ID_COL" />
+                  <TableColumn prefWidth="75.0" text="TRANSACTION TYPE ID" visible="false" fx:id="x_TRANSACTION_TYPE_ID_COL" />
+                  <TableColumn prefWidth="75.0" text="TYPE CODE" visible="false" fx:id="x_TYPE_CODE_COL" />
+                  <TableColumn minWidth="160.0" prefWidth="-1.0" style="-fx-alignment: center;" text="TRANSACTION QUANTITY" fx:id="x_TRANSACTION_QUANTITY_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="TRANSACTION DATE" fx:id="x_TRANSACTION_DATE_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="WASTAGE REASON" fx:id="x_REASON_TYPE_COL" />
+                  <TableColumn minWidth="200.0" prefWidth="-1.0" text="COMMENT" fx:id="x_REASON_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" text="ONHAND BEFOR TRX" visible="false" fx:id="x_ONHAND_QUANTITY_BEFOR_TRX_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" text="ONHAND AFTER TRX" visible="false" fx:id="x_ONHAND_QUANTITY_AFTER_TRX_COL" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" text="Home">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToReportsDashBoard" text="Back" fx:id="x_BACK">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="20.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

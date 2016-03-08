@@ -1,0 +1,11 @@
+.date-picker > .arrow-button {
+    -fx-padding: 0px;
+}
+
+.date-picker > .arrow-button > .arrow {
+    -fx-padding: 0px;
+}
+.date-picker{
+	-fx-size: 10px;
+	
+}

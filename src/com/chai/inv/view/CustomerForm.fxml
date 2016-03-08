@@ -11,7 +11,7 @@
    <top>
       <VBox BorderPane.alignment="CENTER">
          <children>
-            <Label alignment="TOP_LEFT" text="Health Facility Form">
+            <Label alignment="TOP_LEFT" text="Health Facility Form" fx:id="x_FORM_TITLE">
                <font>
                   <Font size="19.0" />
                </font>
@@ -64,16 +64,6 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox onAction="#handleOnCountryChange" prefHeight="25.0" prefWidth="238.0" promptText="Select Country" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_COUNTRY">
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </ComboBox>
-                  <ComboBox prefHeight="25.0" prefWidth="236.0" promptText="Select State" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_STATE">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin>
-                  </ComboBox>
                   <Label layoutX="10.0" layoutY="87.0" text="Phone" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                      <font>
                         <Font size="15.0" />
@@ -82,15 +72,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField layoutX="278.0" layoutY="116.0" prefHeight="25.0" prefWidth="234.0" GridPane.rowIndex="7" GridPane.valignment="TOP" fx:id="x_DAY_PHONE_NUMBER">
-                     <GridPane.margin>
-                        <Insets left="20.0" right="10.0" />
-                     </GridPane.margin>
-                     <tooltip>
-                        <Tooltip text="telephone number formats: (123)456-7890, 123-456-7890, 1234567890, (123)-456-7890" />
-                     </tooltip>
-                  </TextField>
-                  <Label layoutX="278.0" layoutY="126.0" text="E-Mail" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
+                  <Label layoutX="278.0" layoutY="126.0" text="E-Mail" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -98,11 +80,6 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField layoutX="278.0" layoutY="150.0" prefHeight="25.0" prefWidth="234.0" GridPane.rowIndex="9" GridPane.valignment="TOP" fx:id="x_EMAIL_ADDRESS">
-                     <GridPane.margin>
-                        <Insets left="20.0" right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
                   <Label text="Default Ordering Store" GridPane.columnIndex="1" GridPane.rowIndex="8" GridPane.valignment="BOTTOM">
                      <GridPane.margin>
                         <Insets left="10.0" />
@@ -111,28 +88,7 @@
                         <Font name="System Bold" size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox editable="true" onAction="#handleOnDefaultStoreChange" prefHeight="25.0" prefWidth="238.0" promptText="Select Default Store" visibleRowCount="3" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="TOP" fx:id="x_DEFAULT_ORDERING_STORE">
-                     <GridPane.margin>
-                        <Insets left="10.0" right="20.0" />
-                     </GridPane.margin>
-                  </ComboBox>
-                  <CheckBox mnemonicParsing="false" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="CENTER" fx:id="x_STATUS">
-                     <GridPane.margin>
-                        <Insets left="12.0" />
-                     </GridPane.margin>
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                  </CheckBox>
-                  <CheckBox mnemonicParsing="false" text="Fridge Available" GridPane.rowIndex="10" fx:id="x_VACCINE_FLAG">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </CheckBox>
-                  <Label layoutX="30.0" layoutY="162.0" text="Start Date" GridPane.rowIndex="11" GridPane.valignment="BOTTOM">
+                  <Label layoutX="30.0" layoutY="162.0" text="Start Date" GridPane.rowIndex="12" GridPane.valignment="BOTTOM">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -140,7 +96,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label layoutX="30.0" layoutY="162.0" text="End Date" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.valignment="BOTTOM">
+                  <Label layoutX="30.0" layoutY="162.0" text="End Date" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.valignment="BOTTOM">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -148,22 +104,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <DatePicker prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="12" GridPane.valignment="TOP" fx:id="x_START_DATE">
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </DatePicker>
-                  <DatePicker prefHeight="25.0" prefWidth="230.0" GridPane.columnIndex="1" GridPane.rowIndex="12" GridPane.valignment="TOP" fx:id="x_END_DATE">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin>
-                  </DatePicker>
-                  <ComboBox editable="true" layoutX="288.0" layoutY="187.0" prefHeight="25.0" prefWidth="236.0" promptText="Select Ward" visibleRowCount="3" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="TOP" fx:id="x_WARD">
-                     <GridPane.margin>
-                        <Insets left="10.0" />
-                     </GridPane.margin>
-                  </ComboBox>
-                  <Label layoutX="288.0" layoutY="166.0" text="Ward" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="BOTTOM">
+                  <Label layoutX="288.0" layoutY="166.0" text="Ward" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -171,7 +112,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label layoutX="288.0" layoutY="240.0" text="Target Population" GridPane.rowIndex="13" GridPane.valignment="BOTTOM">
+                  <Label layoutX="288.0" layoutY="240.0" text="Target Population" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
                      <font>
                         <Font size="15.0" />
                      </font>
@@ -179,19 +120,6 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <TextField layoutX="288.0" layoutY="123.0" prefHeight="25.0" prefWidth="238.0" promptText="Enter Target Population" GridPane.rowIndex="14" GridPane.valignment="TOP" fx:id="x_TARGET_POPULATION">
-                     <GridPane.margin>
-                        <Insets left="20.0" right="10.0" />
-                     </GridPane.margin>
-                  </TextField>
-                  <TextArea prefHeight="52.0" prefWidth="492.0" promptText="Enter Description" GridPane.columnSpan="2" GridPane.rowIndex="3" fx:id="x_CUSTOMER_DESCRIPTION">
-                     <font>
-                        <Font size="15.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets left="20.0" />
-                     </GridPane.margin>
-                  </TextArea>
                   <Label text="Description" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                      <font>
                         <Font size="15.0" />
@@ -226,6 +154,94 @@
                         <Insets left="10.0" right="20.0" />
                      </GridPane.margin>
                   </TextField>
+                  <TextArea prefHeight="52.0" prefWidth="492.0" promptText="Enter Description" GridPane.columnSpan="2" GridPane.rowIndex="3" fx:id="x_CUSTOMER_DESCRIPTION">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </TextArea>
+                  <ComboBox onAction="#handleOnCountryChange" prefHeight="25.0" prefWidth="238.0" promptText="Select Country" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_COUNTRY">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <ComboBox prefHeight="25.0" prefWidth="236.0" promptText="Select State" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_STATE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <TextField layoutX="278.0" layoutY="116.0" prefHeight="25.0" prefWidth="234.0" GridPane.rowIndex="7" GridPane.valignment="TOP" fx:id="x_DAY_PHONE_NUMBER">
+                     <GridPane.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </GridPane.margin>
+                     <tooltip>
+                        <Tooltip text="telephone number format : 0XXXXXXXXXX | e.g. 07755846923" />
+                     </tooltip>
+                  </TextField>
+                  <TextField layoutX="278.0" layoutY="150.0" prefHeight="25.0" prefWidth="234.0" GridPane.columnIndex="1" GridPane.rowIndex="7" GridPane.valignment="TOP" fx:id="x_EMAIL_ADDRESS">
+                     <GridPane.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <ComboBox editable="true" onAction="#handleOnStateStoreChange" prefHeight="25.0" prefWidth="239.0" promptText="Select State Store" GridPane.rowIndex="9" fx:id="x_STATE_STORE">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <ComboBox editable="true" onAction="#handleOnDefaultStoreChange" prefHeight="25.0" prefWidth="238.0" promptText="Select Default Store" visibleRowCount="3" GridPane.columnIndex="1" GridPane.rowIndex="9" fx:id="x_DEFAULT_ORDERING_STORE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <TextField layoutX="288.0" layoutY="123.0" prefHeight="25.0" prefWidth="238.0" promptText="Enter Target Population" GridPane.rowIndex="11" GridPane.valignment="TOP" fx:id="x_TARGET_POPULATION">
+                     <GridPane.margin>
+                        <Insets left="20.0" right="10.0" />
+                     </GridPane.margin>
+                  </TextField>
+                  <ComboBox editable="true" layoutX="288.0" layoutY="187.0" prefHeight="25.0" prefWidth="236.0" promptText="Select Ward" visibleRowCount="3" GridPane.columnIndex="1" GridPane.rowIndex="11" GridPane.valignment="TOP" fx:id="x_WARD">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <DatePicker prefHeight="25.0" prefWidth="237.0" GridPane.rowIndex="13" GridPane.valignment="TOP" fx:id="x_START_DATE">
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <DatePicker prefHeight="25.0" prefWidth="230.0" GridPane.columnIndex="1" GridPane.rowIndex="13" GridPane.valignment="TOP" fx:id="x_END_DATE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </DatePicker>
+                  <CheckBox mnemonicParsing="false" text="Active" GridPane.columnIndex="1" GridPane.rowIndex="14" GridPane.valignment="CENTER" fx:id="x_STATUS">
+                     <GridPane.margin>
+                        <Insets left="12.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </CheckBox>
+                  <CheckBox mnemonicParsing="false" text="Fridge Available" GridPane.rowIndex="14" fx:id="x_VACCINE_FLAG">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="20.0" />
+                     </GridPane.margin>
+                  </CheckBox>
+                  <Label layoutX="30.0" layoutY="401.0" text="State Store" GridPane.rowIndex="8">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                  </Label>
                </children>
                <VBox.margin>
                   <Insets top="10.0" />

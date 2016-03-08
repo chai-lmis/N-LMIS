@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.AddStockAdjustmentFormController" fx:id="x_BORDER_PANE">
+   <center>
+      <VBox spacing="10.0" fx:id="x_VBOX">
+         <children>
+            <HBox spacing="10.0">
+               <children>
+                  <Label text="Date">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <DatePicker editable="false" prefHeight="25.0" prefWidth="86.0" promptText="Select Date" stylesheets="@Datepicker.css" fx:id="x_DATE" />
+                  <Label layoutX="10.0" layoutY="10.0" prefHeight="21.0" prefWidth="177.0" text="Stock Adjustment Type">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <padding>
+                        <Insets left="4.0" />
+                     </padding>
+                     <HBox.margin>
+                        <Insets left="9.0" />
+                     </HBox.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#handleAdjustmentTypeChange" prefHeight="30.0" prefWidth="193.0" promptText="Adjustment Type" style="-fx-font-size: 15;" visibleRowCount="4" fx:id="x_ADJUSTMENT_TYPE" />
+                  <ComboBox editable="true" layoutX="346.0" layoutY="10.0" onAction="#handleSelectHFDropdown" prefHeight="30.0" prefWidth="193.0" promptText="Select Health Facility" style="-fx-font-size: 15;" visible="false" visibleRowCount="4" fx:id="x_HF_DROPDOWN">
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </ComboBox>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <ScrollPane snapToPixel="false" VBox.vgrow="ALWAYS" fx:id="x_SCROL_PANE">
+               <content>
+                  <GridPane alignment="CENTER" hgap="10.0" vgap="10.0" BorderPane.alignment="CENTER" fx:id="x_GRID_PANE">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                      <ColumnConstraints hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+                    </columnConstraints>
+                    <rowConstraints>
+                        <RowConstraints valignment="CENTER" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <BorderPane.margin>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </BorderPane.margin>
+                     <children>
+                        <Label text="Products">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label text="Physical Stock Count" GridPane.columnIndex="1" fx:id="x_STOCK_COUNT_GRD_LBL">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="79.0" layoutY="10.0" text="Expected Stock Balance" GridPane.columnIndex="2" fx:id="x_STOCK_BAL_LBL">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="210.0" layoutY="10.0" text="Difference" GridPane.columnIndex="3" fx:id="x_DIFF_LBL">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="320.0" layoutY="10.0" text="Comment" GridPane.columnIndex="4">
+                           <font>
+                              <Font name="System Bold" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                     <padding>
+                        <Insets left="8.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="15.0" />
+               </padding>
+            </ScrollPane>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" />
+         </padding>
+      </VBox>
+   </center>
+   <top>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#150aae" strokeType="OUTSIDE" strokeWidth="0.0" text="Stock Adjustment Form">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox alignment="CENTER_LEFT" spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#handleOK" text="Submit" />
+            <Button alignment="CENTER_RIGHT" cancelButton="true" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="20.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

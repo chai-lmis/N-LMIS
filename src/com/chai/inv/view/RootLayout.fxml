@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="262.0" prefWidth="1099.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.RootLayoutController">
+<BorderPane prefHeight="230.0" prefWidth="1099.0" style="-fx-background-color: white;" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.RootLayoutController">
    <top>
-      <VBox>
+      <VBox style="-fx-background-color: white;">
          <children>
             <MenuBar BorderPane.alignment="CENTER">
               <menus>
@@ -21,25 +21,8 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleExitMenuAction" text="Exit" />
                     </items>
                   </Menu>
-                  <Menu mnemonicParsing="false" text="Stock Management" fx:id="x_STOCK_MANAGEMENT_MENU">
+                  <Menu mnemonicParsing="false" text="Stock Management" visible="false" fx:id="x_STOCK_MANAGEMENT_MENU">
                      <items>
-                        <Menu mnemonicParsing="false" text="Issues">
-                          <items>
-                              <MenuItem mnemonicParsing="false" onAction="#handleCustomerIssueMenuAction" text="Health Facility" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleVendorIssueMenuAction" text="Vendor" fx:id="x_VENDOR_ISSUE_MENU_ITEM" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleMiscellaneousIssues" text="Miscellaneous" />
-                          </items>
-                        </Menu>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <Menu mnemonicParsing="false" text="Receipts">
-                          <items>
-                              <MenuItem mnemonicParsing="false" onAction="#handleCustomerReceiveMenuAction" text="Health Facility" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleVendorReceiveMenuAction" text="Vendor" fx:id="x_VENDOR_RECEIVE_MENU_ITEM" />
-                              <MenuItem mnemonicParsing="false" onAction="#handleMiscellaneousReceives" text="Miscellaneous" />
-                          </items>
-                        </Menu>
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                      <MenuItem mnemonicParsing="false" onAction="#handleInterFacilityMenuAction" text="Inter Facility" />
                         <MenuItem mnemonicParsing="false" onAction="#handleOnHandItemsList" text="Onhand Items" />
                         <MenuItem mnemonicParsing="false" onAction="#handleTransactionRegisterMenuAction" text="Transaction Register" />
                         <Menu mnemonicParsing="false" text="Orders" fx:id="x_ORDERS_MENU_ITEM">
@@ -53,15 +36,12 @@
                   <Menu mnemonicParsing="false" text="Maintenance" visible="false" fx:id="x_MAINTENANCE_MENU">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#handleCustomerMenuAction" text="Health Facility" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleVendorMenuAction" text="Vendor" fx:id="x_VENDOR_MENU_ITEM" />
                     </items>
                   </Menu>
                 <Menu mnemonicParsing="false" text="Inventory" visible="false" fx:id="x_INVENTORY_MENU">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleFacilityMenuAction" text="Stores" fx:id="x_STORE_MENU_ITEM" />
-                    <MenuItem mnemonicParsing="false" onAction="#handleProductMenuAction" text="Product" fx:id="x_PRODUCT_MENU_ITEM" />
-                    <MenuItem mnemonicParsing="false" onAction="#handleSubInventoryMenuAction" text="Sub Inventory" fx:id="x_SUBINV_MENU_ITEM" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleLotMasterMenuAction" text="Lot Master" fx:id="x_LOT_MASTER_MENU_ITEM" />
+                    <MenuItem mnemonicParsing="false" text="Product" fx:id="x_PRODUCT_MENU_ITEM" />
                         <MenuItem mnemonicParsing="false" onAction="#handleSelectWarehouse" text="Change LGA Store" visible="false" fx:id="x_CHANGE_FACILITY_MENUITEM" />
                   </items>
                 </Menu>
@@ -69,24 +49,20 @@
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleUserMenuAction" text="User" fx:id="x_USER_MENU_ITEM" />
                         <MenuItem mnemonicParsing="false" onAction="#handleTypeMenuAction" text="Type" fx:id="x_TYPE_MENU_ITEM" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleCategoryMenuAction" text="Category" fx:id="x_CATEGORY_MENU_ITEM" />
+                        <MenuItem mnemonicParsing="false" text="Category" fx:id="x_CATEGORY_MENU_ITEM" />
                   </items>
                 </Menu>
-                  <Menu mnemonicParsing="false" text="Analysis" visible="false" fx:id="x_ANALYSIS_MENU">
-                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#handleMonthlyTransactionSummaryMenuAction" text="Monthly Transaction Summary" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleConsumptionReportMenuAction" text="Consumption Report" />
-                     </items>
-                  </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleRemoveDatabase" text="Remove Database" fx:id="x_UNREGISTER_USER_MENU_ITEM" />
                     <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" onAction="#checkForUpdates" text="Check for Updates" />
                   </items>
                 </Menu>
               </menus>
             </MenuBar>
-            <GridPane prefHeight="196.0" fx:id="x_GRID_PANE">
+            <GridPane prefHeight="193.0" fx:id="x_GRID_PANE">
               <columnConstraints>
                 <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="355.0" minWidth="10.0" prefWidth="162.0" />
                   <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="791.0" minWidth="0.0" prefWidth="754.0" />
@@ -146,10 +122,13 @@
                                  </font>
                               </Text>
                            </children>
-                        </HBox>
-                        <Button mnemonicParsing="false" onAction="#handleChangeFacilityButtonAction" prefHeight="25.0" prefWidth="141.0" text="Change LGA" fx:id="x_CHNG_LGA_BTN">
                            <VBox.margin>
-                              <Insets top="5.0" />
+                              <Insets top="-10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <Button mnemonicParsing="false" onAction="#handleChangeFacilityButtonAction" style="-fx-border-width: 2;" stylesheets="@DisabledComboBoxOpacity.css" text="Change Store" fx:id="x_CHNG_LGA_BTN">
+                           <VBox.margin>
+                              <Insets right="30.0" top="2.0" />
                            </VBox.margin>
                         </Button>
                      </children>

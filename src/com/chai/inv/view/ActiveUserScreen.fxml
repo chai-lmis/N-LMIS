@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="255.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.ActiveUserScreenController">
+<BorderPane prefHeight="255.0" prefWidth="280.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.ActiveUserScreenController">
    <center>
       <GridPane BorderPane.alignment="CENTER">
         <columnConstraints>
@@ -22,7 +22,7 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ComboBox editable="true" onHidden="#handleOnLGASelected" prefHeight="31.0" prefWidth="260.0" promptText="Select LGA Store" visibleRowCount="5" GridPane.rowIndex="2" fx:id="x_ACTIVE_LGA_LIST" />
+            <ComboBox editable="true" onHidden="#handleOnLGASelected" prefHeight="31.0" prefWidth="260.0" promptText="Select LGA Store" visibleRowCount="20" GridPane.rowIndex="2" fx:id="x_ACTIVE_LGA_LIST" />
             <TextField prefWidth="260.0" promptText="Username" GridPane.hgrow="NEVER" GridPane.rowIndex="3" GridPane.vgrow="NEVER" fx:id="x_USERNAME">
                <font>
                   <Font size="15.0" />

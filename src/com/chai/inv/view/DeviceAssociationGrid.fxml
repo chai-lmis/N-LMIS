@@ -7,22 +7,24 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.DeviceAssociationGridController">
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.DeviceAssociationGridController">
    <center>
       <TableView BorderPane.alignment="CENTER" fx:id="x_DEVICE_ASSOCIATION_GRID">
         <columns>
-          <TableColumn minWidth="200.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT_COL" />
-          <TableColumn minWidth="300.0" prefWidth="-1.0" text="Associated Device(s)" fx:id="x_ASSOCIATED_DEVICES_COL" />
-            <TableColumn minWidth="180.0" prefWidth="-1.0" text="No. of Associated Device(s)" fx:id="x_ASSOCIATED_DEVICES_NUMBER_COL" />
+          <TableColumn minWidth="200.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product" fx:id="x_PRODUCT_COL" />
+          <TableColumn minWidth="300.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Associated Device(s)" fx:id="x_ASSOCIATED_DEVICES_COL" />
+            <TableColumn minWidth="180.0" prefWidth="-1.0" style="-fx-alignment: center;" text="No. of Associated Device(s)" fx:id="x_ASSOCIATED_DEVICES_NUMBER_COL" />
             <TableColumn minWidth="180.0" prefWidth="-1.0" text="Device Id" visible="false" fx:id="x_ASSOCIATED_DEVICES_ID_COL" />
             <TableColumn minWidth="180.0" prefWidth="-1.0" text="Product Id" visible="false" fx:id="x_PRODUCT_ID_COL" />
+            <TableColumn minWidth="180.0" prefWidth="-1.0" text="Association_Id" visible="false" fx:id="x_ASSOCIATION_ID" />
         </columns>
       </TableView>
    </center>
    <top>
-      <HBox BorderPane.alignment="CENTER">
+      <HBox spacing="10.0" BorderPane.alignment="CENTER" fx:id="x_HBOX">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleDeviceAssociation" text="Device Association" />
+            <Button mnemonicParsing="false" onAction="#handleDeviceAssociation" text="Add Device Association" />
+            <Button layoutX="20.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleEditDeviceAssociation" text="Edit Device Association" />
          </children>
          <padding>
             <Insets bottom="10.0" left="10.0" top="15.0" />
@@ -37,14 +39,6 @@
                   <ImageView fitHeight="27.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../resources/icons/home.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToIssuesSubMenu" text="Back">
-               <graphic>
-                  <ImageView fitHeight="28.0" fitWidth="77.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/icons/Back.png" />
                      </image>
                   </ImageView>
                </graphic></Button>

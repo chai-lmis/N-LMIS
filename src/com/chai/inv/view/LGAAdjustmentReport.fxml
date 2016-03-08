@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.LGAAdjustmentReportController">
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <Label text="LGA Stock Adjustment  Report">
+               <font>
+                  <Font name="System Bold" size="21.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="538.0" />
+               </VBox.margin>
+            </Label>
+         </children>
+      </VBox>
+   </top>
+   <center>
+      <VBox spacing="20.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane prefHeight="47.0" prefWidth="825.0" fx:id="x_GRID_FILTER">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="296.0" minWidth="10.0" prefWidth="149.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.0" minWidth="0.0" prefWidth="115.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="501.0" minWidth="0.0" prefWidth="120.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="514.0" minWidth="10.0" prefWidth="117.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="537.0" minWidth="10.0" prefWidth="193.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="537.0" minWidth="10.0" prefWidth="187.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="682.0" minWidth="10.0" prefWidth="270.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <DatePicker onAction="#onDateChange" promptText="Select Date" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_DATE" />
+                  <ComboBox editable="true" onAction="#onLGAChange" prefHeight="25.0" prefWidth="180.0" promptText="Select LGA" snapToPixel="false" visibleRowCount="4" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_LGA_DRPDN">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="LGA:" GridPane.columnIndex="3" GridPane.valignment="BOTTOM" fx:id="x_LGA_LBL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <Button mnemonicParsing="false" onAction="#onViewReportAction" prefHeight="26.0" prefWidth="93.0" text="View Report" GridPane.columnIndex="6" GridPane.rowIndex="1" GridPane.valignment="BASELINE">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Button>
+                  <Label layoutX="20.0" layoutY="15.0" text="Month:" GridPane.columnIndex="2" GridPane.valignment="BOTTOM" fx:id="x_MONTH_LBL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox onAction="#onMonthChange" prefHeight="25.0" prefWidth="119.0" promptText="Select Month" visibleRowCount="6" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_MONTH_DRPDN" />
+                  <Label text="Filter By:" GridPane.valignment="BOTTOM" fx:id="x_DATE_TYPE_LBL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox layoutX="20.0" layoutY="34.0" onAction="#onDateTypeChange" prefHeight="25.0" prefWidth="134.0" promptText="Select Date Type" snapToPixel="false" visibleRowCount="6" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_DATE_TYPE_DRPDN" />
+                  <Label text="Year" GridPane.columnIndex="1" GridPane.valignment="BOTTOM" fx:id="x_YEAR_LBL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Label>
+                  <ComboBox layoutX="201.0" layoutY="33.0" onAction="#onYearChange" prefHeight="25.0" prefWidth="100.0" promptText="Select Year" visibleRowCount="6" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_YEAER_DRPDN" />
+                  <ComboBox editable="true" layoutX="498.0" layoutY="34.0" onAction="#onProductChange" prefHeight="25.0" prefWidth="156.0" promptText="Select Product" snapToPixel="false" visibleRowCount="6" GridPane.columnIndex="5" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_PRODUCT_DRPDN">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label layoutX="498.0" layoutY="12.0" text="Product:" GridPane.columnIndex="5" GridPane.valignment="BOTTOM" fx:id="x_PRODUCT_LBL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+                  <ComboBox editable="true" onAction="#onReasonChange" prefHeight="25.0" prefWidth="160.0" promptText="Select Type" snapToPixel="false" visibleRowCount="4" GridPane.columnIndex="4" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_REASON_TYPE_DRPDN">
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </ComboBox>
+                  <Label text="Reason:" GridPane.columnIndex="4" GridPane.valignment="BOTTOM" fx:id="x_TRAN_TYPE_LBL">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets left="10.0" />
+                     </GridPane.margin>
+                  </Label>
+               </children>
+            </GridPane>
+            <TableView fx:id="x_LGA_ADJUSTMENT_REPORT_TABLE">
+              <columns>
+                <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product" fx:id="x_ITEM_COL" />
+                  <TableColumn minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Quantity Adjusted" fx:id="x_QUANT_ADJUST_COL" />
+                  <TableColumn minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Adjustment Type" fx:id="x_ADJUSTMENT_TYPE_COL" />
+                  <TableColumn minWidth="120.0" prefWidth="-1.0" text="Date" visible="false" fx:id="x_DATE_COL" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+         </children>
+         <BorderPane.margin>
+            <Insets top="10.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox prefHeight="62.0" prefWidth="1143.0" spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="48.0" prefWidth="62.0" text="Home">
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToReportsDashboard" prefHeight="48.0" prefWidth="59.0" text="Back" fx:id="x_BACK">
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+         <padding>
+            <Insets left="20.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

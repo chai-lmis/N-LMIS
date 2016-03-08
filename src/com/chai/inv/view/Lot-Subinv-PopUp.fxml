@@ -8,11 +8,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.LotSubInvPopUpController">
+<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.LotSubInvPopUpController">
    <center>
       <GridPane alignment="CENTER" hgap="15.0" vgap="10.0" BorderPane.alignment="CENTER" fx:id="x_GRID_PANE">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" />
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
             <ColumnConstraints hgrow="SOMETIMES" prefWidth="80.0" />
@@ -30,7 +31,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label layoutX="10.0" layoutY="17.0" text="Lot Number" GridPane.columnIndex="1">
+            <Label layoutX="10.0" layoutY="17.0" text="Lot Number" GridPane.columnIndex="2">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
@@ -38,7 +39,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Onhand Qty" GridPane.columnIndex="3">
+            <Label text="Onhand Qty" GridPane.columnIndex="4">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
@@ -46,7 +47,7 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Issue Quantity" GridPane.columnIndex="4">
+            <Label text="Issue Quantity" GridPane.columnIndex="5">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
@@ -54,10 +55,15 @@
                   <Font name="System Bold" size="14.0" />
                </font>
             </Label>
-            <Label text="Expiration Date" GridPane.columnIndex="2">
+            <Label text="Expiration Date" GridPane.columnIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Bin Locator" GridPane.columnIndex="1">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>

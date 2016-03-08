@@ -8,73 +8,79 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CategoryMainController">
+<BorderPane prefHeight="500.0" prefWidth="900.0" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CategoryMainController">
    <top>
-      <HBox spacing="3.0" fx:id="x_HBOX">
-         <children>
+      <ToolBar fx:id="x_TOOLBAR">
+         <items>
             <Button mnemonicParsing="false" onAction="#handleAddCategoryAction" text="Add">
                <graphic>
-                  <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../resources/icons/file_add.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button layoutX="25.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleEditAction" text="Edit">
+            <Button mnemonicParsing="false" onAction="#handleEditAction" text="Edit">
                <graphic>
-                  <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../resources/icons/file_edit.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button layoutX="83.0" layoutY="30.0" mnemonicParsing="false" onAction="#handleViewCategoryAction" prefHeight="31.0" text="Category Overview" />
-            <Button layoutX="105.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleSearchAction" text="Search">
+            <Button mnemonicParsing="false" onAction="#handleViewCategoryAction" text="Category Overview" />
+            <Button mnemonicParsing="false" onAction="#handleSearchAction" text="Search">
                <graphic>
-                  <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../resources/icons/file_search.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button layoutX="185.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
+            <Button mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
                <graphic>
-                  <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../resources/icons/file_history.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-            <Button layoutX="265.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleExportAction" text="Export">
+            <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export">
                <graphic>
-                  <ImageView fitHeight="23.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../resources/icons/Export_load_upload.png" />
                      </image>
                   </ImageView>
                </graphic>
             </Button>
-         </children>
-         <padding>
-            <Insets bottom="7.0" left="5.0" top="10.0" />
-         </padding>
-      </HBox>
+            <Button mnemonicParsing="false" onAction="#refreshCategoryTable" text="Refresh">
+               <graphic>
+                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/refreshIcon.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </items>
+      </ToolBar>
    </top>
    <center>
       <TableView fx:id="categoryTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="categoryCodeColumn" prefWidth="100.0" text="Category Code" />
-          <TableColumn fx:id="categoryNameColumn" prefWidth="100.0" text="Category Name" />
-            <TableColumn fx:id="decsriptionColumn" prefWidth="100.0" text="Description" />
-            <TableColumn fx:id="sourceCodeColumn" prefWidth="100.0" text="Source Code" />
-            <TableColumn fx:id="categoryTypeCodeColumn" prefWidth="120.0" text="Category Type Code" />
-            <TableColumn fx:id="statusColumn" prefWidth="90.0" text="Status" />
-            <TableColumn fx:id="startDateColumn" prefWidth="100.0" text="Start Date" />
-            <TableColumn fx:id="endDateColumn" prefWidth="100.0" text="End Date" />
+          <TableColumn fx:id="categoryCodeColumn" prefWidth="100.0" style="-fx-alignment: center-left;" text="Category Code" />
+          <TableColumn fx:id="categoryNameColumn" prefWidth="100.0" style="-fx-alignment: center-left;" text="Category Name" />
+            <TableColumn fx:id="decsriptionColumn" prefWidth="100.0" style="-fx-alignment: center-left;" text="Description" />
+            <TableColumn fx:id="sourceCodeColumn" prefWidth="100.0" style="-fx-alignment: center-left;" text="Source Code" />
+            <TableColumn fx:id="categoryTypeCodeColumn" prefWidth="120.0" style="-fx-alignment: center-left;" text="Category Type Code" />
+            <TableColumn fx:id="statusColumn" prefWidth="90.0" style="-fx-alignment: center;" text="Status" />
+            <TableColumn fx:id="startDateColumn" prefWidth="100.0" style="-fx-alignment: center;" text="Start Date" />
+            <TableColumn fx:id="endDateColumn" prefWidth="100.0" style="-fx-alignment: center;" text="End Date" />
             <TableColumn fx:id="categoryIdColumn" prefWidth="91.0" text="CategoryId" visible="false" />
             <TableColumn fx:id="categoryTypeNameColumn" prefWidth="86.0" text="Category Type Name" visible="false" />
             <TableColumn fx:id="categoryTypeIdColumn" prefWidth="91.0" text="Category Type Id" visible="false" />
@@ -90,14 +96,6 @@
                   <ImageView fitHeight="22.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../resources/icons/home.png" />
-                     </image>
-                  </ImageView>
-               </graphic></Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToAdminSubMenu" prefHeight="44.0" prefWidth="60.0" text="Back">
-               <graphic>
-                  <ImageView fitHeight="24.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/icons/Back.png" />
                      </image>
                   </ImageView>
                </graphic></Button>

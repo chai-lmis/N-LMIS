@@ -200,7 +200,7 @@
             </HBox>
             <HBox prefHeight="36.0" prefWidth="601.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="107.0" text="Ship" visible="false" />
+                  <Button mnemonicParsing="false" onAction="#handleDeleteProductLine" prefHeight="25.0" prefWidth="107.0" text="Delete Product" />
                   <Button mnemonicParsing="false" text="Pending Receipt" visible="false" />
                </children>
                <VBox.margin>
@@ -221,18 +221,22 @@
                   <TableView prefHeight="324.0" prefWidth="627.0" fx:id="x_ORDER_LINE_ITEMS_TABLE">
                     <columns>
                       <TableColumn prefWidth="42.0" style="-fx-alignment:CENTER;" text="Line#" fx:id="x_LINE_NUMBER" />
-                      <TableColumn prefWidth="108.0" text="Item" fx:id="x_LINE_ITEM" />
-                        <TableColumn prefWidth="75.0" style="-fx-alignment: CENTER-RIGHT;" text="Quantity to Issue" fx:id="x_LINE_QUANTITY" />
-                        <TableColumn prefWidth="55.0" style="-fx-alignment:CENTER;" text="UOM" fx:id="x_LINE_UOM" />
+                      <TableColumn prefWidth="108.0" text="Product" fx:id="x_LINE_ITEM" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment: center;" text="Quantity to Issue" fx:id="x_LINE_QUANTITY" />
+                        <TableColumn prefWidth="55.0" style="-fx-alignment: center;" text="UOM" fx:id="x_LINE_UOM" />
                         <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Item Status" fx:id="x_LINE_STATUS_COL" />
-                        <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Cancel Date" fx:id="x_CANCEL_DATE_COL" />
-                        <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Cancel Reason" fx:id="x_CANCEL_REASON_COL" />
+                        <TableColumn prefWidth="100.0" style="-fx-alignment:CENTER;" text="Comment" fx:id="x_LINE_COMMENT_COL" />
+                        <TableColumn prefWidth="100.0" style="-fx-alignment: center;" text="Cancel Date" fx:id="x_CANCEL_DATE_COL" />
+                        <TableColumn prefWidth="100.0" style="-fx-alignment: center;" text="Cancel Reason" fx:id="x_CANCEL_REASON_COL" />
                         <TableColumn prefWidth="110.0" style="-fx-alignment:CENTER;" text="Shipped Qty" visible="false" fx:id="x_SHIPPED_QTY_COL" />
                         <TableColumn prefWidth="110.0" style="-fx-alignment:CENTER;" text="Shipped Date" visible="false" fx:id="x_SHIPPED_DATE_COL" />
                         <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="Order Line ID" visible="false" fx:id="x_ORDER_LINE_ID_COL" />
                         <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="Item Status ID" visible="false" fx:id="x_LINE_STATUS_ID_COL" />
                         <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="Order Header Id" visible="false" fx:id="x_ORDER_HEADER_ID_COL" />
                         <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="REFERENCE LINE ID" visible="false" fx:id="x_REFERENCE_LINE_ID_COL" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="CONSUMPTION_ID" visible="false" fx:id="x_CONSUMPTION_ID_COL" />
+                        <TableColumn prefWidth="75.0" style="-fx-alignment:CENTER;" text="CUST_PRODUCT_DETAIL_ID" visible="false" fx:id="x_CUST_PRODUCT_DETAIL_ID_COL" />
+                        
                     </columns>
                      <HBox.margin>
                         <Insets left="10.0" />

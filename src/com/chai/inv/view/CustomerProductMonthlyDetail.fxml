@@ -8,20 +8,21 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustProdMonthlyDetailController">
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustProdMonthlyDetailController">
    <center>
       <TableView fx:id="mothlyProductDetail" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="cust_product_detail_id" visible="false" fx:id="x_CUST_PROD_DETAIL_ID" />
-            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="ProductId" visible="false" fx:id="x_PRODUCT_ID" />
-            <TableColumn minWidth="100.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT_NUMBER" />
-            <TableColumn minWidth="120.0" prefWidth="-1.0" text="Product Description" fx:id="x_PRODUCT_DESC" />
-            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Product Type" fx:id="x_PRODUCT_TYPE" />
-            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="Product Type Id" visible="false" fx:id="x_PRODUCT_TYPE_ID" />
+          <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center;" text="cust_product_detail_id" visible="false" fx:id="x_CUST_PROD_DETAIL_ID" />
+            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center;" text="ProductId" visible="false" fx:id="x_PRODUCT_ID" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product" fx:id="x_PRODUCT_NUMBER" />
+            <TableColumn minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product Description" fx:id="x_PRODUCT_DESC" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product Type" fx:id="x_PRODUCT_TYPE" />
+            <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" style="-fx-alignment: center;" text="Product Type Id" visible="false" fx:id="x_PRODUCT_TYPE_ID" />
             <TableColumn minWidth="75.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Week" visible="false" fx:id="x_WEEK" />
             <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Period From Date" fx:id="x_PERIOD_FROM_DATE" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Allocation Date" fx:id="x_ALLOCATION_DATE" />
             <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Period To Date" fx:id="x_PERIOD_TO_DATE" />
-            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Allocation Type" fx:id="x_ALLOCATION_TYPE" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Allocation Type" fx:id="x_ALLOCATION_TYPE" />
             <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Minimum Stock Quantity" fx:id="x_MIN_QTY" />
             <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Maximum Stock Quantity" fx:id="x_MAX_QTY" />
             <TableColumn minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Stock Balance" fx:id="x_STOCK_BALANCE" />
@@ -91,7 +92,7 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox editable="true" promptText="Select Year" GridPane.rowIndex="1" fx:id="x_YEAR_FILTER">
+                  <ComboBox editable="true" onAction="#handleYearChange" promptText="Select Year" GridPane.rowIndex="1" fx:id="x_YEAR_FILTER">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>
@@ -116,7 +117,7 @@
                         <Insets left="10.0" />
                      </padding>
                   </Label>
-                  <ComboBox editable="true" layoutX="171.0" layoutY="40.0" onAction="#handleOnProductAllocTypeChange" promptText="Select Allocation Period" GridPane.columnIndex="2" GridPane.rowIndex="1" fx:id="x_PRODUCT_ALLOCATION_TYPE">
+                  <ComboBox editable="true" layoutX="171.0" layoutY="40.0" promptText="Select Allocation Period" GridPane.columnIndex="2" GridPane.rowIndex="1" fx:id="x_PRODUCT_ALLOCATION_TYPE">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>

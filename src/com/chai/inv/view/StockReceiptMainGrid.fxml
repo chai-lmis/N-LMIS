@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.LGAStockReceiptController">
+   <top>
+      <ToolBar BorderPane.alignment="CENTER">
+        <items>
+          <Button mnemonicParsing="false" onAction="#handleAddReceiveStock" text="Receive Stock" />
+        </items>
+      </ToolBar>
+   </top>
+   <center>
+      <TableView BorderPane.alignment="CENTER" fx:id="x_STOCK_RECEIPT_TBL">
+        <columns>
+          <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Products" fx:id="x_PRODUCTS_COL" />
+          <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Quantity Received" fx:id="x_QTY_RECEIVED_COL" />
+            <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="LGA Old Stock Balance" fx:id="x_LGA_OLD_STOCK_COL" />
+            <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="LGA New Stock Balance" fx:id="x_LGA_NEW_STOCK_COL" />
+            <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Date Received" fx:id="x_DATE_RECEIVED_COL" />
+            <TableColumn maxWidth="-1.0" minWidth="-1.0" prefWidth="-1.0" text="Product ID" visible="false" fx:id="x_PRODUCTS_ID_COL" />
+        </columns>
+      </TableView>
+   </center>
+   <bottom>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" prefHeight="44.0" prefWidth="61.0" text="Home">
+               <graphic>
+                  <ImageView fitHeight="22.0" fitWidth="34.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToAdminSubMenu" prefHeight="44.0" prefWidth="60.0" text="Back">
+               <graphic>
+                  <ImageView fitHeight="24.0" fitWidth="36.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic></Button>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="30.0" top="10.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

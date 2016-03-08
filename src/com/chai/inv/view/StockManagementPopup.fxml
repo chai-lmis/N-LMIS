@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane style="-fx-background-color: transparent; -fx-border-color: transparent;" styleClass="popupDataEntyAnchor" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.StockManagementPopupController">
+	<center>
+		<GridPane alignment="CENTER" hgap="20.0" vgap="10.0" BorderPane.alignment="CENTER" fx:id="x_GRID_PANE">
+			<columnConstraints>
+				<ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" />
+				<ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" />
+			</columnConstraints>
+			<rowConstraints>
+				<RowConstraints fillHeight="false" valignment="CENTER" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" valignment="CENTER" vgrow="NEVER" />
+			</rowConstraints>
+			<children>
+				<Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleTransactionsDashBoardBtn" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="Transaction History" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1">
+					<graphic>
+						<ImageView fitHeight="52.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+							<image>
+								<Image url="@../../../../resources/icons/Transaction-History.png" />
+							</image>
+						</ImageView>
+					</graphic>
+					<cursor>
+						<Cursor fx:constant="HAND" />
+					</cursor>
+				</Button>
+            <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="136.0" mnemonicParsing="false" onAction="#handleOnhandItemsAction" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="Stock Onhand" textAlignment="CENTER" wrapText="true" fx:id="x_ONHAND_ITEMS_BTN">
+               <graphic>
+                  <ImageView fitHeight="58.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Stock-Onhand125X95.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLGAStockReceiptDashboardBtn" prefHeight="131.0" prefWidth="126.0" styleClass="dark-blue-button" text="LGA Stock Receipt from State" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_LGA_RECEIPT_FRM_STATE">
+               <graphic>
+                  <ImageView fitHeight="59.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Stock_Receipt.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLGAStockIssueToHf" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="LGA Stock Issue to Facility" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" fx:id="x_LGA_STOCK_ISSUE_TO_HF">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="58.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/State-Stock-Issue-to-LGA.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+			</children>
+         <BorderPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </BorderPane.margin>
+		</GridPane>
+	</center>
+</BorderPane>

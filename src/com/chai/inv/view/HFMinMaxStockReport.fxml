@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.HFMinMaxStockReportController">
+   <top>
+      <HBox alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#09861c" strokeType="OUTSIDE" strokeWidth="0.0" text="Health Facility MIN/MAX Stock Balance Report">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+   </top>
+   <center>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <ToolBar>
+               <items>
+                  <GridPane fx:id="x_GRID_PANE">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="266.0" minWidth="10.0" prefWidth="142.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="202.0" minWidth="0.0" prefWidth="202.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <Label text="Health Facility : " fx:id="x_HF_LBL">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ComboBox editable="true" onAction="#onHealthFacilityChange" prefWidth="150.0" promptText="Select Health Facility" GridPane.rowIndex="1" fx:id="x_HF_DRPDN">
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <Label text="Min./Max. Filter" GridPane.columnIndex="2">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ComboBox onAction="#onChangeMinMax" prefHeight="25.0" prefWidth="133.0" promptText="Select Type" visibleRowCount="5" GridPane.columnIndex="2" GridPane.rowIndex="1" fx:id="x_MIN_MAX_FILTER">
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <Label text="Date Type : " GridPane.columnIndex="3">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ComboBox onAction="#handleChangeFilterBy" prefHeight="25.0" prefWidth="141.0" promptText="Select Filter Type" visibleRowCount="5" GridPane.columnIndex="3" GridPane.rowIndex="1" fx:id="x_FILTER_BY">
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <Label text="Allocation Type" GridPane.columnIndex="1">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <ComboBox onAction="#onChangeAllocation" prefHeight="25.0" prefWidth="133.0" promptText="Select Allocation" visibleRowCount="5" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_ALLOCATION_TYPE_DRP">
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin>
+                        </ComboBox>
+                        <ToolBar style="-fx-background-color: transparent;" GridPane.columnIndex="4" GridPane.rowSpan="2" fx:id="x_TOOL_BAR2">
+                           <items>
+                              <Label text="Date : " fx:id="x_DATE_LBL">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker onAction="#onDateChange" prefHeight="25.0" prefWidth="130.0" fx:id="x_DATE" />
+                              <Label text="Year : " fx:id="x_YEAR_LBL">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox layoutX="377.0" layoutY="11.0" onAction="#onYearChange" prefHeight="25.0" prefWidth="104.0" promptText="Select Year" visibleRowCount="5" fx:id="x_YEAR_DRPDN" />
+                              <Label text="Month : " fx:id="x_MONTH_LBL">
+                                 <font>
+                                    <Font name="System Bold" size="13.0" />
+                                 </font>
+                              </Label>
+                              <ComboBox layoutX="76.0" layoutY="11.0" onAction="#onMonthChange" prefHeight="25.0" prefWidth="117.0" promptText="Select Month" visibleRowCount="5" fx:id="x_MONTH_DRPDN" />
+                              <Button mnemonicParsing="false" onAction="#handleVeiwReport" text="View Report" fx:id="x_VIEW_BTN" />
+                           </items>
+                        </ToolBar>
+                     </children>
+                  </GridPane>
+               </items>
+            </ToolBar>
+            <TableView fx:id="x_HF_MIN_MAX_STOCK_BAL_TBL">
+              <columns>
+                <TableColumn prefWidth="75.0" text="CUST PRODUCT DETAIL ID" visible="false" fx:id="x_CUST_PRODUCT_DETAIL_ID_COL" />
+                <TableColumn prefWidth="75.0" text="HEALTH FACILITY ID" visible="false" fx:id="x_CUSTOMER_ID_COL" />
+                  <TableColumn minWidth="200.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="HEALTH FACILITY" fx:id="x_CUSTOMER_NAME_COL" />
+                  <TableColumn prefWidth="75.0" text="ITEM ID" visible="false" fx:id="x_ITEM_ID_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="PRODUCT" fx:id="x_ITEM_NUMBER_COL" />
+                  <TableColumn prefWidth="75.0" text="LGA ID" visible="false" fx:id="x_WAREHOUSE_ID_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="LGA NAME" visible="false" fx:id="x_LGA_NAME_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="STOCK BALANCE" fx:id="x_STOCK_BALANCE_COL" />
+                  <TableColumn prefWidth="75.0" text="ALLOCATION" visible="false" fx:id="x_ALLOCATION_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="STOCK RECEIVED DATE" fx:id="x_STOCK_RECEIVED_DATE_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="MIN STOCK QTY" fx:id="x_MIN_STOCK_QTY_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="MAX STOCK QTY" fx:id="x_MAX_STOCK_QTY_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="DIFFERENCE" fx:id="x_DIFFERENCE_COL" />
+                  <TableColumn prefWidth="75.0" text="SHIPFROM WAREHOUSE ID" visible="false" fx:id="x_SHIPFROM_WAREHOUSE_ID_COL" />
+                  <TableColumn prefWidth="75.0" text="MONTH" visible="false" fx:id="x_MONTH_COL" />
+                  <TableColumn minWidth="160.0" prefWidth="-1.0" text="YEAR" visible="false" fx:id="x_YEAR_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" text="WEEK" visible="false" fx:id="x_WEEK_COL" />
+                  <TableColumn minWidth="100.0" prefWidth="-1.0" text="ALLOCATION TYPE" visible="false" fx:id="x_ALLOCATION_TYPE_COL" />
+                  <TableColumn minWidth="200.0" prefWidth="-1.0" text="PERIOD FROM DATE" visible="false" fx:id="x_PERIOD_FROM_DATE_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" text="PERIOD TO DATE" visible="false" fx:id="x_PERIOD_TO_DATE_COL" />
+                  <TableColumn minWidth="150.0" prefWidth="-1.0" text="ALLOCATION DATE" visible="false" fx:id="x_ALLOCATION_DATE_COL" />
+              </columns>
+            </TableView>
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox spacing="10.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHomeDashBoardBtn" text="Home">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/home.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleBackToReportsDashBoard" text="Back">
+               <graphic>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Back.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+         <padding>
+            <Insets bottom="5.0" left="20.0" top="5.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

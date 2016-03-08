@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="152.0" prefWidth="437.0" style="-fx-background-color: transparent; -fx-border-style: none; -fx-border-radius: 40; -fx-border-color: transparent;" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.ReportsButtonPopupController">
+   <children>
+      <GridPane hgap="1.0" layoutX="35.0" layoutY="-2.0" prefHeight="165.0" prefWidth="362.0" fx:id="x_GRID_PANE">
+         <columnConstraints>
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="146.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="150.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLgaReportSubDashboard" prefHeight="112.0" prefWidth="158.0" styleClass="dark-blue-button" text="LGA Reports" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" fx:id="x_LGA_REPORT_DASH_BTN">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="80.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/hflgareports.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button contentDisplay="TOP" layoutX="78.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleHfReportSubDashboard" prefHeight="112.0" prefWidth="150.0" styleClass="dark-blue-button" text="Health Facility Reports" textAlignment="CENTER" wrapText="true" fx:id="x_HF_REPORT_DASHBORD_BTN">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+               <graphic>
+                  <ImageView fitHeight="46.0" fitWidth="76.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/hflgareports.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>

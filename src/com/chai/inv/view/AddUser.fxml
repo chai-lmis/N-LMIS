@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="516.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.UserEditDialogController">
+<AnchorPane prefHeight="516.0" prefWidth="477.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.UserEditDialogController">
    <children>
       <GridPane alignment="CENTER" layoutX="32.0" layoutY="14.0" prefHeight="536.0" prefWidth="414.0">
         <columnConstraints>
@@ -141,7 +141,7 @@
                   <Insets left="18.0" />
                </GridPane.margin>
                <tooltip>
-                  <Tooltip text="telephone number formats: (123)456-7890, 123-456-7890, 1234567890, (123)-456-7890" />
+                  <Tooltip text="telephone number format : 0XXXXXXXXXX | e.g. 07755846923" />
                </tooltip>
             </TextField>
             <CheckBox mnemonicParsing="false" text="Status" GridPane.rowIndex="8" GridPane.valignment="BOTTOM" fx:id="x_STATUS">
@@ -161,12 +161,12 @@
                   <Font name="System Bold" size="15.0" />
                </font>
             </Label>
-            <ComboBox editable="true" prefHeight="31.0" prefWidth="194.0" promptText="User Role" style="-fx-font-size: 15;" GridPane.rowIndex="10" GridPane.valignment="BASELINE" fx:id="x_USER_ROLE">
+            <ComboBox editable="true" onAction="#handleOnUserRoleChange" prefHeight="31.0" prefWidth="194.0" promptText="User Role" style="-fx-font-size: 15;" GridPane.rowIndex="10" GridPane.valignment="BASELINE" fx:id="x_USER_ROLE">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
             </ComboBox>
-            <Label text="Activated On" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="BOTTOM">
+            <Label text="Activated On" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="BOTTOM" fx:id="x_ACTIVATED_ON_LBL">
                <GridPane.margin>
                   <Insets left="18.0" />
                </GridPane.margin>
@@ -174,7 +174,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <DatePicker layoutX="10.0" layoutY="276.0" prefHeight="32.0" prefWidth="191.0" promptText="Activated On" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="BASELINE" fx:id="x_ACTIVATED_ON">
+            <DatePicker layoutX="10.0" layoutY="276.0" prefHeight="32.0" prefWidth="190.0" promptText="Activated On" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="BASELINE" fx:id="x_ACTIVATED_ON">
                <GridPane.margin>
                   <Insets left="18.0" />
                </GridPane.margin></DatePicker>
@@ -213,6 +213,19 @@
                   <Insets left="30.0" top="20.0" />
                </GridPane.margin>
             </Button>
+            <Label text="Assign LGA" GridPane.columnIndex="1" GridPane.rowIndex="9" GridPane.valignment="BOTTOM" fx:id="x_ASSIGN_LGA_LBL">
+               <font>
+                  <Font name="System Bold" size="15.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="20.0" />
+               </GridPane.margin>
+            </Label>
+            <ComboBox editable="true" prefHeight="31.0" prefWidth="192.0" promptText="Select LGA" visibleRowCount="6" GridPane.columnIndex="1" GridPane.rowIndex="10" GridPane.valignment="TOP" fx:id="x_ASSIGN_LGA">
+               <GridPane.margin>
+                  <Insets left="18.0" />
+               </GridPane.margin>
+            </ComboBox>
          </children>
       </GridPane>
    </children>

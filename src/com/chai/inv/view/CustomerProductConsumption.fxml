@@ -8,17 +8,19 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustomerProductConsumptionController">
+<BorderPane stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.CustomerProductConsumptionController">
    <center>
       <TableView fx:id="productConsumptionTable" BorderPane.alignment="CENTER">
         <columns>
           <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="consumption_id" visible="false" fx:id="x_CONSUMPTION_ID" />
             <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="CustomerId" visible="false" fx:id="x_CUSTOMER_ID" />            
           <TableColumn minWidth="100.0" prefWidth="-1.0" text="Health Facility" visible="false" fx:id="x_CUSTOMER_NUMBER" />
-            <TableColumn minWidth="150.0" prefWidth="-1.0" text="Product" fx:id="x_PRODUCT_NUMBER" />
+            <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product" fx:id="x_PRODUCT_NUMBER" />
             <TableColumn maxWidth="-1.0" minWidth="-Infinity" prefWidth="-1.0" text="ProductId" visible="false" fx:id="x_PRODUCT_ID" />
             <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Date" fx:id="x_DATE" />
             <TableColumn minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Stock Balance" fx:id="x_BALANCE" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Order Created" fx:id="x_ORDER_CREATED" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Allocation Type" fx:id="x_ALLOCATION_TYPE" />
         </columns>
       </TableView>
    </center>
