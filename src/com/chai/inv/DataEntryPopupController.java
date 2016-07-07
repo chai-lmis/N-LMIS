@@ -31,7 +31,7 @@ public class DataEntryPopupController {
 
 	@FXML private Button x_STOCK_WASTAGES_BTN;
 	@FXML private Button x_STOCK_ADJUSTMENT_BTN;
-	@FXML private Button x_LGA_STOCK_ENTRY_BTN;
+	@FXML private Button x_LGA_RECEIPT_FRM_STATE;
 	private PopOver popup;
 	public RootLayoutController getRootLayoutController() {
 		return rootLayoutController;
@@ -116,6 +116,40 @@ public class DataEntryPopupController {
 		MainApp.LOGGER.severe("Error occured while loading Home Page layout.. "+MyLogger.getStackTrace(ex));
 	}
 }
+@FXML
+public void handleLGAStockReceiptDashboardBtn() {
+	System.out.println("entered DataentryPopup.handleLGAStockReceiptDashboardBtn()");
+	FXMLLoader loader = new FXMLLoader(
+			MainApp.class
+					.getResource("/com/chai/inv/view/LGAStockReceiptForm.fxml"));
+	try {
+		BorderPane lgaStockReceipt = (BorderPane) loader.load();
+		// lgaStockReceipt.setUserData(loader);
+		// mainBorderPane.setCenter(lgaStockReceipt);
+		Stage dialogStage = new Stage();
+		dialogStage.setTitle("Stock Receipt Entry Form");
+		dialogStage.initModality(Modality.WINDOW_MODAL);
+		dialogStage.initOwner(primaryStage);
+		Scene scene = new Scene(lgaStockReceipt);
+		dialogStage.setScene(scene);
+
+		LGAStockReceiptController controller = loader.getController();
+		controller.setRole(role);
+		controller.setRootLayoutController(getRootLayoutController());
+		controller.setHomePageController(homePageController);
+		controller.setDialogueStage(dialogStage);
+		controller.setFormdefaults();
+		dialogStage.showAndWait();
+
+	} catch (Exception ex) {
+		System.out
+				.println("Error occured while loading LGA Stock Recipt Form layout.. "
+						+ ex.getMessage());
+		ex.printStackTrace();
+	}
+}
+
+
 @FXML public void handleStockAdjustmentBtn(){
 	System.out.println("in dataentrypopupcontroller.handleStockWastagesBtn()");
 	popup.hide();

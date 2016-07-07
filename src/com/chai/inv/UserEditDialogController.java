@@ -71,6 +71,7 @@ public class UserEditDialogController {
 	private String actionBtnString;
 	private Stage dialogStage;
 	private UserService userService;
+	private LabelValueBean role;
 
 	public UserMainController getUserMain() {
 		return userMain;
@@ -83,9 +84,12 @@ public class UserEditDialogController {
 	public UserService getUserService() {
 		return userService;
 	}
+	
+	public void setSelectedUserBean(UserBean selectedUserBean) {
+		this.userBean = selectedUserBean;
+	}
 
-	public void setUserService(UserService userService, String actionBtnString,
-			UserBean loggedInUser) {
+	public void setUserService(UserService userService, String actionBtnString, UserBean loggedInUser) {
 		this.userService = userService;
 		this.actionBtnString = actionBtnString;
 		this.loggedInUser = loggedInUser;
@@ -128,102 +132,72 @@ public class UserEditDialogController {
 	@FXML
 	private void initialize() {
 		x_CONFIRM_PASSWORD.focusedProperty().addListener(
-				new ChangeListener<Boolean>() {
-					@Override
-					public void changed(
-							ObservableValue<? extends Boolean> observable,
-							Boolean oldValue, Boolean newValue) {
-						System.out
-								.println("In confirm passwrd change Listener ");
-						boolean confirm = x_CONFIRM_PASSWORD.getText().equals(
-								x_PASSWORD.getText());
-						System.out.println("Password: " + x_PASSWORD.getText()
-								+ " ,Confirm Password: "
-								+ x_CONFIRM_PASSWORD.getText());
-						if (!newValue.booleanValue()) {
-							System.out
-									.println("change Listeners : outer if called..");
-							if (!confirm) {
-								System.out
-										.println("change Listeners : dialog called..");
-								Dialogs.create()
-										.owner(dialogStage)
-										.title("Warning")
-										.masthead(
-												"Confirm Password does not match with Password")
-										.message("Please re-enter")
-										.showWarning();
-								x_PASSWORD.clear();
-								x_CONFIRM_PASSWORD.clear();
-								x_PASSWORD.requestFocus();
-							}
-						}
+			new ChangeListener<Boolean>() {
+				@Override
+				public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+					System.out.println("In confirm passwrd change Listener ");
+					boolean confirm = x_CONFIRM_PASSWORD.getText().equals(x_PASSWORD.getText());
+					System.out.println("Password: " + x_PASSWORD.getText()+ " ,Confirm Password: "+ x_CONFIRM_PASSWORD.getText());
+					if (!newValue.booleanValue()) {
+						System.out.println("change Listeners : outer if called..");
+						if (!confirm) {
+							System.out.println("change Listeners : dialog called..");
+							Dialogs.create()
+							.owner(dialogStage)
+							.title("Warning")
+							.masthead("Confirm Password does not match with Password")
+							.message("Please re-enter")
+							.showWarning();
+						x_PASSWORD.clear();
+						x_CONFIRM_PASSWORD.clear();
+						x_PASSWORD.requestFocus();
 					}
-				});
-	}
-
-	public void setUserBeanFields(UserBean selectedUserBean,
-			LabelValueBean labelValueBean) {
-		this.userBean = selectedUserBean;
-		if (MainApp.getUserRole() != null) {
-			LabelValueBean role = MainApp.getUserRole();
-			System.out.println("role name : " + role.getLabel());
-			System.out.println("role id : " + role.getValue());
-			if (!(role.getLabel().equals("SCCO") || role.getLabel().equals(
-					"NTO"))) {
-				x_USER_TYPE_NAME.setDisable(true);
-				x_USER_ROLE.setDisable(true);
-				x_ACTIVATED_ON.setDisable(true);
-				x_ACTIVATED.setDisable(true);
-				x_STATUS.setDisable(true);
-				x_START_DATE.setDisable(true);
-				x_END_DATE.setDisable(true);
-				x_ASSIGN_LGA_LBL.setVisible(false);
-				x_ASSIGN_LGA.setVisible(false);
-				x_ACTIVATED_ON_LBL.setVisible(true);
-				x_ACTIVATED_ON.setVisible(true);
-			} else {
-				x_ASSIGN_LGA_LBL.setVisible(true);
-				x_ASSIGN_LGA.setVisible(true);
-				x_ACTIVATED_ON_LBL.setVisible(false);
-				x_ACTIVATED_ON.setVisible(false);
-				x_ASSIGN_LGA.setItems(new FacilityService()
-						.getDropdownList("ASSIGN_LGA"));
-				new SelectKeyComboBoxListener(x_ASSIGN_LGA);
-				if (x_ASSIGN_LGA.getItems().size() == 0) {
-					x_ASSIGN_LGA.setValue(new LabelValueBean(
-							"No LGA available to Assign", null));
-				}
-				new SelectKeyComboBoxListener(x_ASSIGN_LGA);
-				if (actionBtnString.equals("edit")) {
-					x_ASSIGN_LGA.setValue(new LabelValueBean(selectedUserBean
-							.getX_ASSIGN_LGA(), selectedUserBean
-							.getX_ASSIGN_LGA_ID()));
-					x_ASSIGN_LGA.setDisable(true);
 				}
 			}
-		}
+		});
+	}
+
+	public void setUserBeanFields(LabelValueBean labelValueBean) {
+		//for display roleName in RoleDropDown
+		String roleName="";
 		x_FIRST_NAME.setText(userBean.getX_FIRST_NAME());
 		x_LAST_NAME.setText(userBean.getX_LAST_NAME());
 		x_LOGIN_NAME.setText(userBean.getX_LOGIN_NAME());
-		x_USER_ROLE.setItems(userService.getDropdownList("ROLE"));
-		x_USER_ROLE.getItems().addAll(
-				new LabelValueBean("----(select none)----", null));
-		new SelectKeyComboBoxListener(x_USER_ROLE);
-		if (userBean.getX_USER_ROLE_ID() != null) {
-			x_USER_ROLE.setValue(new LabelValueBean(userBean
-					.getX_USER_ROLE_NAME(), userBean.getX_USER_ROLE_ID()));
+		if(actionBtnString.equals("edit")){
+			x_LOGIN_NAME.setDisable(true);
+		}else{
+			x_LOGIN_NAME.setDisable(false);
 		}
 		x_USER_TYPE_NAME.setItems(userService.getDropdownList("TYPE"));
-		x_USER_TYPE_NAME.getItems().addAll(
-				new LabelValueBean("----(select none)----", null));
-		new SelectKeyComboBoxListener(x_USER_TYPE_NAME);
+		new SelectKeyComboBoxListener(x_USER_TYPE_NAME);	
+		if (userBean.getX_USER_ROLE_ID() != null) {
+			//when edit btn pressed for each type of ROLES
+			if(userBean.getX_USER_ROLE_NAME().equals("NTO")){
+				roleName="NATIONAL";
+			}else{
+				roleName=userBean.getX_USER_ROLE_NAME();
+			}
+			x_USER_ROLE.setValue(new LabelValueBean(roleName, userBean.getX_USER_ROLE_ID()));
+		}	
+		if (actionBtnString.equals("edit")) {
+			x_ASSIGN_LGA.setValue(new LabelValueBean(userBean.getX_ASSIGN_LGA(), userBean.getX_ASSIGN_LGA_ID()));
+			x_ASSIGN_LGA.setDisable(true);
+		}
+		
+		
 		if (!actionBtnString.equals("add")) {
 			x_PASSWORD.setDisable(true);
 			x_CONFIRM_PASSWORD.setDisable(true);
 		}
-		if (!actionBtnString.equals("search"))
-			x_USER_TYPE_NAME.setValue(labelValueBean);
+		if (!actionBtnString.equals("search")){
+			if(actionBtnString.equals("add") ){
+				if(role.getLabel().equals("NTO")){
+					x_USER_TYPE_NAME.setValue(x_USER_TYPE_NAME.getItems().get(0));
+				}				
+			}else{
+				x_USER_TYPE_NAME.setValue(labelValueBean);
+			}			
+		}
 		if ((userBean != null) && (userBean.getX_STATUS() != null)) {
 			if (userBean.getX_STATUS().equals("Active"))
 				x_STATUS.setSelected(true);
@@ -235,17 +209,20 @@ public class UserEditDialogController {
 				x_ACTIVATED.setSelected(false);
 			x_EMAIL.setText(userBean.getX_EMAIL());
 			x_TELEPHONE_NUMBER.setText(userBean.getX_TELEPHONE_NUMBER());
-			x_START_DATE.setValue(CalendarUtil.fromString(userBean
-					.getX_START_DATE()));
-			x_ACTIVATED_ON.setValue(CalendarUtil.fromString(userBean
-					.getX_ACTIVATED_ON()));
-			x_END_DATE.setValue(CalendarUtil.fromString(userBean
-					.getX_END_DATE()));
+			if(userBean.getX_START_DATE()==null || userBean.getX_START_DATE().length()==0){
+				x_START_DATE.setValue(LocalDate.now());
+			}else{
+				x_START_DATE.setValue(CalendarUtil.fromString(userBean.getX_START_DATE()));
+			}
+			x_ACTIVATED_ON.setValue(CalendarUtil.fromString(userBean.getX_ACTIVATED_ON()));
+			x_END_DATE.setValue(CalendarUtil.fromString(userBean.getX_END_DATE()));
 		} else {
 			x_STATUS.setSelected(true);
 			x_ACTIVATED.setSelected(false);
 			x_STATUS.setDisable(true);
-			x_ACTIVATED.setDisable(true);
+			if (!actionBtnString.equals("search")) {
+				x_ACTIVATED.setDisable(true);
+			}
 			if (!actionBtnString.equals("search")) {
 				x_START_DATE.setValue(LocalDate.now());
 				x_ACTIVATED_ON.setValue(LocalDate.now());
@@ -254,36 +231,110 @@ public class UserEditDialogController {
 	}
 
 	@FXML
+	public void handleUserTypeChange(){
+		System.out.println("In UserEditDialogController.handleUserTypeChange() handler");
+		if(x_USER_TYPE_NAME!=null && x_USER_TYPE_NAME.getValue()!=null ){
+			System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+			if(MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO") 
+					&& x_USER_TYPE_NAME.getValue().getLabel().toUpperCase().equals("ADMIN")){
+				System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
+				//userService.getDropdownList("ROLE",<boolean excludeNto>,<boolean excludeCCO>)
+				x_USER_ROLE.setItems(userService.getDropdownList("ROLE"));
+				new SelectKeyComboBoxListener(x_USER_ROLE);
+			}else if(MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO") 
+					&& x_USER_TYPE_NAME.getValue().getLabel().toUpperCase().equals("EMPLOYEE")){
+				System.out.println("oooooooooooooooooooooooooooooooo");
+				x_USER_ROLE.setItems(userService.getDropdownList("ROLE_CCO"));
+				new SelectKeyComboBoxListener(x_USER_ROLE);
+			}			
+		}
+	}
+	
+	@FXML
 	public void handleOnUserRoleChange() {
 		System.out.println(" In handleOnUserRoleChange() ... ");
 		LocalDate date = LocalDate.now();
 		if (x_ACTIVATED_ON.getValue() != null) {
 			date = x_ACTIVATED_ON.getValue();
 		}
-		if (x_USER_ROLE.getValue().getLabel().equals("CCO")
-				&& MainApp.getUserRole().getLabel().equals("NTO")) {
-			x_ACTIVATED.setSelected(false);
-			x_ACTIVATED_ON.setValue(null);
+		System.out.println("date = "+date);
+		if(actionBtnString.equals("add")){
+			x_STATUS.setSelected(true);
+			switch (x_USER_ROLE.getValue().getLabel()) {
+			case "CCO": // CCO - EMPLOYEE
+				//activated must be false, so that new CCO's can register on application
+				x_ACTIVATED.setSelected(false);
+				x_ACTIVATED_ON.setValue(null);
+				x_ASSIGN_LGA.setDisable(false);
+				x_ASSIGN_LGA.setValue(null);
+				x_ASSIGN_LGA_LBL.setText("Assign LGA");				
+				x_ASSIGN_LGA.setItems(new FacilityService().getDropdownList("ASSIGN_LGA"));
+				if (x_ASSIGN_LGA.getItems().size() == 0) {
+					x_ASSIGN_LGA.setValue(new LabelValueBean("No LGA available to Assign", null));
+					Dialogs.create().owner(dialogStage)
+					.masthead("LGA not available to be assigned for CCO role user.")
+					.showWarning();
+				}
+				new SelectKeyComboBoxListener(x_ASSIGN_LGA);
+				break;
+			case "LIO": // LIO				
+				x_ACTIVATED.setSelected(true);
+				x_ACTIVATED_ON.setValue(date);
+				x_ASSIGN_LGA.setDisable(false);
+				x_ASSIGN_LGA.setValue(null);
+				x_ASSIGN_LGA_LBL.setText("Assign LGA");
+				x_ASSIGN_LGA.setItems(new FacilityService().getDropdownList("ASSIGN_LGA_FOR_LIO_MOH"));
+				new SelectKeyComboBoxListener(x_ASSIGN_LGA);
+				break;
+			case "MOH": // MOH
+				x_ACTIVATED.setSelected(true);
+				x_ACTIVATED_ON.setValue(date);
+				x_ASSIGN_LGA_LBL.setText("Assign LGA");
+				x_ASSIGN_LGA.setDisable(false);
+				x_ASSIGN_LGA.setValue(null);
+				x_ASSIGN_LGA.setItems(new FacilityService().getDropdownList("ASSIGN_LGA_FOR_LIO_MOH"));
+				new SelectKeyComboBoxListener(x_ASSIGN_LGA);
+				break;
+			case "SIO": // SIO
+				x_ACTIVATED.setSelected(true);
+				x_ACTIVATED_ON.setValue(date);
+				x_ASSIGN_LGA_LBL.setText("Assign State Cold Store");
+				x_ASSIGN_LGA.setDisable(true);
+				if(actionBtnString.equals("add")){
+					x_ASSIGN_LGA.setValue(new LabelValueBean(loggedInUser.getX_USER_WAREHOUSE_NAME(),loggedInUser.getX_USER_WAREHOUSE_ID()));
+				}
+				break;
+			case "SIFP": // SIFP
+				x_ACTIVATED.setSelected(true);
+				x_ACTIVATED_ON.setValue(date);
+				x_ASSIGN_LGA_LBL.setText("Assign State Cold Store");
+				x_ASSIGN_LGA.setDisable(true);
+				if(actionBtnString.equals("add")){
+					x_ASSIGN_LGA.setValue(new LabelValueBean(loggedInUser.getX_USER_WAREHOUSE_NAME(),loggedInUser.getX_USER_WAREHOUSE_ID()));					
+				}
+				break;
+			case "SCCO": // SCCO	
+				x_ACTIVATED.setSelected(true);
+				x_ACTIVATED_ON.setValue(date);
+				x_ASSIGN_LGA_LBL.setText("Assign State Cold Store");
+				x_ASSIGN_LGA.setDisable(true);	
+				if(actionBtnString.equals("add")){
+					x_ASSIGN_LGA.setValue(new LabelValueBean(loggedInUser.getX_USER_WAREHOUSE_NAME(),loggedInUser.getX_USER_WAREHOUSE_ID()));				
+				}				
+				break;
+			default: System.out.println("x_ASSIGN_LGA.getValue().getLabel() : "+x_ASSIGN_LGA.getValue().getLabel()); 
+			
+			}
 		}
-		// else{
-		// x_ACTIVATED.setSelected(true);
-		// x_ACTIVATED_ON.setValue(date);
-		// }
 	}
 
-	/**
-	 * Called when the user clicks ok.
-	 * 
-	 * @throws SQLException
-	 */
 	@FXML
 	private void handleSubmitUser() throws SQLException {
 		if (isValidate(actionBtnString)) {
 			userBean.setX_ACTIVATED_BY(loggedInUser.getX_USER_ID());// activated-by
 			userBean.setX_CREATED_BY(loggedInUser.getX_USER_ID());
 			userBean.setX_UPDATED_BY(loggedInUser.getX_USER_ID());
-			System.out.println("selected user's user_ID: "
-					+ userBean.getX_USER_ID());
+			System.out.println("selected user's user_ID: "+ userBean.getX_USER_ID());
 			System.out.println(userBean.getX_COMPANY_ID());
 			userBean.setX_FIRST_NAME(x_FIRST_NAME.getText());
 			userBean.setX_LAST_NAME(x_LAST_NAME.getText());
@@ -292,34 +343,30 @@ public class UserEditDialogController {
 			userBean.setX_EMAIL(x_EMAIL.getText());
 			userBean.setX_TELEPHONE_NUMBER(x_TELEPHONE_NUMBER.getText());
 			if (x_USER_TYPE_NAME.getValue() != null
-					&& !x_USER_TYPE_NAME.getValue().getLabel()
-							.equals("----(select none)----")) {
-				userBean.setX_USER_TYPE_NAME(x_USER_TYPE_NAME.getValue()
-						.getLabel());
-				userBean.setX_USER_TYPE_ID(x_USER_TYPE_NAME.getValue()
-						.getValue());
+					&& !x_USER_TYPE_NAME.getValue().getLabel().equals("----(select none)----")) {
+				userBean.setX_USER_TYPE_NAME(x_USER_TYPE_NAME.getValue().getLabel());
+				userBean.setX_USER_TYPE_ID(x_USER_TYPE_NAME.getValue().getValue());
 				userBean.setX_COMPANY_ID(x_USER_TYPE_NAME.getValue().getExtra());
 			}
-			if (x_USER_ROLE.getValue() != null
-					&& !x_USER_ROLE.getValue().getLabel()
-							.equals("----(select none)----")) {
+			if (x_USER_ROLE.getValue() != null && !x_USER_ROLE.getValue().getLabel().equals("----(select none)----")) {
 				userBean.setX_USER_ROLE_ID(x_USER_ROLE.getValue().getValue());
-				userBean.setX_USER_ROLE_NAME(x_USER_ROLE.getValue().getLabel());
-				userBean.setX_USER_ROLE_DETAILS(x_USER_ROLE.getValue()
-						.getExtra());
+				if(x_USER_ROLE.getValue().getLabel().equals("NATIONAL")){
+					userBean.setX_USER_ROLE_NAME("NTO");
+				}else{
+					userBean.setX_USER_ROLE_NAME(x_USER_ROLE.getValue().getLabel());
+				}
+				userBean.setX_USER_ROLE_DETAILS(x_USER_ROLE.getValue().getExtra());
 			}
 			userBean.setX_STATUS(x_STATUS.isSelected() ? "A" : "I");
 			userBean.setX_ACTIVATED(x_ACTIVATED.isSelected() ? "Y" : "N");
-			if (x_ACTIVATED_ON.getValue() != null) {
+			if (x_ACTIVATED.isSelected() && x_ACTIVATED_ON.getValue() != null) {
 				userBean.setX_ACTIVATED_ON(x_ACTIVATED_ON.getValue().toString());
 			} else {
 				userBean.setX_ACTIVATED_ON(null);
 			}
-			if (x_START_DATE.getValue() != null) {
+			if (x_START_DATE.getValue() != null){
 				userBean.setX_START_DATE(x_START_DATE.getValue().toString());
-				System.out.println("strt_date: "
-						+ x_START_DATE.getValue().toString());
-			} else {
+			}else {
 				userBean.setX_START_DATE(null);
 			}
 			if (x_END_DATE.getValue() != null) {
@@ -329,6 +376,7 @@ public class UserEditDialogController {
 			}
 			if (x_USER_ROLE.getValue() != null
 					&& !MainApp.getUserRole().getLabel().equals("CCO")) {
+				System.out.println("LGA/NTO assigned : "+x_ASSIGN_LGA.getValue().getValue());
 				userBean.setX_ASSIGN_LGA(x_ASSIGN_LGA.getValue().getLabel());
 				userBean.setX_ASSIGN_LGA_ID(x_ASSIGN_LGA.getValue().getValue());
 			}
@@ -338,8 +386,6 @@ public class UserEditDialogController {
 				userMain.refreshUserTable(userService.getSearchList(userBean));
 				okClicked = true;
 				dialogStage.close();
-				// DatabaseOperation.getDbo().closeConnection();
-				// DatabaseOperation.setDbo(null);
 			} else {
 				String masthead;
 				String message;
@@ -352,15 +398,11 @@ public class UserEditDialogController {
 				}
 				boolean userRoleSaved = false;
 				boolean userWarehouseAssignSaved = false;
-				boolean userSaved = userService.saveUser(userBean,
-						actionBtnString);
+				boolean userSaved = userService.saveUser(userBean,actionBtnString);
 				if (userSaved) {
-					System.out.println("userBean.getX_USER_ID()"
-							+ userBean.getX_USER_ID());
-					userRoleSaved = userService.setRoleIDMapping(userBean,
-							actionBtnString);
-					userWarehouseAssignSaved = userService
-							.setWarehouseIdAssingment(userBean, actionBtnString);
+					System.out.println("userBean.getX_USER_ID()"+ userBean.getX_USER_ID());
+					userRoleSaved = userService.setRoleIDMapping(userBean, actionBtnString);
+					userWarehouseAssignSaved = userService.setWarehouseIdAssingment(userBean, actionBtnString);
 				}
 				userMain.refreshUserTableGrid();
 				okClicked = true;
@@ -374,20 +416,13 @@ public class UserEditDialogController {
 							.masthead("User record not saved").showError();
 					dialogStage.close();
 				}
-				// DatabaseOperation.getDbo().closeConnection();
-				// DatabaseOperation.setDbo(null);
 			}
 		}
 	}
 
-	/**
-	 * Called when the user clicks cancel.
-	 */
 	@FXML
 	private void handleCancel() {
 		dialogStage.close();
-		// DatabaseOperation.getDbo().closeConnection();
-		// DatabaseOperation.setDbo(null);
 	}
 
 	public boolean isValidate(String actionBtnString) throws SQLException {
@@ -410,14 +445,11 @@ public class UserEditDialogController {
 					|| x_LAST_NAME.getText().length() == 0) {
 				errorMessage += "Last name cannot be left empty\n";
 			}
-			if (x_LOGIN_NAME.getText() == null
-					|| x_LOGIN_NAME.getText().length() == 0) {
+			if (x_LOGIN_NAME.getText() == null || x_LOGIN_NAME.getText().length() == 0) {
 				errorMessage += "Login Name cannot be left empty\n";
-			} else if (!x_LOGIN_NAME.getText().equals(
-					userBean.getX_LOGIN_NAME())) {
+			} else if (!x_LOGIN_NAME.getText().equals(userBean.getX_LOGIN_NAME())) {
 				if (CreateLogin.internetAvailable()) {
-					if (CreateLogin
-							.checkIsUserNameExist(x_LOGIN_NAME.getText())) {
+					if (CreateLogin.checkIsUserNameExist(x_LOGIN_NAME.getText())) {
 						errorMessage += "Please enter a different login-name.\n Other edited details will be saved.\n";
 						loginFlag = true;
 					}
@@ -428,14 +460,12 @@ public class UserEditDialogController {
 			if (x_USER_TYPE_NAME.getValue() == null
 					|| x_USER_TYPE_NAME.getValue() == null
 					|| x_USER_TYPE_NAME.getValue().toString().length() == 0
-					|| x_USER_TYPE_NAME.getValue().getLabel()
-							.equals("----(select none)----")) {
+					|| x_USER_TYPE_NAME.getValue().getLabel().equals("----(select none)----")) {
 				errorMessage += "choose a login type!\n";
 			}
 			if (x_USER_ROLE.getValue() == null
 					|| x_USER_ROLE.getValue().toString().length() == 0
-					|| x_USER_ROLE.getValue().getLabel()
-							.equals("----(select none)----")) {
+					|| x_USER_ROLE.getValue().getLabel().equals("----(select none)----")) {
 				errorMessage += "choose a user role!\n";
 			}
 			if (!actionBtnString.equals("edit")) {
@@ -449,21 +479,16 @@ public class UserEditDialogController {
 				}
 			}
 			if (x_EMAIL.getText() != null && x_EMAIL.getText().length() != 0) {
-				boolean valid = CommonService.validateEmailAddress(x_EMAIL
-						.getText());
+				boolean valid = CommonService.validateEmailAddress(x_EMAIL.getText());
 				errorMessage += (valid ? "" : "Enter a valid e-mail address\n");
 			}
 			// telephone number formats: (123)456-7890, 123-456-7890,
 			// 1234567890, (123)-456-7890
-			if (x_TELEPHONE_NUMBER.getText() != null
-					&& x_TELEPHONE_NUMBER.getText().length() != 0) {
-				boolean valid = CommonService
-						.isPhoneNumberValid(x_TELEPHONE_NUMBER.getText());
-				errorMessage += (valid ? ""
-						: "Enter phone number in the format specified in tooltip \n");
+			if (x_TELEPHONE_NUMBER.getText() != null && x_TELEPHONE_NUMBER.getText().length() != 0) {
+				boolean valid = CommonService.isPhoneNumberValid(x_TELEPHONE_NUMBER.getText());
+				errorMessage += (valid ? "" : "Enter phone number in the format specified in tooltip \n");
 			}
-			if (x_START_DATE.getValue() == null
-					|| x_START_DATE.getValue().toString().length() == 0) {
+			if (x_START_DATE.getValue() == null || x_START_DATE.getValue().toString().length() == 0) {
 				errorMessage += "Select Start Date\n";
 			}
 			if (errorMessage.length() == 0) {
@@ -483,5 +508,119 @@ public class UserEditDialogController {
 			}
 		} else
 			return true;
+	}
+
+	public void setRole(LabelValueBean role) {
+		this.role = role;
+		switch (role.getLabel()) {
+		case "LIO": // LIO
+			x_USER_TYPE_NAME.setDisable(true);
+			x_USER_ROLE.setDisable(true);
+			x_ACTIVATED_ON.setDisable(true);
+			x_ACTIVATED.setDisable(true);
+			x_STATUS.setDisable(true);
+			x_START_DATE.setDisable(true);
+			x_END_DATE.setDisable(true);
+			x_ASSIGN_LGA_LBL.setVisible(false);
+			x_ASSIGN_LGA.setVisible(false);
+			x_ACTIVATED_ON_LBL.setVisible(true);
+			x_ACTIVATED_ON.setVisible(true);
+			break;
+		case "MOH": // MOH
+			x_USER_TYPE_NAME.setDisable(true);
+			x_USER_ROLE.setDisable(true);
+			x_ACTIVATED_ON.setDisable(true);
+			x_ACTIVATED.setDisable(true);
+			x_STATUS.setDisable(true);
+			x_START_DATE.setDisable(true);
+			x_END_DATE.setDisable(true);
+			x_ASSIGN_LGA_LBL.setVisible(false);
+			x_ASSIGN_LGA.setVisible(false);
+			x_ACTIVATED_ON_LBL.setVisible(true);
+			x_ACTIVATED_ON.setVisible(true);
+			break;
+		case "SIO": // SIO
+			x_USER_TYPE_NAME.setDisable(true);
+			x_USER_ROLE.setDisable(true);
+			x_ACTIVATED_ON.setDisable(true);
+			x_ACTIVATED.setDisable(true);
+			x_STATUS.setDisable(true);
+			x_START_DATE.setDisable(true);
+			x_END_DATE.setDisable(true);
+			x_ASSIGN_LGA_LBL.setVisible(false);
+			x_ASSIGN_LGA.setVisible(false);
+			x_ACTIVATED_ON_LBL.setVisible(true);
+			x_ACTIVATED_ON.setVisible(true);
+			break;
+		case "SIFP": // SIFP
+			x_USER_TYPE_NAME.setDisable(true);
+			x_USER_ROLE.setDisable(true);
+			x_ACTIVATED_ON.setDisable(true);
+			x_ACTIVATED.setDisable(true);
+			x_STATUS.setDisable(true);
+			x_START_DATE.setDisable(true);
+			x_END_DATE.setDisable(true);
+			x_ASSIGN_LGA_LBL.setVisible(false);
+			x_ASSIGN_LGA.setVisible(false);
+			x_ACTIVATED_ON_LBL.setVisible(true);
+			x_ACTIVATED_ON.setVisible(true);
+			break;
+		case "SCCO": // SCCO
+			if(actionBtnString.equals("add")){
+				x_USER_TYPE_NAME.setDisable(false);
+				x_USER_ROLE.setDisable(false);
+			}else{
+				x_USER_TYPE_NAME.setDisable(true);
+				x_USER_ROLE.setDisable(true);
+				x_ACTIVATED.setDisable(true);
+				x_STATUS.setDisable(true);
+			}		
+//			x_USER_ROLE.setItems(userService.getDropdownList("ROLE"));
+//			new SelectKeyComboBoxListener(x_USER_ROLE);			
+			x_ASSIGN_LGA_LBL.setVisible(true);
+			x_ASSIGN_LGA.setVisible(true);			
+			x_ACTIVATED_ON_LBL.setVisible(false);
+			x_ACTIVATED_ON.setVisible(false);		
+			break;
+		case "NTO": // NTO
+			System.out.println("In setRole() case : NTO : "+actionBtnString);
+			x_USER_ROLE.setDisable(true);
+			x_USER_TYPE_NAME.setDisable(true);			
+			x_USER_ROLE.setValue(new LabelValueBean("NATIONAL",role.getValue(),"National Technical Officer - SUPER ADMINISTRATOR"));
+//			new SelectKeyComboBoxListener(x_USER_ROLE);
+//			x_USER_ROLE.getSelectionModel().selectFirst();			
+			x_ASSIGN_LGA_LBL.setVisible(false);
+			x_ASSIGN_LGA.setVisible(false);
+			x_ACTIVATED_ON_LBL.setVisible(false);
+			x_ACTIVATED_ON.setVisible(false);
+			x_ACTIVATED.setSelected(true);
+			if(actionBtnString.equals("search")){
+				x_USER_TYPE_NAME.setDisable(false);
+				x_USER_ROLE.setDisable(false);
+				x_ACTIVATED.setDisable(false);
+				x_ASSIGN_LGA_LBL.setVisible(true);
+				x_ASSIGN_LGA.setVisible(true);
+				x_ASSIGN_LGA.setItems(new FacilityService().getDropdownList("ALL_STORES"));
+				new SelectKeyComboBoxListener(x_ASSIGN_LGA);
+			}else{
+				System.out.println("userBean.getX_USER_WAREHOUSE_NAME() : "+userBean.getX_USER_WAREHOUSE_NAME());
+				System.out.println("MainApp.getUSER_WAREHOUSE_ID() : "+MainApp.getUSER_WAREHOUSE_ID());
+				x_ASSIGN_LGA.setValue(new LabelValueBean(MainApp.userBean.getX_USER_WAREHOUSE_NAME(),MainApp.getUSER_WAREHOUSE_ID()));
+			}
+			break;
+		case "CCO": // CCO - EMPLOYEE
+			x_USER_TYPE_NAME.setDisable(true);
+			x_USER_ROLE.setDisable(true);
+			x_ACTIVATED_ON.setDisable(true);
+			x_ACTIVATED.setDisable(true);
+			x_STATUS.setDisable(true);
+			x_START_DATE.setDisable(true);
+			x_END_DATE.setDisable(true);
+			x_ASSIGN_LGA_LBL.setVisible(false);
+			x_ASSIGN_LGA.setVisible(false);
+			x_ACTIVATED_ON_LBL.setVisible(true);
+			x_ACTIVATED_ON.setVisible(true);
+			break;
+		}
 	}
 }

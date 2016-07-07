@@ -56,7 +56,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <Label text="State" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                  <Label text="State" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -167,7 +167,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </ComboBox>
-                  <ComboBox prefHeight="25.0" prefWidth="236.0" promptText="Select State" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_STATE">
+                  <ComboBox editable="true" prefHeight="25.0" prefWidth="236.0" promptText="Select State" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="5" GridPane.valignment="TOP" fx:id="x_STATE">
                      <GridPane.margin>
                         <Insets left="10.0" />
                      </GridPane.margin>

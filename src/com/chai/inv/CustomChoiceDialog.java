@@ -159,8 +159,7 @@ public class CustomChoiceDialog {
 							STORE.setDisable(false);
 							label.setDisable(false);
 							selectedState = null;
-							System.out
-									.println("No State/National slected! (selectedState is set null)");
+							System.out.println("No State/National slected! (selectedState is set null)");
 						}
 					});
 			dlg.setMasthead("Select Store you want to login from and then click OK");

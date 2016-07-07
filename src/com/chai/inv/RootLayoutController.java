@@ -48,14 +48,15 @@ import javafx.stage.WindowEvent;
 
 import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.SyncProcess.CheckData;
+import com.chai.inv.loader.ProgressIndicatorTest;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.logger.SendLogToServer;
 import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.model.UserWarehouseLabelValue;
 import com.chai.inv.model.VersionInfoBean;
+import com.chai.inv.service.CommonService;
 import com.chai.inv.service.UserService;
-import com.chai.inv.test.ProgressIndicatorTest;
 import com.chai.inv.update.CheckForUpdates;
 import com.chai.inv.update.CompareVersionInfo;
 import com.chai.inv.update.UpdateProgressBar;
@@ -130,48 +131,37 @@ public class RootLayoutController {
 	private String tempFolderPath=null;
 	private String appDataPath =null;
 	private Boolean dbVersionStatus=false;
-	private Boolean appVersionStatus=false;
-	
+	private Boolean appVersionStatus=false;	
 
 	private HomePageController homePageController;
-
 	private ArrayList<String> list = new ArrayList<>();
 
 	public HomePageController getHomePageController() {
 		return homePageController;
 	}
-
 	public void setHomePageController(HomePageController homePageController) {
 		this.homePageController = homePageController;
 	}
-
 	public void setVisible() {
 		x_VBOX.getChildren().remove(0);
 		x_GRID_PANE.getChildren().remove(0);
 	}
-
 	public Label getX_ROOT_COMMON_LABEL() {
 		return x_ROOT_COMMON_LABEL;
 	}
-
 	public void setX_ROOT_COMMON_LABEL(Label x_ROOT_COMMON_LABEL) {
 		this.x_ROOT_COMMON_LABEL = x_ROOT_COMMON_LABEL;
 	}
-
 	public Label getUserLabel() {
 		return userLabel;
 	}
-
 	public void setUserName(String userLabel) {
 		this.userLabel.setText("User:" + userLabel);
 	}
-
 	public Label getX_USER_WAREHOUSE_NAME() {
-		System.out.println("GET LABEL : x_USER_WAREHOUSE_NAME.getText() = "
-				+ x_USER_WAREHOUSE_NAME.getText());
+		System.out.println("GET LABEL : x_USER_WAREHOUSE_NAME.getText() = "+ x_USER_WAREHOUSE_NAME.getText());
 		return x_USER_WAREHOUSE_NAME;
 	}
-
 	public void setwarehouseLvb(LabelValueBean warehouseLvb) {
 		this.warehouseLvb = warehouseLvb;
 		System.out.println("Warehouse: " + warehouseLvb.getLabel());
@@ -179,56 +169,38 @@ public class RootLayoutController {
 			System.out.println("x_USER_WAREHOUSE_NAME is null");
 			x_USER_WAREHOUSE_NAME = new Label();
 		}
-		System.out.println("-------------------------user warehouse name = "
-				+ warehouseLvb.getExtra() + " : " + warehouseLvb.getLabel()
-				+ "----------------------------");
-		x_USER_WAREHOUSE_NAME.setText(warehouseLvb.getExtra() + " : "
-				+ warehouseLvb.getLabel());
-		System.out.println("x_USER_WAREHOUSE_NAME.getText() = "
-				+ x_USER_WAREHOUSE_NAME.getText());
+		x_USER_WAREHOUSE_NAME.setText(warehouseLvb.getExtra()+" : "+ warehouseLvb.getLabel());
+		System.out.println("x_USER_WAREHOUSE_NAME.getText() = "+ x_USER_WAREHOUSE_NAME.getText());
 	}
-
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
-
 	public void setPrimaryStage(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 	}
-
 	public void setMainBorderPane(BorderPane mainBorderPane) {
 		RootLayoutController.mainBorderPane = mainBorderPane;
 	}
-
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 		mainApp.setLogoutFlag(false);
 	}
-
 	public void setUserBean(UserBean userBean) {
 		this.userBean = userBean;
 	}
-
 	public UserBean getUserBean() {
 		return userBean;
 	}
-
-	@FXML
-	private void initialize() {
-		loginDateText.setText((new SimpleDateFormat("E MMM dd, yyyy HH:mm"))
-				.format(new Date()));
+	@FXML private void initialize() {
+		loginDateText.setText((new SimpleDateFormat("E MMM dd, yyyy HH:mm")).format(new Date()));
 	}
-
-	@FXML
-	public void handleUserMenuAction() {
+	@FXML public void handleUserMenuAction() {
 		System.out.println("User Menu Action Called..");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class.getResource("/com/chai/inv/view/UserMain.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/UserMain.fxml"));
 		try {
 			BorderPane userOverviewPage = (BorderPane) loader.load();
 			userOverviewPage.setUserData(loader);
-			new SetTransitionOnScreen().setTransition(mainBorderPane,
-					"parrallelFadeTranslate", movePageDirection);
+			new SetTransitionOnScreen().setTransition(mainBorderPane,"parrallelFadeTranslate", movePageDirection);
 			mainBorderPane.setCenter(userOverviewPage);
 			UserMainController controller = loader.getController();
 			controller.setMainApp(mainApp);
@@ -239,25 +211,19 @@ public class RootLayoutController {
 			controller.setPrimaryStage(primaryStage);
 			controller.setUserListData();
 		} catch (IOException | NullPointerException | SQLException ex) {
-			System.out.println("Error occured while loading usermain layout.. "
-					+ ex.getMessage());
-				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Error occured while loading usermain layout.. "
-				+MyLogger.getStackTrace(ex));
-				ex.printStackTrace();
+			System.out.println("Error occured while loading usermain layout.. "+ ex.getMessage());
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error occured while loading usermain layout.."+MyLogger.getStackTrace(ex));
 		}
 	}
-
 	@FXML
 	public void handleTypeMenuAction() {
 		System.out.println("Type Menu Action Called..");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class.getResource("/com/chai/inv/view/TypeMain.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/TypeMain.fxml"));
 		try {
 			BorderPane typeOverviewPage = (BorderPane) loader.load();
 			typeOverviewPage.setUserData(loader);
-			new SetTransitionOnScreen().setTransition(mainBorderPane,
-					"parrallelFadeTranslate", movePageDirection);
+			new SetTransitionOnScreen().setTransition(mainBorderPane,"parrallelFadeTranslate", movePageDirection);
 			mainBorderPane.setCenter(typeOverviewPage);
 			TypeMainController controller = loader.getController();
 			controller.setRootLayoutController(this);
@@ -267,17 +233,14 @@ public class RootLayoutController {
 			controller.setUserBean(userBean);
 			controller.setPrimaryStage(primaryStage);
 		} catch (IOException | NullPointerException  ex) {
-			System.out.println("Error occured while loading typemain layout.. "
-					+ ex.getMessage());
+			System.out.println("Error occured while loading typemain layout.. "+ ex.getMessage());
 			ex.printStackTrace();
 		}
 	}
 	@FXML
 	public void handleFacilityMenuAction() {
 		System.out.println("LGA Menu Action Called..");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/FacilityMain.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/FacilityMain.fxml"));
 		try {
 			BorderPane facilityOverviewPage = (BorderPane) loader.load();
 			facilityOverviewPage.setUserData(loader);
@@ -629,14 +592,22 @@ public class RootLayoutController {
 	 */
 	@FXML
 	private void handleAbout() {
-		org.controlsfx.dialog.Dialogs
-				.create()
-				.owner(getPrimaryStage())
-				.title("About N-LIMS")
-				.masthead("N-LIMS")
-				.message(
-						"N-LIMS: Desktop application developed using JavaFx 8 Technology, by Yusata Infotech Pvt. Ltd. Jaipur, Rajasthan, India")
-				.showInformation();
+		Properties p = new Properties();
+		InputStream in = getClass().getResourceAsStream("/com/chai/inv/DAO/rst_connection.properties");
+		try {
+			p.load(in);
+			String applicationFor=p.getProperty("applicationFor");
+
+			Dialogs.create()
+			.owner(getPrimaryStage())
+			.title("About N-LIMS")
+			.masthead("N-LIMS | Version: "+new CommonService().getVersionNumber()+" | "+applicationFor)
+			.message("N-LIMS: Desktop application developed using JavaFx 8 Technology, by Yusata Infotech Pvt. Ltd. Jaipur, Rajasthan, India")
+			.showInformation();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@FXML
@@ -823,9 +794,7 @@ public class RootLayoutController {
 
 	public void handleHfBinCardGrid() {
 		System.out.println("Hey We are in handleHfBinCardGrid Handler");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/HFBinCardsGrid.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/HFBinCardsGrid.fxml"));
 		try {
 			BorderPane HFBinCardReportGrid = (BorderPane) loader.load();
 			HFBinCardReportGrid.setUserData(loader);
@@ -879,7 +848,7 @@ public class RootLayoutController {
 		MainApp.LOGGER.info("property file loaded");
 		//step-1
 		//work done 1
-		versionInfoBean=new CheckForUpdates().checkVersions(p.getProperty("versioninfoprovider"),mainApp);
+		versionInfoBean=new CheckForUpdates().checkVersions(p.getProperty("versioninfoprovider"),mainApp);		
 		switch(MainApp.getUserRole().getLabel().toUpperCase()){
 		case "CCO" :
 			if (CheckForUpdates.isInternetReachable()) {

@@ -12,7 +12,7 @@
    <center>
       <TableView fx:id="itemsOnHandListTable" BorderPane.alignment="CENTER">
         <columns>
-			<TableColumn maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Item" fx:id="x_ITEM_NUMBER" />
+			<TableColumn maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Product" fx:id="x_ITEM_NUMBER" />
             <TableColumn maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Safety Stock" visible="false" fx:id="x_ITEM_SAFETY_STOCK" />
             <TableColumn maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Product Stock Balance" fx:id="x_ONHAND_QUANTITY" />
             <TableColumn maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center;" text="UOM" fx:id="x_TRANSACTION_UOM" />

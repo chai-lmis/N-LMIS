@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
 <BorderPane style="-fx-background-color: transparent; -fx-border-color: transparent; -fx-border-radius: none;" styleClass="popupDataEntyAnchor" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.DashboardPopupController">
    <center>
       <GridPane hgap="10.0" vgap="10.0" fx:id="x_GRID_PANE">
@@ -27,9 +26,9 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
                <graphic>
-                  <ImageView fitHeight="39.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="36.0" fitWidth="114.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../resources/icons/Weekly-Stock-Report.png" />
+                        <Image url="@../../../../resources/icons/LGA_Stock_Perform_Dashboard.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -39,9 +38,9 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
                <graphic>
-                  <ImageView fitHeight="39.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="118.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../resources/icons/Weekly-Stock-Report.png" />
+                        <Image url="@../../../../resources/icons/HF_Stock_Summary.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -51,9 +50,9 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
                <graphic>
-                  <ImageView fitHeight="39.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="53.0" fitWidth="118.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../resources/icons/Weekly-Stock-Report.png" />
+                        <Image url="@../../../../resources/icons/HF_Stock_Summary.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -63,9 +62,9 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
                <graphic>
-                  <ImageView fitHeight="39.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="38.0" fitWidth="108.0" pickOnBounds="true">
                      <image>
-                        <Image url="@../../../../resources/icons/Weekly-Stock-Report.png" />
+                        <Image url="@../../../../resources/icons/LGA_Stock_Perform_Dashboard.png" />
                      </image>
                   </ImageView>
                </graphic>

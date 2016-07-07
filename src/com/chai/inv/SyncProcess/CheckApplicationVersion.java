@@ -34,8 +34,8 @@ public class CheckApplicationVersion {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
-				System.out.println("................. Checking whether any data available on local system to be sync .................");
+//				dbm.setAutoCommit();
+				System.out.println("..........Checking whether any data available on local system to be sync........");
 				sqlQuery = "SELECT APP_VERSION_ID, "
 								+"  DB_VERSION, "
 								+"  APPLICATION_VERSION, "
@@ -54,7 +54,7 @@ public class CheckApplicationVersion {
 				localPStmt = localConn.prepareStatement(sqlQuery);
 				localRs = localPStmt.executeQuery();
 				while (localRs.next()) {
-					System.out.println("Data availbale on local system to sync ON SERVER!!!");
+//					System.out.println("Data availbale on local system to sync ON SERVER!!!");
 					sqlQuery = "SELECT USER_ID,"
 							+ " WAREHOUSE_ID, "
 							+"  DB_VERSION, "
@@ -63,7 +63,7 @@ public class CheckApplicationVersion {
 						+ " WHERE WAREHOUSE_ID = "+warehouseId
 						+ "   AND USER_ID = "+MainApp.getUserId();
 					
-					System.out.println("Query to check whether the data need to be update on server or not? :: "+ sqlQuery);
+//					System.out.println("Query to check whether the data need to be update on server or not? :: "+ sqlQuery);
 					serverPStmt = serverConn.prepareStatement(sqlQuery);
 					serverRs = serverPStmt.executeQuery();
 					if (serverRs.next()) {
@@ -81,17 +81,17 @@ public class CheckApplicationVersion {
 						commonPStmt.setString(3,localRs.getString("LAST_UPDATED_ON"));
 						System.out.println("commonPStmt :: "+ commonPStmt.toString());
 						commonPStmt.executeUpdate();
-						System.out.println("Record updated successfully on SERVER.....DATA ABOUT TO COMMIT");
+						System.out.println("Record updated successfully on SERVER...");
 					}
 				}
-				dbm.commit();
+//				dbm.commit();
 				System.out.println("Record updated successfully on SERVER.....DATA COMMITTED");
 			} else {
 				System.out.println("...Oops Internet not available recently...Try Again Later !!!");
 			}
 		} catch (SQLException | NullPointerException e) {
 			System.out.println("**********Exception Found************ "+ e.getMessage());
-			dbm.rollback();
+//			dbm.rollback();
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {

@@ -123,7 +123,7 @@ public class PurchaseOrderMainController {
 				.println("In setOrderListData() - ------------- - - - ------------------------- - -  -------------------");
 		orderFormService = new OrderFormService();
 		list = orderFormService.getOrderList("Purchase Order",
-				userBean.getX_USER_WAREHOUSE_ID());
+				userBean.getX_USER_WAREHOUSE_ID(),null,null);
 		for (OrderFormBean ofb : list) {
 			if (ofb.getX_SHIP_DATE() != null
 					&& (!ofb.getX_SHIP_DATE().equals(""))) {
@@ -225,7 +225,7 @@ public class PurchaseOrderMainController {
 		System.out
 				.println("In OrderMaincontroller.refreshOrderTable() method: ");
 		ObservableList<OrderFormBean> list1 = orderFormService.getOrderList(
-				"Purchase Order", userBean.getX_USER_WAREHOUSE_ID());
+				"Purchase Order", userBean.getX_USER_WAREHOUSE_ID(),null,null);
 		int selectedIndex = orderTable.getSelectionModel().getSelectedIndex();
 		orderTable.setItems(null);
 		orderTable.layout();

@@ -42,11 +42,9 @@ public class DatabaseConnectionManagement {
 					serverConn.close();
 				}
 			} catch (SQLException | IOException ex) {
-				System.out.println("Exception occured while closing connection:"+
-						ex.getMessage());
+				System.out.println("Exception occured while closing connection:"+ ex.getMessage());
 				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Exception occured while closing connection:"
-				+MyLogger.getStackTrace(e));
+				MainApp.LOGGER.severe("Exception occured while closing connection:"+MyLogger.getStackTrace(e));
 			}
 		}
 	}
@@ -55,11 +53,9 @@ public class DatabaseConnectionManagement {
 			localConn.setAutoCommit(false);
 			serverConn.setAutoCommit(false);
 		} catch (SQLException ex) {
-			System.out.println("***** Exception occured while set commit false *****"
-		+ ex.getMessage());
+			System.out.println("***** Exception occured while set commit false *****"+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("***** Exception occured while set commit false *****"
-			+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("***** Exception occured while set commit false *****"+MyLogger.getStackTrace(ex));
 		}
 	}
 
@@ -68,11 +64,9 @@ public class DatabaseConnectionManagement {
 			localConn.commit();
 			serverConn.commit();
 		} catch (SQLException ex) {
-			System.out.println("***** Exception occured while set commit true *****"+ 
-		ex.getMessage());
+			System.out.println("***** Exception occured while set commit true *****"+ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("***** Exception occured while set commit true *****"
-			+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("***** Exception occured while set commit true *****"+MyLogger.getStackTrace(ex));
 		}
 	}
 
@@ -81,11 +75,9 @@ public class DatabaseConnectionManagement {
 			localConn.rollback();
 			serverConn.rollback();
 		} catch (SQLException ex) {
-			System.out.println("***** Exception occured while rollback *****"+ 
-		ex.getMessage());
+			System.out.println("***** Exception occured while rollback *****"+ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("***** Exception occured while rollback *****"
-			+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("***** Exception occured while rollback *****"+MyLogger.getStackTrace(ex));
 		}
 	}
 
@@ -100,11 +92,9 @@ public class DatabaseConnectionManagement {
 			}
 			System.out.println("Connection Closed......");
 		} catch (SQLException ex) {
-			System.out.println("***** Exception occured while closing connection *****"+
-		ex.getMessage());
+			System.out.println("***** Exception occured while closing connection *****"+ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("***** Exception occured while closing connection *****"
-			+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("***** Exception occured while closing connection *****"+MyLogger.getStackTrace(ex));
 		}
 	}
 }

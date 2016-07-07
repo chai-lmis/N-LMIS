@@ -102,7 +102,7 @@
                         <Insets left="5.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox editable="true" onAction="#handleOrderStatusChange" prefHeight="29.0" prefWidth="200.0" promptText="Select Order Status" style="-fx-font-size: 13;" visibleRowCount="5" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER" fx:id="x_ORDER_STATUS">
+                  <ComboBox editable="true" onAction="#CheckOrderStatusChange" prefHeight="29.0" prefWidth="200.0" promptText="Select Order Status" style="-fx-font-size: 13;" visibleRowCount="5" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.valignment="TOP" GridPane.vgrow="NEVER" fx:id="x_ORDER_STATUS">
                      <GridPane.margin>
                         <Insets left="5.0" right="5.0" />
                      </GridPane.margin>
@@ -200,7 +200,7 @@
             </HBox>
             <HBox prefHeight="36.0" prefWidth="601.0" spacing="10.0">
                <children>
-                  <Button mnemonicParsing="false" onAction="#handleDeleteProductLine" prefHeight="25.0" prefWidth="107.0" text="Delete Product" />
+                  <Button mnemonicParsing="false" onAction="#handleDeleteProductLine" prefHeight="25.0" prefWidth="107.0" text="Delete Product" fx:id="x_DELETE_BTN" />
                   <Button mnemonicParsing="false" text="Pending Receipt" visible="false" />
                </children>
                <VBox.margin>

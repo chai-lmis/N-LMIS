@@ -3,7 +3,6 @@ package com.chai.inv.service;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.logging.Level;
 
 import javafx.collections.FXCollections;
@@ -20,29 +19,15 @@ public class TransactionRegisterService {
 	DatabaseOperation dao;
 	PreparedStatement pstmt;
 	ResultSet rs;
-	Statement stmt;
-
 	public ObservableList<LabelValueBean> getDropdownList(String... action) {
 		String x_QUERY = null;
 		switch (action[0]) {
 		case "item":
-			x_QUERY = "SELECT ITEM_ID, " + "		  ITEM_NUMBER,"
-					+ "		  ITEM_DESCRIPTION," + "		  TRANSACTION_BASE_UOM "
-					+ "	 FROM ITEM_MASTERS " + " WHERE STATUS = 'A' "
+			x_QUERY = "SELECT ITEM_ID, ITEM_NUMBER,  ITEM_DESCRIPTION, TRANSACTION_BASE_UOM "
+					+ "	 FROM ITEM_MASTERS " 
+					+ " WHERE STATUS = 'A' "
 					+ " ORDER BY ITEM_NUMBER";
 			break;
-//		case "subinventory":
-//			x_QUERY = "SELECT SUBINVENTORY_ID, " + "		  SUBINVENTORY_CODE "
-//					+ "  FROM ITEM_SUBINVENTORIES " + " WHERE STATUS = 'A' "
-//					+ "   AND WAREHOUSE_ID = " + action[1]
-//					+ " ORDER BY SUBINVENTORY_CODE";
-//			break;
-//		case "locator":
-//			x_QUERY = "SELECT BIN_LOCATION_ID, " + "		  BIN_LOCATION_CODE "
-//					+ "  FROM SUBINVENTORY_BIN_LOCATIONS "
-//					+ " WHERE STATUS = 'A' " + "   AND SUBINVENTORY_ID = "
-//					+ action[1] + " ORDER BY BIN_LOCATION_CODE";
-//			break;
 		case "transactionType":
 			x_QUERY = "SELECT TYPE_ID, "
 					+ "		  TYPE_NAME "
@@ -136,5 +121,22 @@ public class TransactionRegisterService {
 			System.out.println("transaction register select query (refresh) - "+ pstmt.toString());
 		}
 		return list;
+	}
+	public void disableItemTransactionTriggers(Boolean flag){		
+		try {
+			if(dao==null || dao.getConnection()==null || dao.getConnection().isClosed()){
+				dao = DatabaseOperation.getDbo();
+			}
+			String flagStr = (flag?"T":"F");
+			pstmt = dao.getPreparedStatement("UPDATE SHOW_SYNC_PROGRESS_SCREEN_FLAG SET ITEM_TRANSACTION_TRGS_DISABLE = '"+flagStr+"' ");
+			if(pstmt.executeUpdate()>0){
+				System.out.println("ITEM_TRANSACTION_TRGS_DISABLE = "+flagStr);
+				MainApp.LOGGER.setLevel(Level.INFO);
+				MainApp.LOGGER.info("ITEM_TRANSACTION_TRGS_DISABLE = "+flagStr);
+			}			
+		} catch (SQLException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+		}		
 	}
 }

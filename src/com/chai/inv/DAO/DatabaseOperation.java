@@ -42,12 +42,15 @@ public class DatabaseOperation {
 			p.load(in);
 			Class.forName(p.getProperty("drivername"));
 			if (CONNECT_TO_SERVER) {
+				System.out.println("******************server******************************************COnnection Ip======"+p.getProperty("connectionStringServer"));
 				con = DriverManager.getConnection(
 						p.getProperty("connectionStringServer"),
 						p.getProperty("username"), p.getProperty("password"));
 				System.out.println("Connected to SERVER DB.........");
 				connectionWithServer = true;
 			} else {
+				System.out.println("******************local******************************************COnnection Ip======"+p.getProperty("connectionStringLocal"));
+				
 				dbCredential.setLabel(p.getProperty("username"));
 				dbCredential.setValue(p.getProperty("password"));
 				con = DriverManager.getConnection(
@@ -113,20 +116,16 @@ public class DatabaseOperation {
 	public static DatabaseOperation getDbo() {
 		try {
 			if (dbo == null) {
-				System.out
-						.println("dbo in DatabaseOperation.getDbo() found null... creating new dbo object.");
+				System.out.println("dbo in DatabaseOperation.getDbo() found null... creating new dbo object.");
 				dbo = new DatabaseOperation();
 			} else if (dbo.con == null) {
 				dbo = new DatabaseOperation();
-				System.out
-						.println("In else-if Connection object found null... database operation");
+				System.out.println("In else-if Connection object found null... database operation");
 			} else if (dbo.con.isClosed()) {
 				dbo = new DatabaseOperation();
-				System.out
-						.println("In else--if Connection object found not null but connection is closed... database operation");
+				System.out.println("In else--if Connection object found not null but connection is closed... database operation");
 			} else {
-				System.out
-						.println("In else Connection object found not null & connection is not closed... database operation");
+				System.out.println("In else Connection object found not null & connection is not closed... database operation");
 			}
 		} catch (SQLException e) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
@@ -397,16 +396,13 @@ public class DatabaseOperation {
 		queryList.add("UPDATE SOURCES SET SYNC_FLAG='N'");
 		// CheckUsers - TABLE : ADM_USERS
 		if(remove){
-			queryList
-					.add("UPDATE ADM_USERS SET ACTIVATED='N', SYNC_FLAG='N', STATUS='A' WHERE USER_ID = "
+			queryList.add("UPDATE ADM_USERS SET ACTIVATED='N', SYNC_FLAG='N', STATUS='A' WHERE USER_ID = "
 							+ user_id + " AND WAREHOUSE_ID=" + warehouse_id);
 			// CheckUserRoleMapp - TABLE : ADM_USER_ROLE_MAPPINGS
-			queryList
-					.add("UPDATE ADM_USER_ROLE_MAPPINGS SET STATUS='I', SYNC_FLAG='N' WHERE USER_ID = "
+			queryList.add("UPDATE ADM_USER_ROLE_MAPPINGS SET STATUS='I', SYNC_FLAG='N' WHERE USER_ID = "
 							+ user_id + " AND WAREHOUSE_ID=" + warehouse_id);
 			// CheckUserWarehouseAssignment - TABLE : ADM_USER_WAREHOUSE_ASSIGNMENTS
-			queryList
-					.add("UPDATE ADM_USER_WAREHOUSE_ASSIGNMENTS SET STATUS='I', SYNC_FLAG='N' WHERE USER_ID = "
+			queryList.add("UPDATE ADM_USER_WAREHOUSE_ASSIGNMENTS SET STATUS='I', SYNC_FLAG='N' WHERE USER_ID = "
 							+ user_id + " AND WAREHOUSE_ID=" + warehouse_id);
 		}
 		// CheckTypes - TABLE : TYPES
@@ -417,33 +413,11 @@ public class DatabaseOperation {
 		// NO NEED TO UPDATE CATEORIES
 
 		// CheckInventoryWarehouse - TABLE : INVENTORY_WAREHOUSES
-		queryList
-				.add("UPDATE INVENTORY_WAREHOUSES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+		queryList.add("UPDATE INVENTORY_WAREHOUSES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
 						+ warehouse_id);
 		// CheckItemMaster - TABLE : ITEM_MASTERS
-		queryList
-				.add("UPDATE ITEM_MASTERS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+		queryList.add("UPDATE ITEM_MASTERS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
 						+ warehouse_id);
-		// CheckItemSubInventories - TABLE : ITEM_SUBINVENTORIES
-//		queryList
-//				.add("UPDATE ITEM_SUBINVENTORIES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-//						+ warehouse_id);
-		// CheckItemEnvironmentConditions - TABLE : ITEM_ENVIRONMENT_CONDITIONS
-//		queryList
-//				.add("UPDATE ITEM_ENVIRONMENT_CONDITIONS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-//						+ warehouse_id);
-		// CheckSubInventoryBinLocations - TABLE : SUBINVENTORY_BIN_LOCATIONS
-//		queryList
-//				.add("UPDATE SUBINVENTORY_BIN_LOCATIONS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-//						+ warehouse_id);
-		// CheckItemLotNumber - TABLE : ITEM_LOT_NUMBERS
-//		queryList
-//				.add("UPDATE ITEM_LOT_NUMBERS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-//						+ warehouse_id);
-		// CheckMANUAL_LGA_STOCK_ENTRY - TABLE : MANUAL_LGA_STOCK_ENTRY
-//		queryList
-//				.add("UPDATE MANUAL_LGA_STOCK_ENTRY SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-//						+ warehouse_id);
 		// CheckCustomers - TABLE : CUSTOMERS
 		queryList.add("UPDATE CUSTOMERS SET SYNC_FLAG = 'N' WHERE DEFAULT_STORE_ID = "
 						+ warehouse_id);
@@ -461,12 +435,7 @@ public class DatabaseOperation {
 		// CheckItemOnhandQuantities - TABLE : ITEM_ONHAND_QUANTITIES
 		queryList.add("UPDATE ITEM_ONHAND_QUANTITIES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
 						+ warehouse_id);
-		// CheckOnhandFreezQuantities - TABLE : ITEM_ONHAND_FREEZ_QUANTITIES
-//		queryList
-//				.add("UPDATE ITEM_ONHAND_FREEZ_QUANTITIES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-//						+ warehouse_id);
 		// CheckOrderHeader - TABLE : ORDER_HEADERS
-
 		queryList.add("UPDATE ORDER_HEADERS SET SYNC_FLAG = 'N' "
 						+ " WHERE ORDER_FROM_ID = "+ warehouse_id
 						+ " AND ORDER_TYPE_ID = F_GET_TYPE('Orders','SALES ORDER')");
@@ -475,11 +444,7 @@ public class DatabaseOperation {
 						+ "  OR ORDER_TO_ID = "+ warehouse_id);
 		// CheckItemTransaction - TABLE : ITEM_TRANSACTIONS
 		queryList.add("UPDATE ITEM_TRANSACTIONS SET SYNC_FLAG = 'N' "
-						+ " WHERE FROM_SOURCE_ID = "+ warehouse_id
-						+ "     OR TO_SOURCE_ID = "+ warehouse_id);
-		// CheckChildLineItem - TABLE : CHILD_LINE_ITEMS
-//		queryList.add("UPDATE CHILD_LINE_ITEMS SET SYNC_FLAG = 'N' WHERE SHIP_TO_WAREHOUSE_ID = "
-//						+ warehouse_id);
+						+ " WHERE WAREHOUSE_ID = "+ warehouse_id);
 		// TODO : call method to update all the flags at central server in all
 		// the used tables of
 		// the logged in LGA(sync_flag set 'N' against warehouse_id column in

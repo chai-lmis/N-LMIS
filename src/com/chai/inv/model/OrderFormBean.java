@@ -41,6 +41,7 @@ public class OrderFormBean {
 	private String x_UPDATED_BY;
 	private String x_UPDATED_ON;
 	private String x_COMMENT;
+	private String x_ALLOCATION_TYPE;
 
 	// for order form fields
 	public String getX_ORDER_FROM_NAME() {
@@ -325,6 +326,22 @@ public class OrderFormBean {
 	public void setX_REFERENCE_ORDER_HEADER_ID(
 			String x_REFERENCE_ORDER_HEADER_ID) {
 		this.x_REFERENCE_ORDER_HEADER_ID = x_REFERENCE_ORDER_HEADER_ID;
+	}
+
+	public String getX_START_DATE() {
+		return x_START_DATE;
+	}
+
+	public void setX_START_DATE(String x_START_DATE) {
+		this.x_START_DATE = x_START_DATE;
+	}
+
+	public String getX_ALLOCATION_TYPE() {
+		return x_ALLOCATION_TYPE;
+	}
+
+	public void setX_ALLOCATION_TYPE(String x_ALLOCATION_TYPE) {
+		this.x_ALLOCATION_TYPE = x_ALLOCATION_TYPE;
 	}
 
 }

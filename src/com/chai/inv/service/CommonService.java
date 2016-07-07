@@ -14,6 +14,22 @@ import com.chai.inv.model.HistoryBean;
 public class CommonService {
 	DatabaseOperation dao;
 
+	public String getVersionNumber(){
+		String appVersionNumber;
+		try {
+			ResultSet rs = DatabaseOperation.getDbo().getConnection()
+			.prepareStatement("SELECT APPLICATION_VERSION FROM APPLICATION_VERSION_CONTROL").executeQuery();
+			if(rs.next()){
+				appVersionNumber=rs.getString("APPLICATION_VERSION");
+			}else{
+				appVersionNumber = "<version information not present>";
+			}
+		} catch (SQLException e) {
+			appVersionNumber = "<version information not present>";
+			System.out.println("Error occur while getting Version Number: "+e.getMessage());
+		}
+		return appVersionNumber;
+	}
 	public static boolean isInteger(String value) {
 		boolean result = false;
 		if (value != null) {
@@ -23,8 +39,7 @@ public class CommonService {
 			} catch (NumberFormatException ex) {
 				System.out.println("Integer-NumberFormat Error: "+ ex.getMessage());
 				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Integer-NumberFormat Error: "+
-				MyLogger.getStackTrace(ex));
+				MainApp.LOGGER.severe("Integer-NumberFormat Error: "+MyLogger.getStackTrace(ex));
 			}
 		}
 		return result;

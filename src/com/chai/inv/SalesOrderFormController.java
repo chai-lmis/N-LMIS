@@ -22,9 +22,9 @@ import com.chai.inv.model.TransactionBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.service.OrderFormService;
 import com.chai.inv.util.CalendarUtil;
-import com.chai.inv.util.OrderStatusValidation;
 import com.chai.inv.util.SelectKeyComboBoxListener;
 
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,6 +32,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
@@ -41,6 +42,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
@@ -58,6 +60,7 @@ public class SalesOrderFormController {
 	private boolean okClicked = false;
 	private boolean order_already_cancelled = false;
 	private boolean orderAlreadyOpen = false;
+	private boolean orderAlreadyClosed_issue = false;
 	private SalesOrderMainController salesOrderMain;
 	private ObservableList<AddOrderLineFormBean> list = FXCollections.observableArrayList();
 	private LabelValueBean STATUS_BEFORE_SELECTING_CANCEL = new LabelValueBean();
@@ -65,7 +68,7 @@ public class SalesOrderFormController {
 	private LabelValueBean ORDER_STATUS_INCOMPLETE_LVB = new LabelValueBean();
 	private LabelValueBean ORDER_STATUS_SHIPPED_LVB = new LabelValueBean();
 	private LabelValueBean ORDER_STATUS_CLOSED_LVB = new LabelValueBean();
-
+	
 	@FXML
 	private DatePicker x_SHIPPED_DATE_ON_RECEIVE;
 	@FXML
@@ -127,12 +130,16 @@ public class SalesOrderFormController {
 	@FXML
 	private Button x_ADD_LINE_ITEM_BTN;
 	@FXML
+	private Button x_DELETE_BTN;
+	@FXML
 	private Button x_PENDING_RECEIPT_BTN;
 	@FXML
 	private Button x_SAVE_BTN;
 	int selectedRowIndex;
 	boolean cancelCompleteOrder = false;
 
+	public ChangeListener<LabelValueBean> changeListener;
+	
 	public int getSelectedRowIndex() {
 		return selectedRowIndex;
 	}
@@ -238,8 +245,7 @@ public class SalesOrderFormController {
 		.setCellValueFactory(new PropertyValueFactory<AddOrderLineFormBean, String>(
 				"x_CUST_PRODUCT_DETAIL_ID"));
 		
-		x_ORDER_LINE_ITEMS_TABLE
-				.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		x_ORDER_LINE_ITEMS_TABLE.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		x_ORDER_LINE_ITEMS_TABLE.setRowFactory(tv -> {
 			TableRow<AddOrderLineFormBean> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
@@ -247,11 +253,16 @@ public class SalesOrderFormController {
 					AddOrderLineFormBean rowData = row.getItem();
 					System.out.println(rowData);
 					System.out.println("row.getIndex()>>" + row.getIndex());
-					selectedRowIndex = row.getIndex();
-					addOrderLineFormBean = x_ORDER_LINE_ITEMS_TABLE
-							.getSelectionModel().getSelectedItem();
-					line_Table_action_Btn_String = "edit";
-					handleOpenOrderLineForm();
+					if(x_ORDER_STATUS.getValue().getLabel().toUpperCase().equals("OPEN") 
+							|| x_ORDER_STATUS.getValue().getLabel().toUpperCase().equals("INCOMPLETE")){
+						selectedRowIndex = row.getIndex();
+						addOrderLineFormBean = x_ORDER_LINE_ITEMS_TABLE.getSelectionModel().getSelectedItem();
+						line_Table_action_Btn_String = "edit";
+						handleOpenOrderLineForm();
+					}else{
+						Alert alert = new Alert(AlertType.WARNING, "A "+x_ORDER_STATUS.getValue().getLabel().toUpperCase()+" order cannot be edited.");
+						alert.show();
+					}			
 				}
 			});
 			return row;
@@ -271,7 +282,6 @@ public class SalesOrderFormController {
 			@Override
 			public void handle(WindowEvent we) {
 				System.out.println("Stage is closing");
-				System.out.println("rollback run onCloseRequest.. Pressed window-close button");
 				handleCancel();
 			}
 		});
@@ -287,7 +297,8 @@ public class SalesOrderFormController {
 		x_ORDER_TO.setDisable(true);
 		x_ORDER_STATUS.setItems(orderFormService.getDropdownList("SOOrderStatus"));
 		x_ORDER_STATUS.getItems().addAll(new LabelValueBean("----(select none)----", null));
-		new SelectKeyComboBoxListener(x_ORDER_STATUS);
+		x_ORDER_STATUS.setEditable(false);
+//		new SelectKeyComboBoxListener(x_ORDER_STATUS);
 		for (LabelValueBean bean : x_ORDER_STATUS.getItems()) {
 			if (bean.getLabel().equalsIgnoreCase("CANCEL")) {
 				ORDER_STATUS_CANCEL_LVB = bean;
@@ -299,14 +310,23 @@ public class SalesOrderFormController {
 				ORDER_STATUS_CLOSED_LVB = bean;
 			}
 		}
-		x_CANCEL_DATE.setDisable(true);
-		x_CANCEL_REASON.setDisable(true);
 		if (orderFormBean != null) {
 			if (orderFormBean.getX_ORDER_STATUS().equals("CANCEL")) {
 				order_already_cancelled = true;
-			}
-			if (orderFormBean.getX_ORDER_STATUS().equals("OPEN")) {
+				x_CANCEL_DATE.setDisable(true);
+				x_CANCEL_REASON.setDisable(true);
+				x_SAVE_BTN.setDisable(true);
+				x_DELETE_BTN.setDisable(true);
+			}else if(orderFormBean.getX_ORDER_STATUS().equals("CLOSED/ISSUE")){
+				orderAlreadyClosed_issue=true;
+				x_CANCEL_DATE.setDisable(true);
+				x_CANCEL_REASON.setDisable(true);
+				x_DELETE_BTN.setDisable(true);
+				x_SAVE_BTN.setDisable(true);
+			}else if (orderFormBean.getX_ORDER_STATUS().equals("OPEN")) {
 				orderAlreadyOpen = true;
+				x_CANCEL_DATE.setDisable(true);
+				x_CANCEL_REASON.setDisable(true);
 			}
 			list = orderFormService.getOrderLineList(labelValueBean.getLabel(),order_already_cancelled);
 			for (AddOrderLineFormBean bean : list) {
@@ -328,8 +348,7 @@ public class SalesOrderFormController {
 			System.out.println("order header Id: " + labelValueBean.getLabel());
 			x_ORDER_NUMBER.setText(orderFormBean.getX_ORDER_HEADER_NUMBER());
 			// x_ORDER_NUMBER.setText(orderFormBean.getX_ORDER_HEADER_ID());
-			x_ORDER_DATE.setValue(CalendarUtil.fromString(orderFormBean
-					.getX_ORDER_DATE()));
+			x_ORDER_DATE.setValue(CalendarUtil.fromString(orderFormBean.getX_ORDER_DATE()));
 			String order_to_source_id = orderFormBean.getX_ORDER_TO_SOURCE()
 					.toUpperCase().equals("HEALTH FACILITY") ? "1" : "2";
 			System.out.println("order_to_source_id : HEALTH FACILITY OR STORE : ---> "
@@ -352,8 +371,8 @@ public class SalesOrderFormController {
 			} else {
 				X_SHIP_DATE.setValue(LocalDate.now());
 			}
-			x_ORDER_STATUS.setValue(new LabelValueBean(orderFormBean.getX_ORDER_STATUS(), orderFormBean.getX_ORDER_STATUS_ID()));
-			STATUS_BEFORE_SELECTING_CANCEL = x_ORDER_STATUS.getValue();
+			STATUS_BEFORE_SELECTING_CANCEL = new LabelValueBean(orderFormBean.getX_ORDER_STATUS(), orderFormBean.getX_ORDER_STATUS_ID());
+			x_ORDER_STATUS.getSelectionModel().select(STATUS_BEFORE_SELECTING_CANCEL);
 			x_COMMENT.setText(orderFormBean.getX_COMMENT());
 			x_CANCEL_DATE.setValue(CalendarUtil.fromString(orderFormBean
 					.getX_CANCEL_DATE()));
@@ -428,45 +447,32 @@ public class SalesOrderFormController {
 	}
 
 	@FXML
-	public void handleOrderStatusChange() throws SQLException {
+	public void CheckOrderStatusChange() throws SQLException {
+		System.out.println("order status change listenr is called");
 		LabelValueBean lvb = x_ORDER_STATUS.getValue();
 		if(lvb != null){
-			System.out.println("lvb is null");
-			if (lvb.getLabel().equals("RECEIVED")) {
-				x_SHIPPED_DATE_ON_RECEIVE.setValue(LocalDate.now());
-			} else {
-				x_SHIPPED_DATE_ON_RECEIVE.setValue(null);
-			}
-			
-			if (actionBtnString.equals("edit") && !order_already_cancelled) {
-				if (lvb.getLabel().equals("CANCEL")) {
-					x_CANCEL_DATE.setDisable(false);
-					x_CANCEL_DATE.setValue(LocalDate.now());
-					x_CANCEL_REASON.setDisable(false);
-					x_CANCEL_REASON.setText("cancelled the complete order by user: "
-									+ userBean.getX_FIRST_NAME() + " "
-									+ userBean.getX_LAST_NAME());
-					setStatusCancelOnOrderAndSave(lvb);					
-				} else {
-					x_CANCEL_DATE.setDisable(true);
-					x_CANCEL_DATE.setValue(null);
-					x_CANCEL_REASON.setDisable(true);
-				}
-			} else if (!lvb.getLabel().equals("CANCEL")) {
+			if(lvb.getLabel().equals("CANCEL") && order_already_cancelled){
+				x_CANCEL_DATE.setDisable(false);
+				x_CANCEL_REASON.setDisable(false);
+				x_CANCEL_DATE.setValue(CalendarUtil.fromString(orderFormBean.getX_CANCEL_DATE()));
+				x_CANCEL_REASON.setText(orderFormBean.getX_CANCEL_REASON());
+			}else if(lvb.getLabel().equals("CANCEL")){
+				x_CANCEL_DATE.setDisable(false);
+				x_CANCEL_DATE.setValue(LocalDate.now());
+				x_CANCEL_REASON.setDisable(false);
+				x_CANCEL_REASON.setText("cancelled the complete order by user: "
+						+ userBean.getX_FIRST_NAME() + " "
+						+ userBean.getX_LAST_NAME());
+				
+			}else{
 				x_CANCEL_DATE.setDisable(true);
 				x_CANCEL_DATE.setValue(null);
 				x_CANCEL_REASON.setDisable(true);
 				x_CANCEL_REASON.clear();
-			} else {
-				x_CANCEL_DATE.setDisable(false);
-				x_CANCEL_DATE.setValue(CalendarUtil.fromString(orderFormBean.getX_CANCEL_DATE()));
-				x_CANCEL_REASON.setDisable(false);
-				x_CANCEL_REASON.setText(orderFormBean.getX_CANCEL_REASON());
 			}
 		}else if(lvb.getLabel()==null){
 			System.out.println("lvb.getLabel() is null");
-		}
-		
+		}		
 	}
 
 	public void setStatusCancelOnOrderAndSave(LabelValueBean lvb) throws SQLException {
@@ -500,22 +506,8 @@ public class SalesOrderFormController {
 //			orderFormService.deleteCalculatedMinMaxDetails(aolb.getX_CUST_PRODUCT_DETAIL_ID());
 			orderFormService.updateCalculatedMinMaxDetails(aolb.getX_CUST_PRODUCT_DETAIL_ID());
 		}
-		handleSubmitOrders();
 	}
 
-//	public void setStatusClose(LabelValueBean lvb) throws SQLException {
-//		// cancelCompleteOrder=true;
-//		for (int i = 0; i < list.size(); i++) {
-//			AddOrderLineFormBean aolb = list.get(i);
-//			System.out.println("X_LINE_STATUS : " + aolb.getX_LINE_STATUS());
-//			aolb.setX_LINE_STATUS(lvb.getLabel());
-//			aolb.setX_LINE_STATUS_ID(lvb.getValue());
-//			System.out.println("aolb.getX_ORDER_LINE_ID: " + i + "-->"+ aolb.getX_ORDER_LINE_ID());
-//			System.out.println("aolb.getX_LINE_ITEM_ID : "+ aolb.getX_LINE_ITEM_ID());
-//			list.set(i, aolb);
-//		}
-//	}
-	
 	@FXML public void handleDeleteProductLine(){
 		System.out.println("Handler Called :Delete Product Line from Order Fulfilment : Sales Order Form ");
 		ObservableList<AddOrderLineFormBean> list = x_ORDER_LINE_ITEMS_TABLE.getItems();
@@ -540,6 +532,7 @@ public class SalesOrderFormController {
 				if(custMinMaxFlag ) {
 					if(orderLineFlag){
 						list.remove(list.get(x_ORDER_LINE_ITEMS_TABLE.getSelectionModel().getSelectedIndex()));
+						x_ORDER_LINE_ITEMS_TABLE.getSelectionModel().clearSelection();
 						System.out.println("Line Item Deleted...");
 					}else{
 						System.out.println("*****orderLineFlag = "+orderLineFlag+" ******");
@@ -561,12 +554,65 @@ public class SalesOrderFormController {
 	
 	@FXML
 	public void handleSubmitOrders() throws SQLException {
+		boolean insertFlag=false;
 		if (isValidate(actionBtnString)) {
+			LabelValueBean lvb = x_ORDER_STATUS.getValue();
+			if(lvb != null){
+				System.out.println("lvb is not  null");				
+				if (actionBtnString.equals("edit") && !order_already_cancelled) {
+					if (lvb.getLabel().equals("CANCEL")) {
+						x_CANCEL_DATE.setDisable(false);
+						x_CANCEL_DATE.setValue(LocalDate.now());
+						x_CANCEL_REASON.setDisable(false);
+						x_CANCEL_REASON.setText("cancelled the complete order by user: "
+										+ userBean.getX_FIRST_NAME() + " "
+										+ userBean.getX_LAST_NAME());
+						Action response = Dialogs.create().owner(dialogStage)
+								.masthead("You cancelled all line products in your order.")
+								.message("Do you want to cancel  order?")
+								.actions(Dialog.Actions.NO, Dialog.Actions.YES)
+								.showConfirm();
+						if (response== Dialog.Actions.YES) {
+							System.out.println("order canceled");
+							setStatusCancelOnOrderAndSave(lvb);	
+							insertFlag=true;
+						}else{
+							x_ORDER_STATUS.getSelectionModel().select(STATUS_BEFORE_SELECTING_CANCEL);
+							x_CANCEL_DATE.setDisable(true);
+							x_CANCEL_DATE.setValue(null);
+							x_CANCEL_REASON.setDisable(true);
+							x_CANCEL_REASON.clear();
+						}		
+					} else {
+						x_CANCEL_DATE.setDisable(true);
+						x_CANCEL_DATE.setValue(null);
+						x_CANCEL_REASON.setDisable(true);
+						x_CANCEL_REASON.clear();
+					}
+				} else if (!lvb.getLabel().equals("CANCEL")) {
+					x_CANCEL_DATE.setDisable(true);
+					x_CANCEL_DATE.setValue(null);
+					x_CANCEL_REASON.setDisable(true);
+					x_CANCEL_REASON.clear();
+				} else {
+					x_CANCEL_DATE.setDisable(false);
+					x_CANCEL_DATE.setValue(CalendarUtil.fromString(orderFormBean.getX_CANCEL_DATE()));
+					x_CANCEL_REASON.setDisable(false);
+					x_CANCEL_REASON.setText(orderFormBean.getX_CANCEL_REASON());
+				}
+			}else if(lvb.getLabel()==null){
+				System.out.println("lvb.getLabel() is null");
+			}
+			
 			if (x_ORDER_STATUS.getValue().getLabel().equals("CLOSED/ISSUE") && orderAlreadyOpen) {
 				System.out.println("auto close Process Started");
 				startAutoCloseProcess();
+				insertFlag=true;
 				System.out.println("auto close Process Finished");
-			}		
+			}
+			if(x_ORDER_STATUS.getValue().getLabel().equals("OPEN") && orderAlreadyOpen)	{
+				insertFlag=true;
+			}
 			orderFormBean.setX_CREATED_BY(userBean.getX_USER_ID());
 			orderFormBean.setX_UPDATED_BY(userBean.getX_USER_ID());
 			orderFormBean.setX_ORDER_HEADER_NUMBER(x_ORDER_NUMBER.getText());
@@ -623,21 +669,22 @@ public class SalesOrderFormController {
 				DatabaseOperation.getDbo().closeConnection();
 				DatabaseOperation.setDbo(null);
 			} else {
-				// Operation : edit only
 				String masthead;
 				String message;
 				masthead = "Successfully Updated!";
 				message = "Order is Updated to the Orders List";
 				boolean orderLineUpdateSuccess = false;
 				boolean orderHeaderUpdateSuccess = false;
-				if (OrderStatusValidation.validateOrderStatus(orderFormBean.getX_ORDER_STATUS(), list, dialogStage,this)) {
+				if(insertFlag){
+					// Operation : edit only				
+//					if (OrderStatusValidation.validateOrderStatus(orderFormBean.getX_ORDER_STATUS(), list, dialogStage,this)) {
+//					}
 					orderHeaderUpdateSuccess = orderFormService.saveSalesOrderHeaders(orderFormBean);
 					System.out.println("returned back****************************");
-				}
-				
-				if (orderHeaderUpdateSuccess) {
-					orderLineUpdateSuccess = orderFormService.saveSalesOrderLineItems(list, orderFormBean.getX_REFERENCE_ORDER_HEADER_ID(),
-									cancelCompleteOrder, orderFormBean.getX_ORDER_FROM_ID(),orderFormBean.getX_ORDER_TO_ID());
+					if (orderHeaderUpdateSuccess) {
+						orderLineUpdateSuccess = orderFormService.saveSalesOrderLineItems(list, orderFormBean.getX_REFERENCE_ORDER_HEADER_ID(),
+										cancelCompleteOrder, orderFormBean.getX_ORDER_FROM_ID(),orderFormBean.getX_ORDER_TO_ID());
+					}					
 				}
 				salesOrderMain.refreshOrderTable();
 				okClicked = true;
@@ -647,8 +694,7 @@ public class SalesOrderFormController {
 							.message(message).showInformation();
 					dialogStage.close();
 				} else {
-					System.out
-							.println("------------order data update is not successful------- ");
+					System.out.println("------------order data update is not successful------- ");
 				}
 			}
 		}
@@ -665,7 +711,6 @@ public class SalesOrderFormController {
 		boolean showDialog = false;
 		int i = 0;
 		for (AddOrderLineFormBean addOrderLineFormBean : orderLineList) {
-//			addOrderLineFormBean.setX_LINE_SHIP_QTY(addOrderLineFormBean.getX_LINE_QUANTITY());
 			ObservableList<TransactionBean> subList = orderFormService.getShipItemLotPopUp(userBean.getX_USER_WAREHOUSE_ID(),
 							addOrderLineFormBean.getX_LINE_ITEM_ID());
 			// to check order items stock available or not
@@ -685,22 +730,6 @@ public class SalesOrderFormController {
 					for (TransactionBean transactionBean : subList) {
 						System.out.println("In 3");
 						onhandQty = Integer.parseInt(transactionBean.getX_ONHAND_QUANTITY());
-//						if (tempRemainQty > onhandQty) {
-//							System.out.println("In 4");
-//							tempTotalIssueQty += onhandQty;
-//							tempRemainQty = tempRemainQty - onhandQty;
-//							transactionBean.setX_TRANSACTION_QUANTITY(Integer.toString(onhandQty));
-//							transactionBean.setX_TRANSACTION_TYPE_CODE("HEALTH_FACILITY_ISSUE");
-//							transactionBean.setX_REASON("Health Facility issue transaction on status CLOSED/ISSUE");
-//							transactionBean.setX_STATUS("A");
-//							transactionBean.setX_CREATED_BY(userBean.getX_USER_ID());
-//							transactionBean.setX_UPDATED_BY(userBean.getX_USER_ID());
-//							transactionBean.setX_FROM_SOURCE("LGA STORE");
-//							transactionBean.setX_FROM_SOURCE_ID(userBean.getX_USER_WAREHOUSE_ID());
-//							transactionBean.setX_TO_SOURCE(orderFormBean.getX_ORDER_TO_SOURCE());
-//							transactionBean.setX_TO_SOURCE_ID(orderFormBean.getX_ORDER_TO_ID());
-////							tList.add(transactionBean);
-//						} else {
 						if(tempRemainQty < onhandQty){
 							System.out.println("In 4.ii");
 							tempTotalIssueQty += tempRemainQty;
@@ -804,47 +833,6 @@ public class SalesOrderFormController {
 
 		int orderLineListIndex = 0;
 		for (TransactionBean transactionBean : tList) {
-			
-			System.out.println("======START of list bean============");
-			System.out.println("getX_FROM_SUBINVENTORY_ID = "
-					+ transactionBean.getX_FROM_SUBINVENTORY_ID());
-			System.out.println("getX_TO_SUBINVENTORY_ID = "
-					+ transactionBean.getX_TO_SUBINVENTORY_ID());
-			System.out.println("getX_FROM_BIN_LOCATION_ID = "
-					+ transactionBean.getX_FROM_BIN_LOCATION_ID());
-			System.out.println("getX_TO_BIN_LOCATION_ID =  "
-					+ transactionBean.getX_TO_BIN_LOCATION_ID());
-			System.out.println("getX_LOT_NUMBER =  "
-					+ transactionBean.getX_LOT_NUMBER());
-			System.out.println("getX_TRANSACTION_TYPE_CODE =  "
-					+ transactionBean.getX_TRANSACTION_TYPE_CODE());
-			System.out.println("getX_TRANSACTION_QUANTITY =  "
-					+ transactionBean.getX_TRANSACTION_QUANTITY());
-			System.out.println("getX_TRANSACTION_UOM = "
-					+ transactionBean.getX_TRANSACTION_UOM());
-			System.out.println("getX_ITEM_ID = "
-					+ transactionBean.getX_ITEM_ID());
-			System.out.println("getX_UNIT_COST = "
-					+ transactionBean.getX_UNIT_COST());
-			System.out.println("getX_TRANSACTION_NUMBER = "
-					+ transactionBean.getX_TRANSACTION_NUMBER());
-			System.out
-					.println("getX_STATUS = " + transactionBean.getX_STATUS());
-			System.out.println("getX_CREATED_BY = "
-					+ transactionBean.getX_CREATED_BY());
-			System.out.println("getX_UPDATED_BY = "
-					+ transactionBean.getX_UPDATED_BY());
-			System.out
-					.println("getX_REASON = " + transactionBean.getX_REASON());
-			System.out.println("getX_FROM_SOURCE = "
-					+ transactionBean.getX_FROM_SOURCE());
-			System.out.println("getX_FROM_SOURCE_ID = "
-					+ transactionBean.getX_FROM_SOURCE_ID());
-			System.out.println("getX_TO_SOURCE = "
-					+ transactionBean.getX_TO_SOURCE());
-			System.out.println("getX_TO_SOURCE_ID = "
-					+ transactionBean.getX_TO_SOURCE_ID());
-			System.out.println("---------------------------------------------------");
 			orderLineListIndex++;
 		}
 	}
@@ -913,9 +901,7 @@ public class SalesOrderFormController {
 	@FXML
 	public boolean handleOpenOrderLineForm() {
 		System.out.println("Hey We are in Add Order Line Action Handler");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/OrderItemInfoForm.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/OrderItemInfoForm.fxml"));
 		try {
 			// Load the fxml file and create a new stage for the popup
 			BorderPane addOrderLineDialog = (BorderPane) loader.load();
@@ -935,13 +921,12 @@ public class SalesOrderFormController {
 			controller.setReferenceOrderId(orderFormBean.getX_REFERENCE_ORDER_HEADER_ID());
 			// controller.setFormDefaults(x_ORDER_STATUS.getValue(),"SOOrderStatus",addOrderLineFormBean);
 			if (line_Table_action_Btn_String.equals("edit")) {
-				controller.setFormDefaults(x_ORDER_STATUS.getItems(),x_ORDER_STATUS.getValue(), "SOOrderStatus",addOrderLineFormBean, false);
+				controller.setFormDefaults(x_ORDER_STATUS.getValue(), "SOOrderStatus",addOrderLineFormBean, false);
 				line_Table_action_Btn_String = "add";
 			} else {
-				controller.setFormDefaults(x_ORDER_STATUS.getItems(),x_ORDER_STATUS.getValue(), "SOOrderStatus", null, true);
+				controller.setFormDefaults(x_ORDER_STATUS.getValue(), "SOOrderStatus", null, true);
 			}
-
-			// // Show the dialog and wait until the user closes it
+			//Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 			return controller.isOkClicked();
 		} catch (IOException e) {
@@ -957,8 +942,7 @@ public class SalesOrderFormController {
 		dialogStage.close();
 	}
 
-	public void setOrderFormService(OrderFormService orderFormService,
-			String actionBtnString) {
+	public void setOrderFormService(OrderFormService orderFormService, String actionBtnString) {
 		this.orderFormService = orderFormService;
 		this.actionBtnString = actionBtnString;
 	}

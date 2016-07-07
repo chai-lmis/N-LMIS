@@ -55,75 +55,82 @@ public class LoginController {
 		this.mainApp = mainApp;
 	}
 
-	public void handleSignInAction() throws SQLException {
-		MainApp.LOGGER.severe("sign ok is clicked");
-		if (isValid()) {
-			UserBean userBean = new UserBean();
-			boolean validated = false;
-			String originalStr = "";
-			userBean.setX_LOGIN_NAME(userName.getText());
-			userBean.setX_PASSWORD(password.getText());
-			UserService userService = new UserService();
-			// userService.checkAdminUsernameLogin(userName.getText());
-			// if(isConnectionAvailable()){
-			if (DatabaseOperation.isDatabaseExist()) {
-				if (!(validated = (userService.validateUser(userBean)))) {
+	public void handleSignInAction(){
+		MainApp.excepMsgBfrLogin+="4. ok is clicked \n";
+		MainApp.LOGGER2.setLevel(Level.INFO);
+		MainApp.LOGGER2.info(MainApp.excepMsgBfrLogin); 
+		try {
+			if (isValid()) {
+				UserBean userBean = new UserBean();
+				boolean validated = false;
+				String originalStr = "";
+				userBean.setX_LOGIN_NAME(userName.getText());
+				userBean.setX_PASSWORD(password.getText());
+				UserService userService = new UserService();
+				// userService.checkAdminUsernameLogin(userName.getText());
+				// if(isConnectionAvailable()){
+				if (DatabaseOperation.isDatabaseExist()) {
+					if (!(validated = (userService.validateUser(userBean)))) {
+						DatabaseOperation.CONNECT_TO_SERVER = true;
+						validated = userService.validateUser(userBean);
+					}
+				} else {
 					DatabaseOperation.CONNECT_TO_SERVER = true;
 					validated = userService.validateUser(userBean);
+					originalStr = "*Local Database Not Exist. Install Database & Restart the Application";
 				}
-			} else {
-				DatabaseOperation.CONNECT_TO_SERVER = true;
-				validated = userService.validateUser(userBean);
-				originalStr = "*Local Database Not Exist. Install Database & Restart the Application";
-			}
 
-			if (validated) {
-				mainApp.setUserBean(userBean);
-				System.out.println("userBean.user_id = "
-						+ userBean.getX_USER_ID());
-				System.out.println("userBean.user_type_id = "
-						+ userBean.getX_USER_TYPE_ID());
-				System.out.println("userBean.user_type_code = "
-						+ userBean.getX_USER_TYPE_CODE());
-				System.out.println("userBean.user_type_name = "
-						+ userBean.getX_USER_TYPE_NAME());
-				System.out.println("userBean.user_warehouse_id = "
-						+ userBean.getX_USER_WAREHOUSE_ID());
-				System.out.println("userBean.user_warehouse_name = "
-						+ userBean.getX_USER_WAREHOUSE_NAME());
-				ADMIN_USER_WAREHOUSE_ID_BEAN.setLabel(userBean
-						.getX_USER_WAREHOUSE_NAME());
-				ADMIN_USER_WAREHOUSE_ID_BEAN.setValue(userBean
-						.getX_USER_WAREHOUSE_ID());
-				// System.out.println("userBean.user_warehouse_id = "+userBean.getX_USER_WAREHOUSE_ID());
-				// MainApp.notificationPaneListView.getItems().remove(0,
-				// MainApp.notificationPaneListView.getItems().size());
-				// System.out.println("notificationPaneListView cleared");
-				if (!DatabaseOperation.CONNECT_TO_SERVER) {
-					userService.setLoginCount();
+				if (validated) {
+					mainApp.setUserBean(userBean);
+					System.out.println("userBean.user_id = "
+							+ userBean.getX_USER_ID());
+					System.out.println("userBean.user_type_id = "
+							+ userBean.getX_USER_TYPE_ID());
+					System.out.println("userBean.user_type_code = "
+							+ userBean.getX_USER_TYPE_CODE());
+					System.out.println("userBean.user_type_name = "
+							+ userBean.getX_USER_TYPE_NAME());
+					System.out.println("userBean.user_warehouse_id = "
+							+ userBean.getX_USER_WAREHOUSE_ID());
+					System.out.println("userBean.user_warehouse_name = "
+							+ userBean.getX_USER_WAREHOUSE_NAME());
+					ADMIN_USER_WAREHOUSE_ID_BEAN.setLabel(userBean
+							.getX_USER_WAREHOUSE_NAME());
+					ADMIN_USER_WAREHOUSE_ID_BEAN.setValue(userBean
+							.getX_USER_WAREHOUSE_ID());
+					// System.out.println("userBean.user_warehouse_id = "+userBean.getX_USER_WAREHOUSE_ID());
+					// MainApp.notificationPaneListView.getItems().remove(0,
+					// MainApp.notificationPaneListView.getItems().size());
+					// System.out.println("notificationPaneListView cleared");
+					if (!DatabaseOperation.CONNECT_TO_SERVER) {
+						userService.setLoginCount();
+					}
+					mainApp.showRootLayout(new LabelValueBean(userBean
+							.getX_USER_ROLE_NAME(), userBean.getX_USER_ROLE_ID()));
+				} else {
+					String invalid = "";
+					DatabaseOperation.CONNECT_TO_SERVER = false;
+					if (DatabaseOperation.connectionWithServer) {
+						invalid = "Invalid UserName or Password. \n";
+					}
+					loginStatus.setText(invalid + originalStr);
+					loginStatus.setTextFill(Color.web("#e70b07"));
 				}
-				mainApp.showRootLayout(new LabelValueBean(userBean
-						.getX_USER_ROLE_NAME(), userBean.getX_USER_ROLE_ID()));
+				// }
+				// else{
+				// Dialogs.create()
+				// .owner(new Stage())
+				// .title("Connection Failed")
+				// .masthead("Connection Failed")
+				// .message("Internet is not available or Connection to the server is failed")
+				// .showWarning();
+				// }
 			} else {
-				String invalid = "";
-				DatabaseOperation.CONNECT_TO_SERVER = false;
-				if (DatabaseOperation.connectionWithServer) {
-					invalid = "Invalid UserName or Password. \n";
-				}
-				loginStatus.setText(invalid + originalStr);
-				loginStatus.setTextFill(Color.web("#e70b07"));
+				loginStatus.setText("Enter username and password for login");
 			}
-			// }
-			// else{
-			// Dialogs.create()
-			// .owner(new Stage())
-			// .title("Connection Failed")
-			// .masthead("Connection Failed")
-			// .message("Internet is not available or Connection to the server is failed")
-			// .showWarning();
-			// }
-		} else {
-			loginStatus.setText("Enter username and password for login");
+		} catch (SQLException | NullPointerException e) {
+			MainApp.LOGGER2.info("exeption in handle signin"+MyLogger.getStackTrace(e)); 
+			e.printStackTrace();
 		}
 	}
 
@@ -171,6 +178,8 @@ public class LoginController {
 	}
 
 	public void handleCancelAction() {
+		MainApp.excepMsgBfrLogin+="4. Cancel is clicked \n";
+		MainApp.LOGGER2.info(MainApp.excepMsgBfrLogin); 
 		System.exit(0);
 	}
 

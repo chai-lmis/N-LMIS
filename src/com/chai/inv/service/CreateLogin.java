@@ -1,5 +1,7 @@
 package com.chai.inv.service;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -50,13 +52,15 @@ public class CreateLogin {
 					lvb.setValue(serverRs1.getString("WAREHOUSE_ID"));
 					stateWarehouseList.add(lvb);
 				}
-				serverPstmt = serverConn
-						.prepareStatement("Select COMPANY_ID,USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,PASSWORD,LOGIN_NAME,ACTIVATED,"
+				serverPstmt = serverConn.prepareStatement("Select COMPANY_ID,USER_ID,FIRST_NAME,MIDDLE_NAME,LAST_NAME,PASSWORD,LOGIN_NAME,ACTIVATED,"
 								+ " ACTIVATED_BY,ACTIVATED_ON,STATUS,START_DATE,END_DATE,CREATED_BY,CREATED_ON,UPDATED_BY,LAST_UPDATED_ON,USER_TYPE_ID,EMAIL,"
 								+ " TELEPHONE_NUMBER,WAREHOUSE_ID,SYNC_FLAG,ROLE_USER_ID_MAP,ROLE_ID_MAP,WAREHOUSE_USER_ID_WH,"
 								+ " WAREHOUSE_ID_WH,WAREHOUSE_NAME_INV,DEFAULT_ORDERING_STORE_ID_INV,warehouse_type_id_inv,CITY_ID,STATE_ID,COUNTRY_ID "
-								+ " FROM ACTIVE_USERS_VW"
-								+ " WHERE ACTIVATED='N' AND STATUS_MAP='I' AND STATUS_WH='I' AND WAREHOUSE_ID_WH IS NOT NULL AND WAREHOUSE_TYPE_ID_INV <> F_GET_TYPE('WAREHOUSE TYPES','STATE COLD STORE') "
+								+ " FROM ACTIVE_USERS_VW "
+								+ " WHERE ACTIVATED='N' AND STATUS_MAP='I' AND STATUS_WH='I' "
+								+ " AND WAREHOUSE_ID_WH IS NOT NULL "
+								+ " AND WAREHOUSE_TYPE_ID_INV <> F_GET_TYPE('WAREHOUSE TYPES','STATE COLD STORE') "
+								+ " AND WAREHOUSE_TYPE_ID_INV <> F_GET_TYPE('WAREHOUSE TYPES','MASTER WAREHOUSE') "
 								+ " ORDER BY WAREHOUSE_NAME_INV ");
 				serverRs1 = serverPstmt.executeQuery();
 				activateWarehouseList.clear();
@@ -432,6 +436,8 @@ public class CreateLogin {
 	public static boolean internetAvailable() {
 		boolean available = false;
 		try {
+			InputStream propertyFileStream = CreateLogin.class.getResourceAsStream("/com/chai/inv/DAO/rst_connection.properties");
+			p.load(propertyFileStream);
 			Class.forName(p.getProperty("drivername"));
 			serverConn = DriverManager.getConnection(p.getProperty("connectionStringServer"),
 					p.getProperty("username"),p.getProperty("password"));
@@ -439,7 +445,7 @@ public class CreateLogin {
 				available = true;
 				System.out.println("Internet is available!!");
 			}
-		} catch (SQLException | ClassNotFoundException sql2) {
+		} catch (IOException | SQLException | ClassNotFoundException sql2) {
 			available = false;
 			System.out.println("Internet is not available!!");
 			MainApp.LOGGER.setLevel(Level.SEVERE);

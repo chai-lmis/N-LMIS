@@ -24,6 +24,7 @@ public class CheckData implements Runnable {
 			System.out.println("updateCheckFromClient :: "+ updateCheckFromClient);
 			int warehouseid = Integer.parseInt(MainApp.getUSER_WAREHOUSE_ID());
 			System.out.println("updateCheckFromClient :: "+ updateCheckFromClient);
+
 			new Thread()
 			{	//thread 0
 			    @Override
@@ -32,7 +33,8 @@ public class CheckData implements Runnable {
 			    	completeThreadCount++;
 			    	System.out.println("threadcount="+CheckData.completeThreadCount);
 			    }
-			}.start();			
+			}.start();	
+			
 			new Thread(){	//thread 1
 			    @Override
 				public void run() {
@@ -42,7 +44,7 @@ public class CheckData implements Runnable {
 			    }
 			}.start();			
 			new Thread()
-			{	//thread 2adad
+			{	//thread 2
 			    @Override
 				public void run() {
 			    	CheckUsers.insertUpdateTables(warehouseid);
@@ -95,7 +97,7 @@ public class CheckData implements Runnable {
 			    	 completeThreadCount++;
 			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
 			    }
-			}.start(); 			
+			}.start();		
 			new Thread()
 			{	//thread 8
 			    @Override
@@ -113,15 +115,7 @@ public class CheckData implements Runnable {
 			    	completeThreadCount++;
 			    	System.out.println("threadcount="+CheckData.completeThreadCount);
 			    }
-			}.start(); 		
-//			// products are made dependent on LGA's then it needs to be
-//			// modified. (contain step 2 only)
-////			 CheckItemSubInventories.insertUpdateTables(warehouseid);
-////			 CheckItemEnvironmentConditions.insertUpdateTables(warehouseid);
-////			 CheckSubInventoryBinLocations.insertUpdateTables(warehouseid);
-////			 CheckItemLotNumber.insertUpdateTables(warehouseid);
-//
-			  // working fine
+			}.start();
 			new Thread()
 			{	//thread 10
 			    @Override
@@ -130,7 +124,7 @@ public class CheckData implements Runnable {
 			    	 completeThreadCount++;
 			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
 			    }
-			}.start(); 			
+			}.start(); 				
 			new Thread()
 			{	//thread 11
 			    @Override
@@ -148,8 +142,7 @@ public class CheckData implements Runnable {
 			    	 completeThreadCount++;
 			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
 			    }
-			}.start(); 		
-//
+			}.start();			
 			new Thread()
 			{	//thread 13
 			    @Override
@@ -186,9 +179,18 @@ public class CheckData implements Runnable {
 			    	System.out.println("threadcount="+CheckData.completeThreadCount);
 			    }
 			}.start();
+			new Thread()
+			{	//thread 17
+			    @Override
+				public void run() {
+			    	CheckDHIS2StockWastagesProcessed.insertUpdateTables(warehouseid);
+			    	completeThreadCount++;
+			    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			    }
+			}.start();
 			while(true){
 				System.out.print("");
-				if(CheckData.completeThreadCount==17){
+				if(CheckData.completeThreadCount==18){
 					System.out.println("in if****************************"+CheckData.completeThreadCount);
 					threadCycleComplete = true;
 					break;

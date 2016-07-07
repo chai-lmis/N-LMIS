@@ -62,7 +62,7 @@
                         <Insets left="20.0" />
                      </GridPane.margin>
                   </Label>
-                  <ComboBox editable="true" onAction="#handleSetUomOnItemChng" prefHeight="29.0" prefWidth="168.0" promptText="Select Item" visibleRowCount="6" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_LINE_ITEM" />
+                  <ComboBox editable="true" prefHeight="29.0" prefWidth="168.0" promptText="Select Item" visibleRowCount="6" GridPane.rowIndex="1" GridPane.valignment="BASELINE" fx:id="x_LINE_ITEM" />
                   <TextField prefHeight="31.0" prefWidth="167.0" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_LINE_QUANTITY">
                      <GridPane.margin>
                         <Insets right="18.0" />
@@ -78,7 +78,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <ComboBox editable="true" layoutX="511.0" layoutY="43.0" onAction="#handleLineStatusChange" prefHeight="29.0" prefWidth="168.0" promptText="Select Line Status" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_LINE_STATUS" />
+                  <ComboBox editable="true" layoutX="511.0" layoutY="43.0" prefHeight="29.0" prefWidth="168.0" promptText="Select Line Status" GridPane.rowIndex="5" GridPane.valignment="BASELINE" fx:id="x_LINE_STATUS" />
                   <Label text="Quantity To Issue" GridPane.columnIndex="1" GridPane.rowIndex="4" GridPane.valignment="BOTTOM" fx:id="x_LINE_SHIP_QTY_LABEL">
                      <GridPane.margin>
                         <Insets left="20.0" />

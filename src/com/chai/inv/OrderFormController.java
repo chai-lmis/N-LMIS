@@ -1182,14 +1182,16 @@ public class OrderFormController {
 									+ addOrderLineFormBean
 											.getX_ORDER_HEADER_ID());
 				}
-				controller.setFormDefaults(x_ORDER_STATUS.getItems(),
+				controller.setFormDefaults(
+//						x_ORDER_STATUS.getItems(),
 						x_ORDER_STATUS.getValue(), "POOrderStatus",
 						addOrderLineFormBean, activeReceiveLineStatus);
 				line_Table_action_Btn_String = "add";
 			} else {
 				System.out
 						.println("in else while opening addorderlinecontrolle8977787987989798r ");
-				controller.setFormDefaults(x_ORDER_STATUS.getItems(),
+				controller.setFormDefaults(
+//						x_ORDER_STATUS.getItems(),
 						ORDER_STATUS_OPEN_LVB, "POOrderStatus", null, true);
 			}
 			// // Show the dialog and wait until the user closes it

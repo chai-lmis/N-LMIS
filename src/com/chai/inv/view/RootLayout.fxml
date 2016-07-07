@@ -55,11 +55,14 @@
                 <Menu mnemonicParsing="false" text="Help">
                   <items>
                         <MenuItem mnemonicParsing="false" onAction="#handleRemoveDatabase" text="Remove Database" fx:id="x_UNREGISTER_USER_MENU_ITEM" />
-                    <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
-                    <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" onAction="#checkForUpdates" text="Check for Updates" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Update">
+                     <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
+                        <MenuItem mnemonicParsing="false" onAction="#checkForUpdates" text="Check for Updates" />
+                     </items>
+                  </Menu>
               </menus>
             </MenuBar>
             <GridPane prefHeight="193.0" fx:id="x_GRID_PANE">

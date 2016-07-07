@@ -128,9 +128,7 @@ public class OrderFormService {
 		case "linestatus":
 			x_QUERY = "SELECT STATUS_ID, " 
 					+ "		  STATUS_NAME "
-					+ "  FROM PD_ORDER_LINE_STATUS " // PD_ORDER_LINE_STATUS :
-														// currently not using
-														// for line_status
+					+ "  FROM PD_ORDER_LINE_STATUS "
 					+ " ORDER BY STATUS_NAME ";
 			break;
 		case "OrderType":
@@ -140,27 +138,12 @@ public class OrderFormService {
 					+ " WHERE SOURCE_TYPE = 'Orders' AND STATUS='A' "
 					+ " ORDER BY TYPE_NAME ";
 			break;
-//		case "subinventoylist":
-//			x_QUERY = "SELECT SUBINVENTORY_ID, " 
-//					+ "		  SUBINVENTORY_CODE "
-//					+ "  FROM ITEM_SUBINVENTORIES " 
-//					+ " WHERE STATUS = 'A' "
-//					+ "   AND WAREHOUSE_ID = " + action[1]
-//					+ " ORDER BY SUBINVENTORY_CODE";
-//			break;
-//		case "binlocationlist":
-//			x_QUERY = "SELECT BIN_LOCATION_ID, " + "		  BIN_LOCATION_CODE "
-//					+ "  FROM SUBINVENTORY_BIN_LOCATIONS "
-//					+ " WHERE STATUS = 'A' " + "   AND SUBINVENTORY_ID = "
-//					+ action[1] + " ORDER BY BIN_LOCATION_CODE";
-//			break;
 		}
 		try {
 			return DatabaseOperation.getDropdownList(x_QUERY);
 		} catch (SQLException e) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
 		}
 		return null;
 	}
@@ -634,26 +617,21 @@ public class OrderFormService {
 				dao = DatabaseOperation.getDbo();
 			}
 			int transaction_id = 0;
-			pstmt = dao
-					.getPreparedStatement("SELECT MAX(TRANSACTION_ID) AS TRANSACTION_ID FROM ITEM_TRANSACTIONS");
+			pstmt = dao.getPreparedStatement("SELECT MAX(TRANSACTION_ID) AS TRANSACTION_ID FROM ITEM_TRANSACTIONS");
 			rs = pstmt.executeQuery();
 			if (rs.next()) {
 				if (rs.getString("TRANSACTION_ID") != null) {
 					id_flag = true;
-					transaction_id = Integer.parseInt(rs
-							.getString("TRANSACTION_ID"));
+					transaction_id = Integer.parseInt(rs.getString("TRANSACTION_ID"));
 				} else {
 					id_flag = false;
-					transaction_id = Integer.parseInt(MainApp
-							.getUSER_WAREHOUSE_ID() + "1");
+					transaction_id = Integer.parseInt(MainApp.getUSER_WAREHOUSE_ID() + "1");
 				}
 			} else {
 				id_flag = false;
-				transaction_id = Integer.parseInt(MainApp
-						.getUSER_WAREHOUSE_ID() + "1");
+				transaction_id = Integer.parseInt(MainApp.getUSER_WAREHOUSE_ID() + "1");
 			}
-			pstmt = dao
-					.getPreparedStatement(" INSERT INTO ITEM_TRANSACTIONS "
+			pstmt = dao.getPreparedStatement(" INSERT INTO ITEM_TRANSACTIONS "
 							+ " (ITEM_ID, FROM_SOURCE, FROM_SOURCE_ID, TO_SOURCE, "
 							+ // 1-4
 							"  TO_SOURCE_ID,  FROM_SUBINVENTORY_ID, TO_SUBINVENTORY_ID, FROM_BIN_LOCATION_ID,  "
@@ -695,7 +673,7 @@ public class OrderFormService {
 				pstmt.setString(16, transactionBean.getX_STATUS());
 				pstmt.setString(17, transactionBean.getX_CREATED_BY());
 				pstmt.setString(18, transactionBean.getX_UPDATED_BY());
-				pstmt.setString(19, transactionBean.getX_TRANSACTION_NUMBER());
+				pstmt.setString(19, "1");
 				System.out.println("counter before increment : " + counter);
 				if (id_flag) {
 					System.out.println("In item_transaction, id generation: id_flag true :  ++counter");
@@ -821,7 +799,6 @@ public class OrderFormService {
 			} else {
 				pstmt.setString(4,orderFormBean2.getX_ORDER_FROM_SOURCE_TYPE_NAME());
 				pstmt.setString(5, orderFormBean2.getX_ORDER_FROM_NAME());
-				// orderFormBean.setX_ORDER_FROM_SOURCE_TYPE_NAME(rs.getString("ORDER_FROM_NAME_TYPE_NAME"));
 			}
 			pstmt.setString(6, orderFormBean2.getX_EXPECTED_DATE());
 			pstmt.setString(7, orderFormBean2.getX_CANCEL_DATE());
@@ -844,14 +821,8 @@ public class OrderFormService {
 				orderFormBean.setX_ORDER_FROM_ID(rs.getString("ORDER_FROM_ID"));
 				orderFormBean.setX_ORDER_TO_SOURCE(rs.getString("ORDER_TO_SOURCE")); // DB
 				orderFormBean.setX_ORDER_TO_ID(rs.getString("ORDER_TO_ID")); // DB
-				// orderFormBean.setX_ORDER_TO_NUMBER(rs.getString("ORDER_TO_NUMBER"));
-				// if(order_type.equals("Sales Order")){
-				// orderFormBean.setX_ORDER_TO_NAME(rs.getString("ORDER_FROM_NAME"));
 				orderFormBean.setX_ORDER_TO_NAME(rs.getString("ORDER_TO_NAME"));
 				orderFormBean.setX_ORDER_FROM_NAME(rs.getString("ORDER_FROM_NAME"));
-				// }else{
-				// orderFormBean.setX_ORDER_TO_NAME(rs.getString("ORDER_TO_NAME"));
-				// }
 				orderFormBean.setX_CANCEL_DATE(rs.getString("CANCEL_DATE"));
 				orderFormBean.setX_CANCEL_REASON(rs.getString("CANCEL_REASON"));
 				orderFormBean.setX_STATUS(rs.getString("STATUS"));
@@ -878,8 +849,29 @@ public class OrderFormService {
 		return searchData;
 	}
 
-	public ObservableList<OrderFormBean> getOrderList(String order_type,
-			String warehouse_id) throws SQLException {
+	public ObservableList<OrderFormBean> getOrderList(String order_type,String warehouse_id, String ShowOrderListFor,LabelValueBean filterBean) throws SQLException {
+		String conditionForShowOrderList="";
+		String cutomerIdCondition="";
+		String monthCondition="";
+		if(ShowOrderListFor!=null){
+			if(ShowOrderListFor.equalsIgnoreCase("CLOSED/ISSUE")){
+				conditionForShowOrderList=" AND ORD.order_status = 'CLOSED/ISSUE' ";
+			}else if(ShowOrderListFor.equalsIgnoreCase("OPEN")){
+				conditionForShowOrderList=" AND ORD.order_status = 'OPEN' ";
+			}else if(ShowOrderListFor.equalsIgnoreCase("CANCEL")){
+				conditionForShowOrderList=" AND ORD.order_status = 'CANCEL' ";
+			}else if(ShowOrderListFor.equalsIgnoreCase("INCOMPLETE")){
+				conditionForShowOrderList=" AND ORD.order_status = 'INCOMPLETE' ";
+			}
+		}
+		if(filterBean!=null){
+			if(filterBean.getValue()!=null){
+				cutomerIdCondition=" AND ORDER_TO_ID = '"+ filterBean.getValue() + "' ";
+			}
+			if(filterBean.getExtra()!=null){
+				monthCondition=" AND DATE_FORMAT(ORD.ORDER_DATE, '%b')='" + filterBean.getExtra() + "' ";			
+			}
+		}
 		ObservableList<OrderFormBean> ordersData = FXCollections
 				.observableArrayList();
 		if (dao == null || dao.getConnection().isClosed()) {
@@ -888,16 +880,10 @@ public class OrderFormService {
 		}
 		String WHERE_CONDITION_FOR_WAREHOUSE = "";
 		String WHERE_CONDITION_FOR_CUSTOMER = "";
-		String PO_LIST_CONDTION_1 = " WHERE ORD.STATUS = 'A' AND ORD.ORDER_TYPE_NAME = '"
-				+ order_type
-				+ "' "
-				+ "      AND ORDER_TO_ID = '"
-				+ warehouse_id
-				+ "' "
-				+ "		 AND ORDER_FROM_ID <> '"
-				+ warehouse_id
-				+ "'"
-				+ "      AND ORD.ORDER_FROM_ID = INV.WAREHOUSE_ID ";
+		String PO_LIST_CONDTION_1 = " WHERE ORD.STATUS = 'A' AND ORD.ORDER_TYPE_NAME = '"+ order_type+ "' "
+				+ " AND ORDER_TO_ID = '"+ warehouse_id+ "' "
+				+ "	AND ORDER_FROM_ID <> '"+ warehouse_id+ "'"
+				+ " AND ORD.ORDER_FROM_ID = INV.WAREHOUSE_ID ";
 		// + "      ORDER BY ORDER_HEADER_NUMBER DESC "
 
 		String PO_LIST_CONDTION_2 = " WHERE ORD.STATUS = 'A' "
@@ -909,23 +895,24 @@ public class OrderFormService {
 				+ " ORDER BY ORDER_HEADER_NUMBER DESC ";
 
 		String SO_LIST_CONDTION_1 = " WHERE ORD.STATUS = 'A' AND ORD.ORDER_TYPE_NAME = '"
-				+ order_type
-				+ "' "
-				+ "      AND ORDER_FROM_ID = '"
-				+ warehouse_id
-				+ "' "
-				+ "		 AND ORDER_TO_ID <> '"
-				+ warehouse_id
-				+ "'"
-				+ "      AND ORD.ORDER_TO_ID = INV.WAREHOUSE_ID ";
+				+ order_type+ "' "
+				+conditionForShowOrderList
+				+ " AND ORDER_FROM_ID = '"
+				+ warehouse_id+ "' "
+				+ "	AND ORDER_TO_ID <> '"+ warehouse_id+ "' "
+				+cutomerIdCondition
+				+monthCondition
+				+ " AND ORD.ORDER_TO_ID = INV.WAREHOUSE_ID ";
 		// + "      ORDER BY ORDER_HEADER_NUMBER DESC ";
 
 		String SO_LIST_CONDTION_2 = " WHERE ORD.STATUS = 'A' "
+				+conditionForShowOrderList
 				+ " AND ORD.ORDER_TYPE_NAME = '" + order_type + "' "
 				+ " AND ORDER_FROM_ID = '" + warehouse_id + "' "
 				+ " AND ORDER_TO_ID <> '" + warehouse_id + "' "
+				+cutomerIdCondition
+				+monthCondition
 				+ " AND ORD.ORDER_TO_ID = CUST.CUSTOMER_ID "
-				+ " AND ORD.ORDER_FROM_NAME IS NOT NULL "
 				+ " ORDER BY ORDER_HEADER_NUMBER DESC ";
 
 		if (order_type.equals("Sales Order")) {
@@ -965,7 +952,7 @@ public class OrderFormService {
 				+ "		where line.order_header_id=ORD.order_header_id AND line.RECEIVED_DATE IS NOT NULL) AS RECEIVED_DATE, "
 				+ "		ORD.ORDER_FROM_NAME_TYPE_ID, "
 				+ "		ORD.ORDER_FROM_NAME_TYPE_NAME,"
-				+ "		ORD.COMMENT, "
+				+ "		ORD.COMMENT, ORD.ALLOCATION_TYPE,"
 				+ "		DATE_FORMAT(ORD.SHIPPED_DATE_ON_RECEIVE,'%d-%b-%Y') SHIPPED_DATE_ON_RECEIVE "
 				+ " FROM VW_ORDER_HEADERS ORD , VIEW_INVENTORY_WAREHOUSES INV "
 				+ WHERE_CONDITION_FOR_WAREHOUSE
@@ -995,7 +982,7 @@ public class OrderFormService {
 				+ " 		(select distinct date_format(line.RECEIVED_DATE,'%d-%b-%Y') from order_lines line where line.order_header_id=ORD.order_header_id AND line.RECEIVED_DATE IS NOT NULL) AS RECEIVED_DATE, "
 				+ " 		ORD.ORDER_FROM_NAME_TYPE_ID, "
 				+ " 		ORD.ORDER_FROM_NAME_TYPE_NAME, "
-				+ "		ORD.COMMENT, "
+				+ "		ORD.COMMENT, ORD.ALLOCATION_TYPE, "
 				+ "		DATE_FORMAT(ORD.SHIPPED_DATE_ON_RECEIVE,'%d-%b-%Y') SHIPPED_DATE_ON_RECEIVE "
 				+ " FROM VW_ORDER_HEADERS ORD, VIEW_CUSTOMERS CUST "
 				+ WHERE_CONDITION_FOR_CUSTOMER;
@@ -1025,8 +1012,7 @@ public class OrderFormService {
 				orderFormBean.setX_ORDER_FROM_SOURCE(rs
 						.getString("ORDER_FROM_SOURCE"));
 				orderFormBean.setX_ORDER_FROM_ID(rs.getString("ORDER_FROM_ID"));
-				orderFormBean.setX_ORDER_TO_SOURCE(rs
-						.getString("ORDER_TO_SOURCE")); // DB
+				orderFormBean.setX_ORDER_TO_SOURCE(rs.getString("ORDER_TO_SOURCE")); // DB
 				orderFormBean.setX_ORDER_TO_ID(rs.getString("ORDER_TO_ID")); // DB
 				// orderFormBean.setX_ORDER_TO_NUMBER(rs.getString("ORDER_TO_NUMBER"));
 				// if(order_type.equals("Sales Order")){
@@ -1056,8 +1042,8 @@ public class OrderFormService {
 				orderFormBean.setX_REFERENCE_ORDER_HEADER_ID(rs
 						.getString("REFERENCE_ORDER_ID"));
 				orderFormBean.setX_COMMENT(rs.getString("COMMENT"));
-				orderFormBean.setX_SHIPPED_DATE_ON_RECEIVE(rs
-						.getString("SHIPPED_DATE_ON_RECEIVE"));
+				orderFormBean.setX_ALLOCATION_TYPE(rs.getString("ALLOCATION_TYPE"));
+				orderFormBean.setX_SHIPPED_DATE_ON_RECEIVE(rs.getString("SHIPPED_DATE_ON_RECEIVE"));
 				ordersData.add(orderFormBean);
 			}
 		} catch (SQLException | NullPointerException ex) {
@@ -1318,21 +1304,17 @@ public class OrderFormService {
 							.getString("CANCEL_REASON"));
 					orderLinesData.add(orderLineFormBean);
 				}
-				if (maxOrderLineId < Long.parseLong(rs
-						.getString("ORDER_LINE_ID"))) {
-					maxOrderLineId = Long.parseLong(rs
-							.getString("ORDER_LINE_ID"));
+				if (maxOrderLineId < Long.parseLong(rs.getString("ORDER_LINE_ID"))) {
+					maxOrderLineId = Long.parseLong(rs.getString("ORDER_LINE_ID"));
 				}
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out
-					.println("Error occured while getting Order Lines List, error: "
-							+ ex.getMessage());
+			System.out.println("Error occured while getting Order Lines List, error: "+ ex.getMessage());
+			ex.printStackTrace();
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
 		} finally {
-			System.out.println("finally block : Order Lines select query: "
-					+ pstmt.toString());
+			System.out.println("finally block : Order Lines select query: "+ pstmt.toString());
 		}
 		orderLineCount = orderLinesData.size();
 		return orderLinesData;

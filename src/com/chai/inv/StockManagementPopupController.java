@@ -8,20 +8,16 @@ import com.chai.inv.model.UserBean;
 import com.chai.inv.service.ItemService;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class StockManagementPopupController {
 	@FXML 
 	private Button x_ONHAND_ITEMS_BTN;
 	@FXML private Button x_LGA_STOCK_ISSUE_TO_HF;
-	@FXML private Button x_LGA_RECEIPT_FRM_STATE;
 	@FXML private GridPane x_GRID_PANE;
 
 	private MainApp mainApp;
@@ -92,7 +88,6 @@ public class StockManagementPopupController {
 			break;
 		case "SIO": // SIO
 			x_GRID_PANE.getChildren().remove(x_LGA_STOCK_ISSUE_TO_HF);
-			x_GRID_PANE.getChildren().remove(x_LGA_RECEIPT_FRM_STATE);
 			if(CustomChoiceDialog.selectedLGA!=null){
 				x_GRID_PANE.add(x_LGA_STOCK_ISSUE_TO_HF,0,1,2,1);
 				GridPane.setHalignment(x_LGA_STOCK_ISSUE_TO_HF,HPos.CENTER);
@@ -100,7 +95,6 @@ public class StockManagementPopupController {
 			break;
 		case "SCCO": // SCCO
 			x_GRID_PANE.getChildren().remove(x_LGA_STOCK_ISSUE_TO_HF);
-			x_GRID_PANE.getChildren().remove(x_LGA_RECEIPT_FRM_STATE);
 			if(CustomChoiceDialog.selectedLGA!=null){
 				x_GRID_PANE.add(x_LGA_STOCK_ISSUE_TO_HF,0,1,2,1);
 				GridPane.setHalignment(x_LGA_STOCK_ISSUE_TO_HF,HPos.CENTER);
@@ -108,7 +102,6 @@ public class StockManagementPopupController {
 			break;
 		case "SIFP": // SIFP
 			x_GRID_PANE.getChildren().remove(x_LGA_STOCK_ISSUE_TO_HF);
-			x_GRID_PANE.getChildren().remove(x_LGA_RECEIPT_FRM_STATE);
 			if(CustomChoiceDialog.selectedLGA!=null){
 				x_GRID_PANE.add(x_LGA_STOCK_ISSUE_TO_HF,0,1,2,1);
 				GridPane.setHalignment(x_LGA_STOCK_ISSUE_TO_HF,HPos.CENTER);
@@ -120,7 +113,6 @@ public class StockManagementPopupController {
 		case "NTO":
 			if(CustomChoiceDialog.selectedLGA==null){
 				x_GRID_PANE.getChildren().remove(x_LGA_STOCK_ISSUE_TO_HF);
-				x_GRID_PANE.getChildren().remove(x_LGA_RECEIPT_FRM_STATE);
 			}else{
 				x_GRID_PANE.add(x_LGA_STOCK_ISSUE_TO_HF,0,1,2,1);
 				x_LGA_STOCK_ISSUE_TO_HF.setText("View LGA Stock Issue to Facility");
@@ -140,39 +132,7 @@ public class StockManagementPopupController {
 			StockManagementPopupController stockManagementSubMenuController) {
 		this.stockManagementSubMenuController = stockManagementSubMenuController;
 	}
-	@FXML
-	public void handleLGAStockReceiptDashboardBtn() {
-		System.out.println("entered handleLGAStockReceiptDashboardBtn()");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/LGAStockReceiptForm.fxml"));
-		try {
-			BorderPane lgaStockReceipt = (BorderPane) loader.load();
-			// lgaStockReceipt.setUserData(loader);
-			// mainBorderPane.setCenter(lgaStockReceipt);
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Stock Receipt Entry Form");
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(primaryStage);
-			Scene scene = new Scene(lgaStockReceipt);
-			dialogStage.setScene(scene);
-
-			LGAStockReceiptController controller = loader.getController();
-			controller.setRole(role);
-			controller.setRootLayoutController(getRootLayoutController());
-			controller.setHomePageController(homePageController);
-			controller.setDialogueStage(dialogStage);
-			controller.setFormdefaults();
-			dialogStage.showAndWait();
-
-		} catch (Exception ex) {
-			System.out
-					.println("Error occured while loading LGA Stock Recipt Form layout.. "
-							+ ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
-
+	
 	@FXML
 	public void handleLGAStockIssueToHf() {
 		popup.hide();

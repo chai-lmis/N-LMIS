@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
@@ -81,6 +82,8 @@ public class FacilityMainController {
 	@FXML
 	private Button x_EDIT_STORE_BTN;
 	@FXML
+	private Label x_ROW_COUNT;
+	@FXML
 	private ToolBar x_TOOLBAR;
 	private MainApp mainApp;
 	private FacilityService facilityService;
@@ -112,6 +115,7 @@ public class FacilityMainController {
 		this.mainApp = mainApp;
 		facilityService = new FacilityService();
 		facilityTable.setItems(facilityService.getFacilityList());
+		x_ROW_COUNT.setText("Row Count : "+facilityTable.getItems().size());
 	}
 
 	public void setUserBean(UserBean userBean) {
@@ -224,6 +228,7 @@ public class FacilityMainController {
 		facilityTable.layout();
 		facilityTable.setItems(facilityService.getFacilityList());
 		facilityTable.getSelectionModel().select(selectedIndex);
+		x_ROW_COUNT.setText("Row Count : "+facilityTable.getItems().size());
 	}
 
 	public void refreshFacilityTable(ObservableList<FacilityBean> list) {

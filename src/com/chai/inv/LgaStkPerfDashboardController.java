@@ -15,6 +15,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.Region;
 
+import com.chai.inv.loader.FirstPreloader;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.LgaDashBoardPerfBean;
@@ -24,6 +25,8 @@ import com.chai.inv.service.FacilityService;
 import com.chai.inv.util.CalendarUtil;
 import com.chai.inv.util.SelectKeyComboBoxListener;
 
+import javafx.application.Preloader.StateChangeNotification;
+import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,6 +55,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class LgaStkPerfDashboardController {
+	private Stage loadingScreenStage=null;
 	private HomePageController homePageController;
 	private RootLayoutController rootLayoutController;
 	private UserBean userBean;
@@ -59,6 +63,7 @@ public class LgaStkPerfDashboardController {
 	private LabelValueBean role;
 	private BorderPane mainBorderPane;
 	private LgaDashBoardPerfBean bean=new LgaDashBoardPerfBean();
+	FirstPreloader fp=new FirstPreloader();
 	//data list from database
 	private ObservableList<LgaDashBoardPerfBean> lgaStkPerfDashboardList = FXCollections.observableArrayList();
 	private ObservableList<LgaDashBoardPerfBean> stateStkSummList = FXCollections.observableArrayList();
@@ -74,50 +79,18 @@ public class LgaStkPerfDashboardController {
 	@FXML Button x_VIEW_SUMMURY;
 	@FXML Button x_VIEW_BTN;
 	@FXML HBox x_HBOX;
+	@FXML Label x_RED_LBL;
+	@FXML Label x_GREEN_LBL;
+	@FXML Label x_YELLOW_LBL;
 	public static DashboardPopupController dashboardPopupController;
 	int rowIndex=0;
 	private MainApp mainApp;
 	
 	@FXML public void handleLGADashboardRefresh(){
-		setDefaults();
-	}
-	
-	@FXML public void onYearChange(){
-		if(x_YEAR_FILTER.getValue()!=null){
-			x_WEEK_FILTER.setItems(new CalendarUtil().getWeek(Integer.parseInt(x_YEAR_FILTER.getValue())));
-			bean.setX_YEAR(x_YEAR_FILTER.getValue());
-		}
-	}
-	@FXML public void onChangeLga(){
-		if (x_LGA_DPRDN.getValue()!=null) {
-			if(MainApp.getUserRole().getLabel().equals("NTO")){
-				bean.setX_STATE_ID(x_LGA_DPRDN.getValue().getValue());
-			}else{
-				bean.setX_STATE_ID(MainApp.getUSER_WAREHOUSE_ID());
-				if (x_LGA_DPRDN.getValue()!=null) {
-					bean.setX_LGA_ID(x_LGA_DPRDN.getValue().getValue());
-			}
-			}
-		}
-	}
-	@FXML public void onChangeWeek(){
-		if(x_WEEK_FILTER.getValue()!=null){
-			bean.setX_WEEK(x_WEEK_FILTER.getValue());
-		}
-	}
-	@FXML public void initialize(){
-		x_YEAR_FILTER.setItems(CalendarUtil.getYear());
-		//product list from database by HF
-		
-	}
-	
-	public void setDefaults(){
-		System.out.println("in setdefaults");
-		x_GRID_PANE.getChildren().clear();
+//		LoadingScreen.getLoadingScreen(primaryStage);
+		boolean searchFlag=true;
 		Alert alert=new Alert(AlertType.INFORMATION);
 		//x_GRID_PANE.getChildren().clear();
-		boolean searchFlag=true;
-		SortedSet<String> statenameList=new TreeSet<>();
 		if(MainApp.getUserRole().getLabel().equals("SCCO")
 				|| MainApp.getUserRole().getLabel().equals("SIFP")
 				|| MainApp.getUserRole().getLabel().equals("SIO")){
@@ -169,8 +142,47 @@ public class LgaStkPerfDashboardController {
 			x_WEEK_FILTER.requestFocus();
 		}
 		if(searchFlag){
+			setDefaults();
+		}
+	}
+	
+	@FXML public void onYearChange(){
+		if(x_YEAR_FILTER.getValue()!=null){
+			x_WEEK_FILTER.setItems(new CalendarUtil().getWeek(Integer.parseInt(x_YEAR_FILTER.getValue())));
+			bean.setX_YEAR(x_YEAR_FILTER.getValue());
+		}
+	}
+	@FXML public void onChangeLga(){
+		if (x_LGA_DPRDN.getValue()!=null) {
+			if(MainApp.getUserRole().getLabel().equals("NTO")){
+				bean.setX_STATE_ID(x_LGA_DPRDN.getValue().getValue());
+			}else{
+				bean.setX_STATE_ID(MainApp.getUSER_WAREHOUSE_ID());
+				if (x_LGA_DPRDN.getValue()!=null) {
+					bean.setX_LGA_ID(x_LGA_DPRDN.getValue().getValue());
+			}
+			}
+		}
+	}
+	@FXML public void onChangeWeek(){
+		if(x_WEEK_FILTER.getValue()!=null){
+			bean.setX_WEEK(x_WEEK_FILTER.getValue());
+		}
+	}
+	@FXML public void initialize(){
+		x_YEAR_FILTER.setItems(CalendarUtil.getYear());
+		//product list from database by HF
+		
+	}
+	
+	public void setDefaults(){
+		try {
+			fp.start(new Stage());
+			System.out.println("in setdefaults");
+			x_GRID_PANE.getChildren().clear();
 			rowIndex=0;
 			lgaStkPerfDashboardList=new DashboardService().getLgaStkPerfDashBoard(bean);
+			SortedSet<String> statenameList=new TreeSet<>();
 			for (LgaDashBoardPerfBean data : lgaStkPerfDashboardList) {
 				statenameList.add(data.getX_STATE_NAME());
 			}
@@ -209,7 +221,7 @@ public class LgaStkPerfDashboardController {
 								double width;
 								double height=stateField.getPrefHeight();
 								//
-								Label LESS_3_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(datalist.getX_LESS_3_ANTIGENS_TOTAL_HF_PER()));
+								Label LESS_3_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(datalist.getX_LESS_3_ANTIGENS_TOTAL_HF_PER()+"%"));
 								LESS_3_ANTIGENS_TOTAL_HF_PER.
 								setStyle("-fx-background-color:"+datalist.getX_LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
 								width=(Integer.parseInt(datalist.getX_LESS_3_ANTIGENS_TOTAL_HF_PER())*400)/100;
@@ -219,7 +231,7 @@ public class LgaStkPerfDashboardController {
 								setPrefHeight(31);
 								LESS_3_ANTIGENS_TOTAL_HF_PER.setAlignment(Pos.CENTER);
 								//
-								Label GREATER_2_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(datalist.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER()));
+								Label GREATER_2_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(datalist.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER()+"%"));
 								GREATER_2_ANTIGENS_TOTAL_HF_PER.
 								setStyle("-fx-background-color:"+datalist.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
 								GREATER_2_ANTIGENS_TOTAL_HF_PER.
@@ -230,7 +242,7 @@ public class LgaStkPerfDashboardController {
 								GREATER_2_ANTIGENS_TOTAL_HF_PER.
 								setPrefHeight(31);
 								//
-								Label SUFFICIENT_STOCK_TOTAL_HF_PER=new Label("",new Text(datalist.getX_SUFFICIENT_STOCK_TOTAL_HF_PER()));
+								Label SUFFICIENT_STOCK_TOTAL_HF_PER=new Label("",new Text(datalist.getX_SUFFICIENT_STOCK_TOTAL_HF_PER()+"%"));
 								SUFFICIENT_STOCK_TOTAL_HF_PER.
 								setStyle("-fx-background-color:"+datalist.getX_SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG()+";");
 								SUFFICIENT_STOCK_TOTAL_HF_PER.
@@ -282,7 +294,7 @@ public class LgaStkPerfDashboardController {
 							double width;
 							double height=lgaLbl.getPrefHeight();
 							//
-							Label LESS_3_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER()));
+							Label LESS_3_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER()+"%"));
 							LESS_3_ANTIGENS_TOTAL_HF_PER.
 							setStyle("-fx-background-color:"+data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
 							width=(Integer.parseInt(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER())*400)/100;
@@ -292,7 +304,7 @@ public class LgaStkPerfDashboardController {
 							setPrefHeight(31);
 							LESS_3_ANTIGENS_TOTAL_HF_PER.setAlignment(Pos.CENTER);
 							//
-							Label GREATER_2_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER()));
+							Label GREATER_2_ANTIGENS_TOTAL_HF_PER=new Label("",new Text(data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER()+"%"));
 							GREATER_2_ANTIGENS_TOTAL_HF_PER.
 							setStyle("-fx-background-color:"+data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
 							GREATER_2_ANTIGENS_TOTAL_HF_PER.
@@ -303,7 +315,7 @@ public class LgaStkPerfDashboardController {
 							GREATER_2_ANTIGENS_TOTAL_HF_PER.
 							setPrefHeight(31);
 							//
-							Label SUFFICIENT_STOCK_TOTAL_HF_PER=new Label("",new Text(data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER()));
+							Label SUFFICIENT_STOCK_TOTAL_HF_PER=new Label("",new Text(data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER()+"%"));
 							SUFFICIENT_STOCK_TOTAL_HF_PER.
 							setStyle("-fx-background-color:"+data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG()+";");
 							SUFFICIENT_STOCK_TOTAL_HF_PER.
@@ -340,7 +352,14 @@ public class LgaStkPerfDashboardController {
 						}
 						}
 			}
-			}
+			
+		} catch (Exception e) {
+			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			e.printStackTrace();
+		}
+		fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
 	}
 	@FXML public void handleSummary(){
 		System.out.println("lgaStkperfDashBordreport.handleSummary()");
@@ -363,77 +382,86 @@ public class LgaStkPerfDashboardController {
 			x_WEEK_FILTER.requestFocus();
 		}
 		if(searchFlag){
-			stateStkSummList=new DashboardService().getstateStkSummdata(bean);
-			x_GRID_PANE.getChildren().clear();
-			for (LgaDashBoardPerfBean data : stateStkSummList) {
-				//for lga display column
-				TextField stateName=new TextField();
-				stateName.setText(data.getX_STATE_NAME());
-				stateName.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
-				stateName.setStyle("-fx-background-color:#efefef;"+"-fx-border-color:black;");
-				stateName.setEditable(false);
-				//for percentage bar
-				HBox percentageBarBox=new HBox();
-				percentageBarBox.setPrefWidth(400);
-				percentageBarBox.setPrefHeight(31);
-				percentageBarBox.setStyle("-fx-border-color:black");
-				double width;
-				double height=stateName.getPrefHeight();
-				//
-				Label LESS_3_ANTIGENS_TOTAL_LGA_PER=new Label("",new Text(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER()));
-				LESS_3_ANTIGENS_TOTAL_LGA_PER.
-				setStyle("-fx-background-color:"+data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
-				width=(Integer.parseInt(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER())*400)/100;
-				LESS_3_ANTIGENS_TOTAL_LGA_PER.
-				setPrefWidth(width);
-				LESS_3_ANTIGENS_TOTAL_LGA_PER.
-				setPrefHeight(31);
-				LESS_3_ANTIGENS_TOTAL_LGA_PER.setAlignment(Pos.CENTER);
-				//
-				Label GREATER_2_ANTIGENS_TOTAL_LGA_PER=new Label("",new Text(data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER()));
-				GREATER_2_ANTIGENS_TOTAL_LGA_PER.
-				setStyle("-fx-background-color:"+data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
-				GREATER_2_ANTIGENS_TOTAL_LGA_PER.
-				setAlignment(Pos.CENTER);
-				width=(Integer.parseInt(data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER())*400)/100;
-				GREATER_2_ANTIGENS_TOTAL_LGA_PER.
-				setPrefWidth(width);
-				GREATER_2_ANTIGENS_TOTAL_LGA_PER.
-				setPrefHeight(31);
-				//
-				Label SUFFICIENT_STOCK_TOTAL_LGA_PER=new Label("",new Text(data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER()));
-				SUFFICIENT_STOCK_TOTAL_LGA_PER.
-				setStyle("-fx-background-color:"+data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG()+";");
-				SUFFICIENT_STOCK_TOTAL_LGA_PER.
-				setAlignment(Pos.CENTER);
-				width=(Integer.parseInt(data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER())*400)/100;
-				SUFFICIENT_STOCK_TOTAL_LGA_PER.
-				setPrefWidth(width);
-				SUFFICIENT_STOCK_TOTAL_LGA_PER.
-				setPrefHeight(31);
-				//
-				if(!data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER().equals("0")){
-					percentageBarBox.getChildren().add(LESS_3_ANTIGENS_TOTAL_LGA_PER);
-				}if(!data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER().equals("0")){
-					percentageBarBox.getChildren().add(GREATER_2_ANTIGENS_TOTAL_LGA_PER);
-				}if(!data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER().equals("0")){
-					percentageBarBox.getChildren().add(SUFFICIENT_STOCK_TOTAL_LGA_PER);
+			try {
+				fp.start(new Stage());
+				stateStkSummList=new DashboardService().getstateStkSummdata(bean);
+				x_GRID_PANE.getChildren().clear();
+				for (LgaDashBoardPerfBean data : stateStkSummList) {
+					//for lga display column
+					TextField stateName=new TextField();
+					stateName.setText(data.getX_STATE_NAME());
+					stateName.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
+					stateName.setStyle("-fx-background-color:#efefef;"+"-fx-border-color:black;");
+					stateName.setEditable(false);
+					//for percentage bar
+					HBox percentageBarBox=new HBox();
+					percentageBarBox.setPrefWidth(400);
+					percentageBarBox.setPrefHeight(31);
+					percentageBarBox.setStyle("-fx-border-color:black");
+					double width;
+					double height=stateName.getPrefHeight();
+					//
+					Label LESS_3_ANTIGENS_TOTAL_LGA_PER=new Label("",new Text(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER()));
+					LESS_3_ANTIGENS_TOTAL_LGA_PER.
+					setStyle("-fx-background-color:"+data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
+					width=(Integer.parseInt(data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER())*400)/100;
+					LESS_3_ANTIGENS_TOTAL_LGA_PER.
+					setPrefWidth(width);
+					LESS_3_ANTIGENS_TOTAL_LGA_PER.
+					setPrefHeight(31);
+					LESS_3_ANTIGENS_TOTAL_LGA_PER.setAlignment(Pos.CENTER);
+					//
+					Label GREATER_2_ANTIGENS_TOTAL_LGA_PER=new Label("",new Text(data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER()));
+					GREATER_2_ANTIGENS_TOTAL_LGA_PER.
+					setStyle("-fx-background-color:"+data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG()+";");
+					GREATER_2_ANTIGENS_TOTAL_LGA_PER.
+					setAlignment(Pos.CENTER);
+					width=(Integer.parseInt(data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER())*400)/100;
+					GREATER_2_ANTIGENS_TOTAL_LGA_PER.
+					setPrefWidth(width);
+					GREATER_2_ANTIGENS_TOTAL_LGA_PER.
+					setPrefHeight(31);
+					//
+					Label SUFFICIENT_STOCK_TOTAL_LGA_PER=new Label("",new Text(data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER()));
+					SUFFICIENT_STOCK_TOTAL_LGA_PER.
+					setStyle("-fx-background-color:"+data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG()+";");
+					SUFFICIENT_STOCK_TOTAL_LGA_PER.
+					setAlignment(Pos.CENTER);
+					width=(Integer.parseInt(data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER())*400)/100;
+					SUFFICIENT_STOCK_TOTAL_LGA_PER.
+					setPrefWidth(width);
+					SUFFICIENT_STOCK_TOTAL_LGA_PER.
+					setPrefHeight(31);
+					//
+					if(!data.getX_LESS_3_ANTIGENS_TOTAL_HF_PER().equals("0")){
+						percentageBarBox.getChildren().add(LESS_3_ANTIGENS_TOTAL_LGA_PER);
+					}if(!data.getX_GREATER_2_ANTIGENS_TOTAL_HF_PER().equals("0")){
+						percentageBarBox.getChildren().add(GREATER_2_ANTIGENS_TOTAL_LGA_PER);
+					}if(!data.getX_SUFFICIENT_STOCK_TOTAL_HF_PER().equals("0")){
+						percentageBarBox.getChildren().add(SUFFICIENT_STOCK_TOTAL_LGA_PER);
+					}
+					//
+					ImageView arrowImageView=new ImageView();
+					Image arrowImage=new Image(MainApp.class
+							.getResource("/resources/icons/Arrow.png").toString());
+					arrowImageView.setFitHeight(8);
+					arrowImageView.setFitWidth(25);
+					arrowImageView.setRotate(data.getX_ROTATION());
+					System.out.println("data.getX_ROTATION()"+data.getX_ROTATION());
+					arrowImageView.setImage(arrowImage);
+					percentageBarBox.getChildren().add(arrowImageView);
+					HBox.setMargin(arrowImageView,new Insets(10, 0, 0, 0));
+					x_GRID_PANE.add(stateName, 0, rowIndex);
+					x_GRID_PANE.add(percentageBarBox, 1, rowIndex);
+					rowIndex++;
 				}
-				//
-				ImageView arrowImageView=new ImageView();
-				Image arrowImage=new Image(MainApp.class
-						.getResource("/resources/icons/Arrow.png").toString());
-				arrowImageView.setFitHeight(8);
-				arrowImageView.setFitWidth(25);
-				arrowImageView.setRotate(data.getX_ROTATION());
-				System.out.println("data.getX_ROTATION()"+data.getX_ROTATION());
-				arrowImageView.setImage(arrowImage);
-				percentageBarBox.getChildren().add(arrowImageView);
-				HBox.setMargin(arrowImageView,new Insets(10, 0, 0, 0));
-				x_GRID_PANE.add(stateName, 0, rowIndex);
-				x_GRID_PANE.add(percentageBarBox, 1, rowIndex);
-				rowIndex++;
+			} catch (Exception e) {
+				fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+				MainApp.LOGGER.setLevel(Level.SEVERE);
+				MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+				e.printStackTrace();
 			}
+			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
 		}
 	}
 	
@@ -660,6 +688,9 @@ public class LgaStkPerfDashboardController {
 					rootLayoutController.getX_ROOT_COMMON_LABEL().setText("LGA Stock Performance Dashboard");
 				}else{
 					rootLayoutController.getX_ROOT_COMMON_LABEL().setText("State Stock Performance Dashboard");
+					x_RED_LBL.setText(" % of LGAs with >3 Antigens in red ");
+					x_GREEN_LBL.setText(" % of LGAs with no Antigens in red ");
+					x_YELLOW_LBL.setText(" % of LGAs with Antigens that need to re-order Stock ");
 				}
 				lgaList=new FacilityService().getDropdownList("LGA_STORES",MainApp.getUSER_WAREHOUSE_ID());
 				lgaList.add(0, new LabelValueBean("All", null));
@@ -667,6 +698,9 @@ public class LgaStkPerfDashboardController {
 				new SelectKeyComboBoxListener(x_LGA_DPRDN);
 				break;
 			case "SCCO": // Should have state level admin access ( they can
+				x_RED_LBL.setText("% of LGAs with >3 Antigens in red");
+				x_GREEN_LBL.setText("% of LGAs with no Antigens in red");
+				x_YELLOW_LBL.setText("% of LGAs with Antigens that need to re-order Stock");
 				x_VIEW_SUMMURY.setVisible(false);
 				if(CustomChoiceDialog.selectedLGA!=null){
 					x_TOOLBAR.getItems().remove(0, 2);
@@ -675,6 +709,9 @@ public class LgaStkPerfDashboardController {
 					rootLayoutController.getX_ROOT_COMMON_LABEL().setText("LGA Stock Performance Dashboard");
 				}else{
 					rootLayoutController.getX_ROOT_COMMON_LABEL().setText("State Stock Performance Dashboard");
+					x_RED_LBL.setText(" % of LGAs with >3 Antigens in red ");
+					x_GREEN_LBL.setText(" % of LGAs with no Antigens in red ");
+					x_YELLOW_LBL.setText(" % of LGAs with Antigens that need to re-order Stock ");
 				}
 				lgaList=new FacilityService().getDropdownList("LGA_STORES",MainApp.getUSER_WAREHOUSE_ID());
 				x_LGA_DPRDN.setItems(lgaList);
@@ -683,6 +720,9 @@ public class LgaStkPerfDashboardController {
 				break;
 			case "SIFP": // State immunization Focal person: Should have State
 							// admin read only access
+				x_RED_LBL.setText(" % of LGAs with >3 Antigens in red ");
+				x_GREEN_LBL.setText(" % of LGAs with no Antigens in red ");
+				x_YELLOW_LBL.setText(" % of LGAs with Antigens that need to re-order Stock ");
 				x_VIEW_SUMMURY.setVisible(false);
 				if(CustomChoiceDialog.selectedLGA!=null){
 					x_TOOLBAR.getItems().remove(0, 2);
@@ -691,6 +731,9 @@ public class LgaStkPerfDashboardController {
 					rootLayoutController.getX_ROOT_COMMON_LABEL().setText("LGA Stock Performance Dashboard");
 				}else{
 					rootLayoutController.getX_ROOT_COMMON_LABEL().setText("State Stock Performance Dashboard");
+					x_RED_LBL.setText("% of LGAs with >3 Antigens in red");
+					x_GREEN_LBL.setText("% of LGAs with no Antigens in red");
+					x_YELLOW_LBL.setText("% of LGAs with Antigens that need to re-order Stock");
 				}
 				lgaList=new FacilityService().getDropdownList("LGA_STORES",MainApp.getUSER_WAREHOUSE_ID());
 				x_LGA_DPRDN.setItems(lgaList);

@@ -39,7 +39,7 @@
             <RowConstraints valignment="CENTER" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleWastageReportDashboardBtn" prefHeight="101.0" prefWidth="141.0" text="Wastage Report" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" fx:id="x_WASTAGE_REPORT_BTN">
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleWastageReportDashboardBtn" prefHeight="101.0" prefWidth="141.0" text="LGA Wastage Report" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" GridPane.halignment="LEFT" fx:id="x_WASTAGE_REPORT_BTN">
                <graphic>
                   <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
                      <image>

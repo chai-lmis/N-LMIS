@@ -72,11 +72,12 @@ public class CompareVersionInfo {
 		String adminAppversion = null;
 		Boolean adminFlag=false;
 		String query = "SELECT APPLICATION_VERSION "
-				+ "FROM ADM_USERS "
-				+ "WHERE USER_TYPE_ID=F_GET_TYPE('USER TYPES','ADMIN') "
-				+ "AND USER_ID=? "
-				+ "AND WAREHOUSE_ID=?";
+				+ " FROM ADM_USERS "
+				+ " WHERE USER_TYPE_ID=F_GET_TYPE('USER TYPES','ADMIN') "
+				+ " AND USER_ID=? "
+				+ " AND WAREHOUSE_ID=?";
 		try {
+			System.out.println("DatabaseOperation.getDbo() = "+DatabaseOperation.CONNECT_TO_SERVER);
 			dao = DatabaseOperation.getDbo();
 			pstmt = dao.getPreparedStatement(query);
 			pstmt.setString(1,MainApp.getUserId());
@@ -86,9 +87,11 @@ public class CompareVersionInfo {
 				adminAppversion = rs.getString("APPLICATION_VERSION");
 			}
 			if (Float.parseFloat(adminAppversion) <Float.parseFloat(versioninfobean.getAPPLICATION_VERSION())) {
-				flag = true;
+				System.out.println("TRUE: adminAppversion("+adminAppversion+") < versioninfobean.getAPPLICATION_VERSION("+versioninfobean.getAPPLICATION_VERSION()+")");
+				adminFlag = true;
 			} else {
-				flag = false;
+				System.out.println("FALSE: adminAppversion("+adminAppversion+") < versioninfobean.getAPPLICATION_VERSION("+versioninfobean.getAPPLICATION_VERSION()+")");
+				adminFlag = false;
 			}
 		} catch (Exception e) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);

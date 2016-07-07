@@ -298,7 +298,6 @@ public class CheckForUpdates {
 		try{
 			HttpURLConnection connection = null;
 			String request = "test";
-			URL netur1 = null;
 			URL netUrl = new URL(versionInfoProvider);
 			connection = (HttpURLConnection) netUrl.openConnection();
 			connection.setRequestMethod("POST");

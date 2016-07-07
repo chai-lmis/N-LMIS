@@ -25,6 +25,9 @@ public class HFReportSubDashboardController {
 	private BorderPane mainBorderPane;
 	private HomePageController homePageController;
 	@FXML Button x_HF_MIN_MAX_STOCK_REPORT_BTN;
+	@FXML Button x_HF_WASTAGE_REPORT_BTN;
+	@FXML Button x_HF_EMER_STOCK_REPORT_BTN;
+	@FXML Button x_HF_BIN_CARD_BTN;
 	private ReportsButtonPopupController reportsButtonPopupController;
 	public MainApp getMainApp() {
 		return mainApp;
@@ -166,6 +169,34 @@ public class HFReportSubDashboardController {
 			e.printStackTrace();
 		}
 	}
+	
+	@FXML
+	public void handleHfWastageReportBtn() {
+		System.out.println("entered HFreportSubDashCon.handleHfWastageReportBtn()");
+		System.out.println("Hey We are in handleHfBinCardGrid Handler");
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/HfWastageReport.fxml"));
+		try {
+			BorderPane HfWastageReport = (BorderPane) loader.load();
+			HfWastageReport.setUserData(loader);
+			new SetTransitionOnScreen().setTransition(mainBorderPane,
+					"parrallelFadeTranslate", movePageDirection);
+			mainBorderPane.setCenter(HfWastageReport);
+			HfWastageReportController controller = loader.getController();
+			controller.setMainApp(mainApp);
+			controller.setRootLayoutController(rootLayoutController);
+			controller.setHomePageController(homePageController);
+			controller.setRole(role);
+			controller.setUserBean(userBean);
+			controller.setPrimaryStage(primaryStage);
+			controller.setReportButtonPopupCont(reportsButtonPopupController);
+			controller.setDefaults();
+		} catch (IOException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			e.printStackTrace();
+		}
+	}
+	
 	@FXML
 	public void handleHomeDashBoardBtn() {
 		System.out.println("entered handleHomeDashBoardBtn()");

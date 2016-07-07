@@ -12,7 +12,37 @@
    <top>
       <VBox fx:id="x_VBOX">
          <children>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" fx:id="x_TOOLBAR">
+            <GridPane fx:id="x_GRIDPANE_LBL">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="509.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="490.0" minWidth="10.0" prefWidth="118.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="796.0" minWidth="10.0" prefWidth="753.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label style="-fx-background-color: #e2efd9;" text="Step 1" textFill="#01031e">
+                     <GridPane.margin>
+                        <Insets left="216.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label style="-fx-background-color: #e2efd9;" text="Step 2" textFill="#01031e" GridPane.columnIndex="1">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label style="-fx-background-color: #e2efd9;" text="Step 3" textFill="#01031e" GridPane.columnIndex="2">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+            <ToolBar prefHeight="35.0" prefWidth="200.0" fx:id="x_TOOLBAR">
                <items>
                   <Button mnemonicParsing="false" onAction="#handleAddAction" text="Add" fx:id="x_ADD_CUSTOMER_BTN">
                      <graphic>
@@ -61,7 +91,7 @@
                      </graphic>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#handleCustomerProductConsumption" text="Check HF Stock Balance" fx:id="x_CHECK_STOCK_BALANCE" />
-                  <Button mnemonicParsing="false" onAction="#handleManualStockEntryAction" text="Manual HFs Stock Entry" />
+                  <Button mnemonicParsing="false" onAction="#handleManualStockEntryAction" text="Enter HF Stock Balance" />
                   <Button mnemonicParsing="false" onAction="#handleProductMonthlyDetail" text="Product Allocation" wrapText="true" />
                   <Button mnemonicParsing="false" onAction="#handleAutoGenerateSalesOrder" text="Auto Generate Order" />
                   <Button mnemonicParsing="false" onAction="#handleOrderFulfilmentAction" text="Order Fulfilment" />
@@ -76,7 +106,7 @@
                   </Button>
                </items>
             </ToolBar>
-            <ToolBar layoutX="10.0" layoutY="10.0" prefHeight="40.0" prefWidth="200.0" fx:id="x_FILTER_TOOLBAR">
+            <ToolBar layoutX="10.0" layoutY="10.0" prefHeight="35.0" prefWidth="200.0" fx:id="x_FILTER_TOOLBAR">
                <items>
                   <Label text="State Store Filter" />
                   <ComboBox editable="true" onAction="#handleOnStateSelected" prefWidth="150.0" promptText="Select State Store" visibleRowCount="6" fx:id="x_STATE_STORE" />

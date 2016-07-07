@@ -24,6 +24,8 @@ public class FacilityService {
 	public ObservableList<LabelValueBean> getDropdownList(String... action) {
 		String x_QUERY = null;
 		switch (action[0]) {
+		case "ALL_STORES": x_QUERY="SELECT DISTINCT WAREHOUSE_ID, WAREHOUSE_NAME FROM VIEW_INVENTORY_WAREHOUSES";
+			break;
 		case "facilityTypeList":
 			if (action[1] != null) {
 				x_QUERY = "SELECT TYPE_ID, "
@@ -67,6 +69,12 @@ public class FacilityService {
 					+ " WHERE DEFAULT_ORDERING_WAREHOUSE_ID = "
 					+ MainApp.getUSER_WAREHOUSE_ID()
 					+ " AND WAREHOUSE_ID NOT IN (SELECT DISTINCT WAREHOUSE_ID FROM ADM_USERS) ";
+			break;
+		case "ASSIGN_LGA_FOR_LIO_MOH":
+			x_QUERY = " SELECT WAREHOUSE_ID, WAREHOUSE_NAME "
+					+ " FROM INVENTORY_WAREHOUSES "
+					+ " WHERE DEFAULT_ORDERING_WAREHOUSE_ID = "
+					+ MainApp.getUSER_WAREHOUSE_ID();
 			break;
 		case "ASSIGN_LGA_FOR_WARDS":
 			x_QUERY = " SELECT WAREHOUSE_ID, WAREHOUSE_NAME "
@@ -277,9 +285,10 @@ public class FacilityService {
 								+ " CREATED_ON, " //
 								+ " LAST_UPDATED_ON," //
 								+ " SYNC_FLAG,"
-								+ " MONTHLY_TARGET_POPULATION ) " //
+								+ " MONTHLY_TARGET_POPULATION ) " //16
 								+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),NOW(),'N',?)");
 				pstmt.setString(15, facilityBean.getX_CREATED_BY());
+				pstmt.setString(16, facilityBean.getX_MTP());
 			} else {
 				pstmt = dao.getPreparedStatement("UPDATE INVENTORY_WAREHOUSES SET "
 								+ "	COMPANY_ID=?, "
@@ -301,6 +310,7 @@ public class FacilityService {
 								+ " MONTHLY_TARGET_POPULATION =?"
 								+ " WHERE WAREHOUSE_ID=?");
 				pstmt.setString(15, facilityBean.getX_MTP());
+				pstmt.setString(16, facilityBean.getX_WAREHOUSE_ID());
 			}
 			pstmt.setString(1, facilityBean.getX_COMPANY_ID());
 			pstmt.setString(2, facilityBean.getX_WAREHOUSE_CODE());
@@ -310,8 +320,6 @@ public class FacilityService {
 			pstmt.setString(6, facilityBean.getX_ADDRRESS1());
 			pstmt.setString(7, facilityBean.getX_COUNTRY_ID());
 			pstmt.setString(8, facilityBean.getX_STATE_ID());
-			// pstmt.setString(9, facilityBean.getX_CITY_ID());
-			// pstmt.setString(10, facilityBean.getX_ZIPCODE());
 			pstmt.setString(9, facilityBean.getX_TELEPHONE_NUMBER());
 			pstmt.setString(10, facilityBean.getX_STATUS());
 			if (facilityBean.getX_START_DATE() == null) {
@@ -325,14 +333,12 @@ public class FacilityService {
 				pstmt.setString(12, facilityBean.getX_END_DATE()+" "+CalendarUtil.getCurrentTime());
 			pstmt.setString(13,facilityBean.getX_UPDATED_BY());
 			pstmt.setString(14,facilityBean.getX_DEFAULT_ORDERING_WAREHOUSE_ID());
-			pstmt.setString(16, facilityBean.getX_WAREHOUSE_ID());
 			pstmt.executeUpdate();
 		} catch (SQLException | NullPointerException ex) {
 			flag = false;
 			System.out.println("An error occured while saving/editing Stores, error: "+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("An error occured while saving/editing Stores, error: "+
-					MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("An error occured while saving/editing Stores, error: "+MyLogger.getStackTrace(ex));
 			return flag;
 		} finally {
 			System.out.println("warehouse insert/update query : "+ pstmt.toString());

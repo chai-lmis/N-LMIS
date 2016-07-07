@@ -362,8 +362,8 @@ public class HomePageController {
 		System.out.println("**In handleLGAStockEntryDashBoardBtn()**");
 
 	}
-	@FXML
-	public void handleDashboardBtn() {
+	
+	@FXML public void handleDashboardBtn() {
 		MainApp.LOGGER.severe("handleDashboardBtn");
 		System.out.println("**In handleDashboardBtn action handler**");
 		FXMLLoader loader = new FXMLLoader(

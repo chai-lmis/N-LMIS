@@ -68,7 +68,7 @@
                </font>
             </Label>
             <ComboBox layoutX="10.0" layoutY="10.0" prefWidth="150.0" promptText="Select Week" visibleRowCount="3" fx:id="x_WEEK_FILTER" />
-            <Button mnemonicParsing="false" onAction="#handleLGADashboardRefresh" text="Refresh" />
+            <Button mnemonicParsing="false" onAction="#handleLGADashboardRefresh" text="View Dashboard" />
             <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export" />
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="10.0" prefHeight="26.0" prefWidth="48.0">
                <opaqueInsets>
@@ -76,15 +76,15 @@
                </opaqueInsets>
             </Label>
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="16.0" prefWidth="15.0" style="-fx-background-color: red;" />
-            <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="226.0" text="3 or more antigens below min stock level">
+            <Label prefHeight="26.0" prefWidth="168.0" text=" Antigen below minimum level">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Label>
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: green;" />
-            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="220.0" text="No antigens below minimum stock level" />
+            <Label contentDisplay="CENTER" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="113.0" text=" Antigen sufficient" />
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #ffc000;" />
-            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="137.0" text="Need to re-order Stock " />
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="172.0" text="Antigen need to be re-ordered" />
          </items>
       </ToolBar>
    </top>

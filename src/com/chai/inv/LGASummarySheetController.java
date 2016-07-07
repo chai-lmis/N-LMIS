@@ -13,6 +13,7 @@ import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import com.chai.inv.loader.FirstPreloader;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.LabelValueBean;
@@ -23,6 +24,8 @@ import com.chai.inv.service.ItemService;
 import com.chai.inv.util.CalendarUtil;
 import com.chai.inv.util.SelectKeyComboBoxListener;
 
+import javafx.application.Preloader.StateChangeNotification;
+import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -48,6 +51,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class LGASummarySheetController {
+	private Stage loadingScreenStage=null;
 	private HomePageController homePageController;
 	private RootLayoutController rootLayoutController;
 	private UserBean userBean;
@@ -57,6 +61,7 @@ public class LGASummarySheetController {
 	private FacilityService facilityService= new FacilityService();
 	private CustProdMonthlyDetailBean bean=new CustProdMonthlyDetailBean();
 	private int columnSize;
+	FirstPreloader fp=new FirstPreloader();
 	//data list from database
 	private ObservableList<CustProdMonthlyDetailBean> lgaSummarySheetList = FXCollections.observableArrayList();
 	private ObservableList<LabelValueBean> vaccineList = FXCollections.observableArrayList();
@@ -99,9 +104,10 @@ public class LGASummarySheetController {
 			alert.showAndWait();
 		}
 		if(searchflage){
+			//loadingScreenStage=LoadingScreen.getLoadingScreen(primaryStage);
 			setDefaults();
+			//loadingScreenStage.close();
 		}
-	
 	}
 	
 	@FXML public void onYearChange(){
@@ -127,115 +133,124 @@ public class LGASummarySheetController {
 	}
 	
 	public void setDefaults(){
-		System.out.println("in setdefaults");
-		//x_GRID_PANE.getChildren().clear();
-		double maxWidth = 0;
-		lgaSummarySheetList=new DashboardService().getLgaStockSummary(bean);	
-		if(lgaSummarySheetList.size()>0){
-			vaccineList=new ItemService().
-				getDropdownList("products_for_each_state",x_STATE_STORE_COMBOX.getValue().getValue());
-			x_GRID_PANE.getChildren().clear();
-			System.out.println("in lgaSummarySheetList.size()!=0");
-			
-			//for column as product based
-			int productIndex=0;
-			for (LabelValueBean lbvb : vaccineList) {
-				TextArea Productlbl=new TextArea();
-				Productlbl.setStyle("-fx-text-fill: #0077cc;"+"-fx-border-color:black;");
-				Productlbl.setWrapText(true);
-				if(lbvb.getLabel().length()>2 && lbvb.getLabel().length()<7){
-					Productlbl.setPrefSize(40, 50);
-				}else if(lbvb.getLabel().length()>10 && lbvb.getLabel().length()<13){
-					Productlbl.setPrefSize(80, 50);
-				}else if(lbvb.getLabel().length()==2){
-					Productlbl.setPrefSize(30, 50);
-				}else{
-					Productlbl.setPrefSize(93, 50);
+		try {
+			fp.start(new Stage());
+			System.out.println("in setdefaults");
+			//x_GRID_PANE.getChildren().clear();
+			double maxWidth = 0;
+			lgaSummarySheetList=new DashboardService().getLgaStockSummary(bean);	
+			if(lgaSummarySheetList.size()>0){
+				vaccineList=new ItemService().
+					getDropdownList("products_for_each_state",x_STATE_STORE_COMBOX.getValue().getValue());
+				x_GRID_PANE.getChildren().clear();
+				System.out.println("in lgaSummarySheetList.size()!=0");
+				
+				//for column as product based
+				int productIndex=0;
+				for (LabelValueBean lbvb : vaccineList) {
+					TextArea Productlbl=new TextArea();
+					Productlbl.setStyle("-fx-text-fill: #0077cc;"+"-fx-border-color:black;");
+					Productlbl.setWrapText(true);
+					if(lbvb.getLabel().length()>2 && lbvb.getLabel().length()<7){
+						Productlbl.setPrefSize(40, 50);
+					}else if(lbvb.getLabel().length()>10 && lbvb.getLabel().length()<13){
+						Productlbl.setPrefSize(80, 50);
+					}else if(lbvb.getLabel().length()==2){
+						Productlbl.setPrefSize(30, 50);
+					}else{
+						Productlbl.setPrefSize(93, 50);
+					}
+					Productlbl.setEditable(false);
+					Productlbl.setText(lbvb.getLabel());
+					Productlbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,11));
+					System.out.println("productName:="+lbvb.getLabel());
+					x_GRID_PANE.addColumn(productIndex+1, Productlbl);
+					GridPane.setHalignment(Productlbl, HPos.CENTER);
+					productIndex++;
 				}
-				Productlbl.setEditable(false);
-				Productlbl.setText(lbvb.getLabel());
-				Productlbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,11));
-				System.out.println("productName:="+lbvb.getLabel());
-				x_GRID_PANE.addColumn(productIndex+1, Productlbl);
-				GridPane.setHalignment(Productlbl, HPos.CENTER);
-				productIndex++;
-			}
-				//for Lga list and count hf no
-				SortedSet<String> lgaNameList=new TreeSet<>();
-				for (int i = 0; i < lgaSummarySheetList.size(); i++) {
-					lgaNameList.add(lgaSummarySheetList.get(i).getX_LGA_NAME());
-				}
-				//for no fo column
-				columnSize=lgaNameList.size();
-				int lgaNameIndex=0;
-				//for display row as Lga name
-				for (String LgaName : lgaNameList) {
-					TextField lgaLbl=new TextField();
-					lgaLbl.setText(LgaName);
-					lgaLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,12));
-					lgaLbl.setEditable(false);
-					lgaLbl.setStyle("-fx-border-color:black");
-					lgaLbl.setPrefHeight(8);
-					GridPane.setHgrow(lgaLbl, Priority.ALWAYS);
-					System.out.println("LgaName:="+LgaName);
+					//for Lga list and count hf no
+					SortedSet<String> lgaNameList=new TreeSet<>();
+					for (int i = 0; i < lgaSummarySheetList.size(); i++) {
+						lgaNameList.add(lgaSummarySheetList.get(i).getX_LGA_NAME());
+					}
+					//for no fo column
+					columnSize=lgaNameList.size();
+					int lgaNameIndex=0;
+					//for display row as Lga name
+					for (String LgaName : lgaNameList) {
+						TextField lgaLbl=new TextField();
+						lgaLbl.setText(LgaName);
+						lgaLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,12));
+						lgaLbl.setEditable(false);
+						lgaLbl.setStyle("-fx-border-color:black");
+						lgaLbl.setPrefHeight(8);
+						GridPane.setHgrow(lgaLbl, Priority.ALWAYS);
+						System.out.println("LgaName:="+LgaName);
 //					GridPane.setMargin(hflbl, new Insets(0, 10, 0, 10));
-					x_GRID_PANE.addRow(lgaNameIndex+1,lgaLbl);
-					maxWidth = (stateLbl.getMaxWidth()>maxWidth?stateLbl.getMaxWidth():maxWidth);
-					GridPane.setHalignment(stateLbl, HPos.LEFT);				
-					lgaNameIndex++;
-				}
-				System.out.println("list of Lga"+lgaNameList.size());
-				stateNameLbl.setText(lgaSummarySheetList.get(0).getX_STATE_NAME());
-				stateNameLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
+						x_GRID_PANE.addRow(lgaNameIndex+1,lgaLbl);
+						maxWidth = (stateLbl.getMaxWidth()>maxWidth?stateLbl.getMaxWidth():maxWidth);
+						GridPane.setHalignment(stateLbl, HPos.LEFT);				
+						lgaNameIndex++;
+					}
+					System.out.println("list of Lga"+lgaNameList.size());
+					stateNameLbl.setText(lgaSummarySheetList.get(0).getX_STATE_NAME());
+					stateNameLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
 //				GridPane.setMargin(stateLbl, new Insets(0, 0, 0, 10));
-				stateNameLbl.setStyle("-fx-background-color:#efefef;"+"-fx-border-color:black;");
-				//stateLbl.setTextFill(Paint.valueOf("#0b7c3e"));
-				stateNameLbl.setEditable(false);
-			    x_GRID_PANE.add(stateNameLbl,0, 0);
-			    maxWidth = (stateNameLbl.getMaxWidth()>maxWidth?stateNameLbl.getMaxWidth():maxWidth);
-			    GridPane.setHalignment(stateNameLbl, HPos.LEFT);
-			    ColumnConstraints constraint = x_GRID_PANE.getColumnConstraints().get(0);
-			    constraint.setFillWidth(true);
-			    //for add data
-			    System.out.println("dataset");
-			    int i=1;
-			    String color="";
-			    for (String lgaName : lgaNameList) {
-					for (int j = 0; j < vaccineList.size(); j++) {
-						TextField blank=new TextField();
-						blank.setPrefSize(30, 10);
-						blank.setStyle("-fx-border-color:black");
-						blank.setText("0");
-						blank.setAlignment(Pos.CENTER);
-						blank.setStyle("-fx-background-color:red;-fx-border-color:black;");
-						blank.setEditable(false);
-						x_GRID_PANE.add(blank, j+1, i);
-						for (int j2 = 0; j2 < lgaSummarySheetList.size(); j2++) {
-							if(lgaName.equals(lgaSummarySheetList.get(j2).getX_LGA_NAME())
-									&& vaccineList.get(j).getLabel().equals(lgaSummarySheetList.get(j2).getX_PRODUCT())){
-								TextField stkBal=new TextField();
-								color=lgaSummarySheetList.get(j2).getX_LEGEND_COLOR();
-								stkBal.setStyle("-fx-background-color:"+color+";-fx-border-color:black;");
-								stkBal.setPrefSize(10, 10);
-								stkBal.setAlignment(Pos.CENTER);
-								stkBal.setEditable(false);
-								stkBal.setText(lgaSummarySheetList.get(j2).getX_STOCK_BALANCE());
-								x_GRID_PANE.getChildren().remove(blank);
-								x_GRID_PANE.add(stkBal, j+1, i);
-								GridPane.setHalignment(stkBal, HPos.CENTER);
-								GridPane.setValignment(stkBal, VPos.TOP);
+					stateNameLbl.setStyle("-fx-background-color:#efefef;"+"-fx-border-color:black;");
+					//stateLbl.setTextFill(Paint.valueOf("#0b7c3e"));
+					stateNameLbl.setEditable(false);
+				    x_GRID_PANE.add(stateNameLbl,0, 0);
+				    maxWidth = (stateNameLbl.getMaxWidth()>maxWidth?stateNameLbl.getMaxWidth():maxWidth);
+				    GridPane.setHalignment(stateNameLbl, HPos.LEFT);
+				    ColumnConstraints constraint = x_GRID_PANE.getColumnConstraints().get(0);
+				    constraint.setFillWidth(true);
+				    //for add data
+				    System.out.println("dataset");
+				    int i=1;
+				    String color="";
+				    for (String lgaName : lgaNameList) {
+						for (int j = 0; j < vaccineList.size(); j++) {
+							TextField blank=new TextField();
+							blank.setPrefSize(30, 10);
+							blank.setStyle("-fx-border-color:black");
+							blank.setText("0");
+							blank.setAlignment(Pos.CENTER);
+							blank.setStyle("-fx-background-color:red;-fx-border-color:black;");
+							blank.setEditable(false);
+							x_GRID_PANE.add(blank, j+1, i);
+							for (int j2 = 0; j2 < lgaSummarySheetList.size(); j2++) {
+								if(lgaName.equals(lgaSummarySheetList.get(j2).getX_LGA_NAME())
+										&& vaccineList.get(j).getLabel().equals(lgaSummarySheetList.get(j2).getX_PRODUCT())){
+									TextField stkBal=new TextField();
+									color=lgaSummarySheetList.get(j2).getX_LEGEND_COLOR();
+									stkBal.setStyle("-fx-background-color:"+color+";-fx-border-color:black;");
+									stkBal.setPrefSize(10, 10);
+									stkBal.setAlignment(Pos.CENTER);
+									stkBal.setEditable(false);
+									stkBal.setText(lgaSummarySheetList.get(j2).getX_STOCK_BALANCE());
+									x_GRID_PANE.getChildren().remove(blank);
+									x_GRID_PANE.add(stkBal, j+1, i);
+									GridPane.setHalignment(stkBal, HPos.CENTER);
+									GridPane.setValignment(stkBal, VPos.TOP);
+								}
 							}
 						}
+						i++;
 					}
-					i++;
-				}
-			    stateNameLbl.setPrefHeight(50);
-			    GridPane.setHgrow(stateNameLbl, Priority.ALWAYS);
+				    stateNameLbl.setPrefHeight(50);
+				    GridPane.setHgrow(stateNameLbl, Priority.ALWAYS);
 
-			}else{
-			System.out.println("lgaSummarySheetList.size()==0");
-			x_GRID_PANE.getChildren().clear();
-			}
+				}else{
+				System.out.println("lgaSummarySheetList.size()==0");
+				x_GRID_PANE.getChildren().clear();
+				}
+		} catch (Exception e) {
+			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			e.printStackTrace();
+		}
+		fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
 		}
 	@FXML
 	public void handleExportAction() {

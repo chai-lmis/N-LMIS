@@ -32,7 +32,7 @@ public class CheckManualLgaStockEntry {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				sqlQuery = "SELECT LGA_STOCK_ENTRY_ID, " // 1
 						+ "   WAREHOUSE_ID, " // 2
 						+ "   ITEM_ID, " // 3
@@ -153,7 +153,7 @@ public class CheckManualLgaStockEntry {
 					System.out
 							.println("Record updated successfully on warehouse......");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("...Oops Internet not available recently...Try Again Later !!!");
@@ -181,7 +181,7 @@ public class CheckManualLgaStockEntry {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				sqlQuery = "SELECT LGA_STOCK_ENTRY_ID, " // 1
 						+ "   WAREHOUSE_ID, " // 2
 						+ "   ITEM_ID, " // 3
@@ -302,7 +302,7 @@ public class CheckManualLgaStockEntry {
 					System.out
 							.println("Record updated successfully on warehouse......");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("...Oops Internet not available recently...Try Again Later !!!");

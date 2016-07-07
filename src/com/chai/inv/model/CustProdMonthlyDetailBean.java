@@ -31,6 +31,9 @@ public class CustProdMonthlyDetailBean {
 	private String x_STATE_ID;
 	private String x_LGA_ID;
 	private String x_LEGEND_COLOR;
+	private String x_WASTAGE_REASON_TYPE;
+	private String x_WASTAGE_QTY;
+	private String x_WASTAGE_RECEIVED_DATE;
 	public String getX_LGA_ID() {
 		return x_LGA_ID;
 	}
@@ -282,6 +285,30 @@ public class CustProdMonthlyDetailBean {
 
 	public void setX_LEGEND_COLOR(String x_LEGEND_COLOR) {
 		this.x_LEGEND_COLOR = x_LEGEND_COLOR;
+	}
+
+	public String getX_WASTAGE_REASON_TYPE() {
+		return x_WASTAGE_REASON_TYPE;
+	}
+
+	public void setX_WASTAGE_REASON_TYPE(String x_WASTAGE_REASON_TYPE) {
+		this.x_WASTAGE_REASON_TYPE = x_WASTAGE_REASON_TYPE;
+	}
+
+	public String getX_WASTAGE_QTY() {
+		return x_WASTAGE_QTY;
+	}
+
+	public void setX_WASTAGE_QTY(String x_WASTAGE_QTY) {
+		this.x_WASTAGE_QTY = x_WASTAGE_QTY;
+	}
+
+	public String getX_WASTAGE_RECEIVED_DATE() {
+		return x_WASTAGE_RECEIVED_DATE;
+	}
+
+	public void setX_WASTAGE_RECEIVED_DATE(String x_WASTAGE_RECEIVED_DATE) {
+		this.x_WASTAGE_RECEIVED_DATE = x_WASTAGE_RECEIVED_DATE;
 	}
 
 	public String getX_STATE_ID() {

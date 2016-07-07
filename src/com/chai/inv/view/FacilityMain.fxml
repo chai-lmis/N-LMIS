@@ -109,6 +109,14 @@
                      </image>
                   </ImageView>
                </graphic></Button>
+            <Label text="Row Count : " fx:id="x_ROW_COUNT">
+               <HBox.margin>
+                  <Insets top="10.0" />
+               </HBox.margin>
+               <font>
+                  <Font name="System Bold" size="16.0" />
+               </font>
+            </Label>
          </children>
          <padding>
             <Insets left="30.0" top="10.0" />

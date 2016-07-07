@@ -78,7 +78,7 @@
                <GridPane.margin>
                   <Insets right="18.0" />
                </GridPane.margin></TextField>
-            <ComboBox editable="true" prefHeight="30.0" prefWidth="193.0" promptText="Login Type" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_USER_TYPE_NAME">
+            <ComboBox editable="true" onAction="#handleUserTypeChange" prefHeight="30.0" prefWidth="193.0" promptText="Login Type" style="-fx-font-size: 15;" GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.valignment="BASELINE" fx:id="x_USER_TYPE_NAME">
                <GridPane.margin>
                   <Insets left="18.0" />
                </GridPane.margin>

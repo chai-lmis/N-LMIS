@@ -15,8 +15,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -40,50 +38,31 @@ import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class SalesOrderMainController {
 
-	@FXML
-	private TableView<OrderFormBean> orderTable;
-	@FXML
-	private TableColumn<OrderFormBean, String> orderNumberColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> orderDateColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> orderToColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> orderToNameColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> expectedDateColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> shipDateColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> shippedDateOnReceiveColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> orderStatusColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> commentColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> cancelDateColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> cancelReasonColumn;
-	@FXML
-	private TableColumn<OrderFormBean, String> x_ORDER_HEADER_ID_COL;
-	@FXML
-	private TableColumn<OrderFormBean, String> x_REFERENCE_ORDER_HEADER_ID_COL;
-	@FXML
-	private TableColumn<OrderFormBean, String> x_ORDER_TO_ID_COL;
-	@FXML
-	private TableColumn<OrderFormBean, String> x_ORDER_STATUS_ID_COL;
-	@FXML
-	private TableColumn<OrderFormBean, String> x_STORE_TYPE_ID_COL;
-	@FXML
-	private TableColumn<OrderFormBean, String> x_STORE_TYPE_COL;
-	@FXML
-	private Label x_USER_WAREHOUSE_NAME;
-	@FXML
-	private Label userLabel;
-	@FXML
-	private ComboBox<LabelValueBean> x_MONTH_FILTER;
-	@FXML
-	private ComboBox<LabelValueBean> x_HF_FILTER;
+	@FXML private TableView<OrderFormBean> orderTable;
+	@FXML private TableColumn<OrderFormBean, String> orderNumberColumn;
+	@FXML private TableColumn<OrderFormBean, String> orderDateColumn;
+	@FXML private TableColumn<OrderFormBean, String> orderToColumn;
+	@FXML private TableColumn<OrderFormBean, String> orderToNameColumn;
+	@FXML private TableColumn<OrderFormBean, String> expectedDateColumn;
+	@FXML private TableColumn<OrderFormBean, String> shipDateColumn;
+	@FXML private TableColumn<OrderFormBean, String> shippedDateOnReceiveColumn;
+	@FXML private TableColumn<OrderFormBean, String> orderStatusColumn;
+	@FXML private TableColumn<OrderFormBean, String> commentColumn;
+	@FXML private TableColumn<OrderFormBean, String> cancelDateColumn;
+	@FXML private TableColumn<OrderFormBean, String> cancelReasonColumn;
+	@FXML private TableColumn<OrderFormBean, String> x_ORDER_HEADER_ID_COL;
+	@FXML private TableColumn<OrderFormBean, String> x_REFERENCE_ORDER_HEADER_ID_COL;
+	@FXML private TableColumn<OrderFormBean, String> x_ORDER_TO_ID_COL;
+	@FXML private TableColumn<OrderFormBean, String> x_ORDER_STATUS_ID_COL;
+	@FXML private TableColumn<OrderFormBean, String> x_STORE_TYPE_ID_COL;
+	@FXML private TableColumn<OrderFormBean, String> x_STORE_TYPE_COL;
+	@FXML private TableColumn<OrderFormBean, String> x_ALLOCATION_TYPE_COL;
+	@FXML private Label x_USER_WAREHOUSE_NAME;
+	@FXML private Label userLabel;
+	@FXML private ComboBox<LabelValueBean> x_MONTH_FILTER;
+	@FXML private ComboBox<LabelValueBean> x_HF_FILTER;
+	@FXML private ComboBox<LabelValueBean> x_ORDER_STATUS_FILTER;
+	
 	private MainApp mainApp;
 	private OrderFormService orderFormService;
 	private UserBean userBean;
@@ -98,143 +77,109 @@ public class SalesOrderMainController {
 	public Label getUserLabel() {
 		return userLabel;
 	}
-
 	public void setUserName(String userLabel) {
 		this.userLabel.setText("User:" + userLabel);
 	}
-
 	public Label getX_USER_WAREHOUSE_NAME() {
 		return x_USER_WAREHOUSE_NAME;
 	}
-
 	public void setX_USER_WAREHOUSE_NAME(Label x_USER_WAREHOUSE_NAME) {
 		this.x_USER_WAREHOUSE_NAME = x_USER_WAREHOUSE_NAME;
 	}
-
 	public Stage getPrimaryStage() {
 		return primaryStage;
 	}
-
 	public void setPrimaryStage(Stage primaryStage) {
 		this.primaryStage = primaryStage;
 	}
-
 	public UserBean getUserBean() {
 		return userBean;
 	}
-
 	public void setUserBean(UserBean userBean) {
 		this.userBean = userBean;
 	}
-
 	public void setOrderListData() throws SQLException {
 		orderFormService = new OrderFormService();
-		list = orderFormService.getOrderList("Sales Order",
-				userBean.getX_USER_WAREHOUSE_ID());
+		list = orderFormService.getOrderList("Sales Order",userBean.getX_USER_WAREHOUSE_ID(),null,null);
 		orderTable.setItems(list);
 		x_MONTH_FILTER.setItems(CalendarUtil.getShortMonths("short_months"));
 		new SelectKeyComboBoxListener(x_MONTH_FILTER);
-		x_HF_FILTER.setItems(new CustomerService().getDropdownList(
-				"HEALTH_FACILITIES", MainApp.getUSER_WAREHOUSE_ID()));
+		x_HF_FILTER.setItems(new CustomerService().getDropdownList("HEALTH_FACILITIES", MainApp.getUSER_WAREHOUSE_ID()));
 		new SelectKeyComboBoxListener(x_HF_FILTER);
+		x_ORDER_STATUS_FILTER.setItems(new OrderFormService().getDropdownList("SOOrderStatus"));
+		new SelectKeyComboBoxListener(x_ORDER_STATUS_FILTER);
 	}
-
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
-
+	@FXML public void handleOrderStatusFilter(){
+		System.out.println("In handleOrderStatusFilter()...");
+		LabelValueBean filterBean=new LabelValueBean();
+		if(x_HF_FILTER.getValue()!=null){
+			filterBean.setLabel(x_HF_FILTER.getValue().getLabel());
+			filterBean.setValue(x_HF_FILTER.getValue().getValue());
+			filterBean.setExtra(x_MONTH_FILTER.getValue().getLabel());
+		}
+		if(x_ORDER_STATUS_FILTER.getValue()!=null){
+			try {
+				orderTable.setItems(orderFormService.getOrderList("Sales Order",userBean.getX_USER_WAREHOUSE_ID(),
+						x_ORDER_STATUS_FILTER.getValue().getLabel(),filterBean));
+			} catch (SQLException e) {
+				MainApp.LOGGER.setLevel(Level.SEVERE);
+				MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			}
+		}		
+	}
 	@FXML
 	private void initialize() {
-		orderNumberColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_HEADER_NUMBER"));
-		orderDateColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_DATE"));
-		orderToColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_TO_SOURCE"));
-		orderToNameColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_TO_NAME"));
-		expectedDateColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_EXPECTED_DATE"));
-		orderStatusColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_STATUS"));
-		commentColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_COMMENT"));
-		shipDateColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_SHIP_DATE"));
-		shippedDateOnReceiveColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_SHIPPED_DATE_ON_RECEIVE"));
-		cancelDateColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_CANCEL_DATE"));
-		cancelReasonColumn
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_CANCEL_REASON"));
-		x_ORDER_HEADER_ID_COL
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_HEADER_ID"));
-		x_REFERENCE_ORDER_HEADER_ID_COL
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_REFERENCE_ORDER_HEADER_ID"));
-		x_ORDER_TO_ID_COL
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_TO_ID"));
-		x_ORDER_STATUS_ID_COL
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_STATUS_ID"));
-		x_STORE_TYPE_ID_COL
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_TO_SOURCE_TYPE_ID"));
-		x_STORE_TYPE_COL
-				.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>(
-						"x_ORDER_TO_SOURCE_TYPE_NAME"));
+		orderNumberColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_HEADER_NUMBER"));
+		orderDateColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_DATE"));
+		orderToColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_TO_SOURCE"));
+		orderToNameColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_TO_NAME"));
+		expectedDateColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_EXPECTED_DATE"));
+		orderStatusColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_STATUS"));
+		commentColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_COMMENT"));
+		shipDateColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_SHIP_DATE"));
+		shippedDateOnReceiveColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_SHIPPED_DATE_ON_RECEIVE"));
+		cancelDateColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_CANCEL_DATE"));
+		cancelReasonColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_CANCEL_REASON"));
+		x_ORDER_HEADER_ID_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_HEADER_ID"));
+		x_REFERENCE_ORDER_HEADER_ID_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_REFERENCE_ORDER_HEADER_ID"));
+		x_ORDER_TO_ID_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_TO_ID"));
+		x_ORDER_STATUS_ID_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_STATUS_ID"));
+		x_STORE_TYPE_ID_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_TO_SOURCE_TYPE_ID"));
+		x_STORE_TYPE_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_TO_SOURCE_TYPE_NAME"));
+		x_ALLOCATION_TYPE_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ALLOCATION_TYPE"));
 		orderTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 	}
-
 	@FXML
 	public void refreshOrderTable() throws SQLException {
 		x_HF_FILTER.setValue(null);
 		x_MONTH_FILTER.setValue(null);
-		System.out
-				.println("In OrderMaincontroller.refreshOrderTable() method: ");
+		System.out.println("In OrderMaincontroller.refreshOrderTable() method: ");
 		int selectedIndex = orderTable.getSelectionModel().getSelectedIndex();
 		orderTable.setItems(null);
 		orderTable.layout();
-		orderTable.setItems(orderFormService.getOrderList("Sales Order",
-				userBean.getX_USER_WAREHOUSE_ID()));
+		orderTable.setItems(orderFormService.getOrderList("Sales Order",userBean.getX_USER_WAREHOUSE_ID(),null,null));
 		orderTable.getSelectionModel().select(selectedIndex);
 	}
-
 	public void refreshOrderTable(ObservableList<OrderFormBean> list) {
-		System.out
-				.println("In OrderMaincontroller.refreshOrderTable(list) method: search");
+		System.out.println("In OrderMaincontroller.refreshOrderTable(list) method: search");
 		if (list == null) {
-			Dialogs.create().owner(getPrimaryStage())
-					.title("Information").masthead("Search Result")
+			Dialogs.create().owner(getPrimaryStage()).title("Information").masthead("Search Result")
 					.message("Record(s) not found!").showInformation();
 		} else {
 			orderTable.setItems(list);
-			Dialogs.create().owner(getPrimaryStage())
-					.title("Information").masthead("Search Result")
-					.message(list.size() + " Record(s) found!")
-					.showInformation();
+			Dialogs.create().owner(getPrimaryStage()).title("Information").masthead("Search Result")
+					.message(list.size() + " Record(s) found!").showInformation();
 		}
 	}
-
 	@FXML
 	public void handleLogoutAction() {
 		System.out.print("Logout Action Called..");
 		mainApp.start(primaryStage);
 	}
-
+	
 	@FXML
 	public boolean handleEditSalesOrderAction() {
 		System.out.println("Hey We are in Edit Sales Order Action Handler");
@@ -399,46 +344,43 @@ public class SalesOrderMainController {
 
 	@FXML
 	public void handleOnHealthFacilitySelected() {
-		System.out
-				.println("entered SalesOrderMain.handleOnHealthFacilitySelected()");
-		new SelectKeyComboBoxListener(x_HF_FILTER);
-		if (x_HF_FILTER.getValue() != null) {
-			try {
-				if (x_MONTH_FILTER.getValue() != null) {
-					orderTable.setItems(orderFormService.getOrderListByFilter(
-							"Sales Order", MainApp.getUSER_WAREHOUSE_ID(),
-							x_HF_FILTER.getValue().getValue(), x_MONTH_FILTER
-									.getValue().getLabel()));
-				} else {
-					Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error Dialog");
-					alert.setContentText("Please Select Month!");
-					alert.showAndWait();
-				}
-			} catch (SQLException e) {
-				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("exeption catch by salesordermaincont.handleonfacilitichange()"
-				+MyLogger.getStackTrace(e));
-				System.out
-						.println("exeption catch by salesordermaincont.handleonfacilitichange()");
-				e.printStackTrace();
-			}
-		}
+//		System.out
+//				.println("entered SalesOrderMain.handleOnHealthFacilitySelected()");
+//		new SelectKeyComboBoxListener(x_HF_FILTER);
+//		if (x_HF_FILTER.getValue() != null) {
+//			try {
+//				if (x_MONTH_FILTER.getValue() != null) {
+//					orderTable.setItems(orderFormService.getOrderListByFilter(
+//							"Sales Order", MainApp.getUSER_WAREHOUSE_ID(),
+//							x_HF_FILTER.getValue().getValue(), x_MONTH_FILTER
+//									.getValue().getLabel()));
+//				} else {
+//					Alert alert = new Alert(AlertType.ERROR);
+//					alert.setTitle("Error Dialog");
+//					alert.setContentText("Please Select Month!");
+//					alert.showAndWait();
+//				}
+//			} catch (SQLException e) {
+//				MainApp.LOGGER.setLevel(Level.SEVERE);
+//				MainApp.LOGGER.severe("exeption catch by salesordermaincont.handleonfacilitichange()"
+//				+MyLogger.getStackTrace(e));
+//				System.out
+//						.println("exeption catch by salesordermaincont.handleonfacilitichange()");
+//				e.printStackTrace();
+//			}
+//		}
 	}
-
 	@FXML
 	public void handleMonthSelect() {
 		if (x_MONTH_FILTER.getValue() != null) {
 			x_HF_FILTER.setValue(null);
 		}
 	}
-
 	@FXML
 	public void handleHomeDashBoardBtn() {
 		System.out.println("entered handleHomeDashBoardBtn()");
 		rootLayoutController.handleHomeMenuAction();
 	}
-
 	@FXML
 	public void handleBackToStockOrdersSubMenu() throws Exception {
 		System.out.println("entered handleBackToStockOrdersSubMenu()");
@@ -452,15 +394,11 @@ public class SalesOrderMainController {
 			rootLayoutController.handleCustomerMenuAction();
 		}
 	}
-
 	public void setHomePageController(HomePageController homePageController) {
 		this.homePageController = homePageController;
 	}
-
-	public void setRootLayoutController(
-			RootLayoutController rootLayoutController) {
+	public void setRootLayoutController(RootLayoutController rootLayoutController) {
 		this.rootLayoutController = rootLayoutController;
-		rootLayoutController.getX_ROOT_COMMON_LABEL().setText(
-				"Order Fulfillment");
+		rootLayoutController.getX_ROOT_COMMON_LABEL().setText("Order Fulfillment");
 	}
 }

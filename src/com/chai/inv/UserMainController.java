@@ -161,7 +161,20 @@ public class UserMainController {
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
 	}
-
+	@FXML
+	public void handleRowSelectAction() {
+		UserBean selectedUserBean = userTable.getSelectionModel().getSelectedItem();
+		if (selectedUserBean != null) {
+			if ((selectedUserBean.getX_USER_ROLE_NAME().equals("NTO")
+					&& MainApp.getUserRole().getLabel().toUpperCase().equals("NTO")) 
+				|| MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO")
+				|| MainApp.getUserRole().getLabel().toUpperCase().equals("CCO")) {
+				x_EDIT_USER_BTN.setDisable(false);
+			} else {
+				x_EDIT_USER_BTN.setDisable(true);
+			}
+		}
+	}
 	public void setRole(LabelValueBean role) {
 		this.role = role;
 		switch (role.getLabel()) {
@@ -185,7 +198,9 @@ public class UserMainController {
 			}
 			break;
 		case "NTO": // NTO
-
+			if (CustomChoiceDialog.selectedLGA != null) {
+				x_TOOL_BAR.getItems().remove(0, 2);
+			}
 			break;
 		case "SIFP": // SIFP
 			x_TOOL_BAR.getItems().remove(0, 1);
@@ -229,18 +244,21 @@ public class UserMainController {
 			} else {
 				String userID = userChangePasswordBean.getX_USER_ID();
 				System.out.println("userID = " + userID);
-				boolean passwordChanged = userService.changePassword(userID,
-						oldPasswordStr, newPasswordStr);
+				boolean passwordChanged = userService.changePassword(userID, oldPasswordStr, newPasswordStr);
 				if (passwordChanged) {
 					System.out.println("Password Changed!");
 					Dialogs.create()
 							.owner(new Stage())
 							.title("Information")
 							.masthead("Password Changed!")
-							.message(
-									"New password is set for the selected user.")
+							.message("New password is set for the selected user.")
 							.showInformation();
 					d.hide();
+					try {
+						refreshUserTableGrid();
+					} catch (SQLException e) {
+						System.out.println("Error occured while changing user's password: "+e.getMessage());
+					}
 				} else {
 					Dialogs.create().owner(new Stage()).title("Error")
 							.masthead("Error in changing the Password")
@@ -252,59 +270,25 @@ public class UserMainController {
 
 	@FXML
 	private void initialize() {
-		companyIdColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_COMPANY_ID"));
-		firstNameColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_FIRST_NAME"));
-		lastNameColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_LAST_NAME"));
-		loginNameColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_LOGIN_NAME"));
-		passwordColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_PASSWORD"));
-		statusColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_STATUS"));
-		activeStatusColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_ACTIVATED"));
-		userIdColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_USER_ID"));
-		userTypeIdColumn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_USER_TYPE_ID"));
-		assignedLGA
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_ASSIGN_LGA"));
-		assignedLGAID
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_ASSIGN_LGA_ID"));
-		userType.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-				"x_USER_TYPE_NAME"));
-		startDate
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_START_DATE"));
-		endDate.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-				"x_END_DATE"));
-		activatedOn
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_ACTIVATED_ON"));
-		facilityFlag
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_FACILITY_FLAG"));
-		userRole.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-				"x_USER_ROLE_NAME"));
-		email.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-				"x_EMAIL"));
-		telephone_number
-				.setCellValueFactory(new PropertyValueFactory<UserBean, String>(
-						"x_TELEPHONE_NUMBER"));
+		companyIdColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_COMPANY_ID"));
+		firstNameColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_FIRST_NAME"));
+		lastNameColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_LAST_NAME"));
+		loginNameColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_LOGIN_NAME"));
+		passwordColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_PASSWORD"));
+		statusColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_STATUS"));
+		activeStatusColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_ACTIVATED"));
+		userIdColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_USER_ID"));
+		userTypeIdColumn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_USER_TYPE_ID"));
+		assignedLGA.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_ASSIGN_LGA"));
+		assignedLGAID.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_ASSIGN_LGA_ID"));
+		userType.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_USER_TYPE_NAME"));
+		startDate.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_START_DATE"));
+		endDate.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_END_DATE"));
+		activatedOn.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_ACTIVATED_ON"));
+		facilityFlag.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_FACILITY_FLAG"));
+		userRole.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_USER_ROLE_NAME"));
+		email.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_EMAIL"));
+		telephone_number.setCellValueFactory(new PropertyValueFactory<UserBean, String>("x_TELEPHONE_NUMBER"));
 		userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		x_TOOL_BAR.setStyle("-fx-background-color:TRANSPARENT");
 	}
@@ -358,9 +342,10 @@ public class UserMainController {
 			UserEditDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
 			controller.setUserService(userService, "add", userBean);
-			controller.setUserBeanFields(new UserBean(), new LabelValueBean(
-					"Select Login Type", "0", ""));
 			controller.setUserMain(this);
+			controller.setSelectedUserBean(new UserBean());
+			controller.setRole(role);
+			controller.setUserBeanFields(new LabelValueBean("Select Login Type", "0", ""));
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 			return controller.isOkClicked();
@@ -377,13 +362,11 @@ public class UserMainController {
 		System.out.println("Hey We are in Edit Action Handler");
 		boolean flag = false;
 		boolean edit = false;
-		UserBean selectedUserBean = userTable.getSelectionModel()
-				.getSelectedItem();
+		UserBean selectedUserBean = userTable.getSelectionModel().getSelectedItem();
 		if (selectedUserBean != null) {
 			if (role.getLabel().equals("SCCO")
 					|| role.getLabel().equals("NTO")
-					|| role.getValue().equals(
-							selectedUserBean.getX_USER_ROLE_ID())) {
+					|| role.getValue().equals(selectedUserBean.getX_USER_ROLE_ID())) {
 				edit = true;
 			}
 			if (edit) {
@@ -402,13 +385,14 @@ public class UserMainController {
 					Scene scene = new Scene(userAddEditDialog);
 					dialogStage.setScene(scene);
 					// Set the user into the controller
-					UserEditDialogController controller = loader
-							.getController();
+					UserEditDialogController controller = loader.getController();
 					controller.setDialogStage(dialogStage);
-					controller.setUserService(userService, "edit", userBean);
-					controller.setUserBeanFields(selectedUserBean,
-							selectedLabelValueBean);
 					controller.setUserMain(this);
+					controller.setUserService(userService, "edit", userBean);
+					controller.setSelectedUserBean(selectedUserBean);
+					controller.setRole(role);
+					controller.setUserBeanFields(selectedLabelValueBean);
+					
 					// Show the dialog and wait until the user closes it
 					dialogStage.showAndWait();
 					return controller.isOkClicked();
@@ -438,8 +422,7 @@ public class UserMainController {
 	@FXML
 	public boolean handleSearchAction() {
 		System.out.println("Hey We are in User's Search Action Handler");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class.getResource("/com/chai/inv/view/AddUser.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/AddUser.fxml"));
 		try {
 			// Load the fxml file and create a new stage for the popup
 			AnchorPane userAddEditDialog = (AnchorPane) loader.load();
@@ -452,9 +435,11 @@ public class UserMainController {
 			// Set the User into the controller
 			UserEditDialogController controller = loader.getController();
 			controller.setDialogStage(dialogStage);
-			controller.setUserService(userService, "search", userBean);
-			controller.setUserBeanFields(new UserBean(), new LabelValueBean("Select Login Type", "1", ""));
 			controller.setUserMain(this);
+			controller.setUserService(userService, "search", userBean);
+			controller.setSelectedUserBean(new UserBean());
+//			controller.setRole(role);
+			controller.setUserBeanFields(new LabelValueBean("Select Login Type", "1", ""));			
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 			return controller.isOkClicked();
@@ -465,8 +450,6 @@ public class UserMainController {
 			return false;
 		}
 	}
-
-	
 
 	@FXML
 	public boolean handleHistoryAction() {
@@ -590,16 +573,14 @@ public class UserMainController {
 				Dialog dlg = new Dialog(getPrimaryStage(), "Change Password");
 				dlg.setMasthead("Enter in the following fields to change the password");
 				dlg.setContent(grid);
-				dlg.getActions().addAll(actionChangePassword,
-						Dialog.Actions.CANCEL);
+				dlg.getActions().addAll(actionChangePassword,Dialog.Actions.CANCEL);
 				dlg.show();
 			} else {
 				Dialogs.create()
 						.owner(primaryStage)
 						.title("Warning")
 						.masthead("Password Change : Access Denied")
-						.message(
-								"You do not have permission to change the password of other users.")
+						.message("You do not have permission to change the password of other users.")
 						.showWarning();
 			}
 		} else {
@@ -608,8 +589,7 @@ public class UserMainController {
 					.owner(primaryStage)
 					.title("Warning")
 					.masthead("No User Selected")
-					.message(
-							"Please select a user in the table to change its password.")
+					.message("Please select a user in the table to change its password.")
 					.showWarning();
 			return false;
 		}

@@ -31,7 +31,7 @@ public class CheckItemSubInventories {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				System.out
 						.println("................. Checking whether any data available on warehouse to be sync ................. ");
 				sqlQuery = "SELECT COMPANY_ID, WAREHOUSE_ID, SUBINVENTORY_ID, SUBINVENTORY_CODE, SUBINVENTORY_DESCRIPTION, "
@@ -173,7 +173,7 @@ public class CheckItemSubInventories {
 					System.out
 							.println("Record updated successfully on warehouse ......");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("... Oops Internet not available recently ... Try Again Later !!!");
@@ -200,7 +200,7 @@ public class CheckItemSubInventories {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				System.out
 						.println("................. Checking whether any data available on server to be sync .................");
 				sqlQuery = "SELECT COMPANY_ID, WAREHOUSE_ID, SUBINVENTORY_ID, SUBINVENTORY_CODE, SUBINVENTORY_DESCRIPTION, "
@@ -336,7 +336,7 @@ public class CheckItemSubInventories {
 					commonPStmt.executeUpdate();
 					System.out.println("Record Updated successfully");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("...Oops Internet not available recently...Try Again Later !!!");

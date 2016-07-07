@@ -129,6 +129,100 @@ public class ReportsService {
 		return list;
 	}
 
+	public ObservableList<CustProdMonthlyDetailBean> getHfWastageReportList(CustProdMonthlyDetailBean bean){
+		System.out.println("In ReportsService.getLGAWastageReportList() ..");
+		ObservableList<CustProdMonthlyDetailBean> list = FXCollections.observableArrayList();
+		String x_WHERE_DAY="";
+		String 	x_WHERE_WEEK="";
+		String 	x_WHERE_MONTH="";
+		String x_WHERE_YEAR="";
+		String x_QUERY = "SELECT STATE_ID,"
+				+ "STATE_NAME,"
+				+"	LGA_ID,"
+				+ "LGA_NAME,"
+				+"CUSTOMER_ID,"
+				+ "CUSTOMER_NAME,"
+				+"ITEM_ID,"
+				+ "ITEM_NAME,"
+				+"WASTAGE_TYPE_ID,"
+				+ "WASTAGE_TYPE,"
+				+"REASON_TYPE_ID,"
+				+ "REASON_TYPE,"
+				+"WASTAGE_QUANTITY,"
+				+" DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%m-%d') AS WASTAGE_RECEIVED_DATE"
+				+ " FROM DHIS2_STOCK_WASTAGES_PROCESSED_V ";
+		if(bean!=null){
+			if(bean.getX_CUSTOMER_ID()==null){
+				x_QUERY="select DISTINCT CUSTOMER_ID	,CUSTOMER_NAME FROM  DHIS2_STOCK_WASTAGES_PROCESSED_V ";
+				x_WHERE_DAY="Where DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%m-%d') = '"+bean.getX_ALLOCATION_DATE()+"' "
+						+"  AND LGA_ID=IFNULL("+bean.getX_LGA_ID()+",LGA_ID)";
+				x_WHERE_WEEK="WHERE DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%v') = '"+bean.getX_YEAR()+"-"+bean.getX_WEEK()+"' "
+						+"  AND LGA_ID=IFNULL("+bean.getX_LGA_ID()+",LGA_ID)";
+				x_WHERE_MONTH="WHERE DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%c') = '"+bean.getX_YEAR()+"-"+bean.getX_MONTH()+"' "
+						+"  AND LGA_ID=IFNULL("+bean.getX_LGA_ID()+",LGA_ID)";
+				x_WHERE_YEAR="WHERE DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y') = '"+bean.getX_YEAR()+"' "
+						+"  AND LGA_ID=IFNULL("+bean.getX_LGA_ID()+",LGA_ID)";
+			}else{
+				 x_WHERE_DAY = " WHERE LGA_ID = IFNULL("+bean.getX_LGA_ID()+",LGA_ID) "
+				 		+ " AND DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%m-%d') = '"
+						 +bean.getX_ALLOCATION_DATE()+"' AND CUSTOMER_ID="+bean.getX_CUSTOMER_ID() ;
+				 x_WHERE_WEEK = " WHERE LGA_ID = IFNULL("+bean.getX_LGA_ID()+",LGA_ID) "
+				 		+ " AND DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%v') = '"
+						 +bean.getX_YEAR()+"-"+bean.getX_WEEK()+"' AND CUSTOMER_ID="+bean.getX_CUSTOMER_ID() ;
+				 x_WHERE_MONTH = " WHERE LGA_ID = IFNULL("+bean.getX_LGA_ID()+",LGA_ID) "
+				 		+ " AND DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y-%c') = '"
+						 +bean.getX_YEAR()+"-"+bean.getX_MONTH()+"' AND CUSTOMER_ID="+bean.getX_CUSTOMER_ID() ;
+				 x_WHERE_YEAR = " WHERE LGA_ID = IFNULL("+bean.getX_LGA_ID()+",LGA_ID) "
+				 		+ " AND DATE_FORMAT(WASTAGE_RECEIVED_DATE,'%Y') = '"
+						 +bean.getX_YEAR()+"' AND CUSTOMER_ID="+bean.getX_CUSTOMER_ID() ; 
+			}
+			switch(bean.getX_DATE_TYPE()){
+			case "DAY" : 
+				x_QUERY+=x_WHERE_DAY;
+				break;
+			case "WEEK" : 
+				x_QUERY+=x_WHERE_WEEK;
+				break;
+			case "MONTH" : 
+				x_QUERY+=x_WHERE_MONTH;
+				break;
+			case "YEAR" : 
+				x_QUERY+=x_WHERE_YEAR;
+				break;
+			}			
+		}else{
+			x_QUERY+= " WHERE 1=0 ";
+		}
+		
+		try{
+			if(dao==null || dao.getConnection()==null || dao.getConnection().isClosed()){
+				dao = DatabaseOperation.getDbo();
+			}
+			pstmt = dao.getPreparedStatement(x_QUERY);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				CustProdMonthlyDetailBean tbean = new CustProdMonthlyDetailBean();
+				if(bean.getX_CUSTOMER_ID()!=null){
+					tbean.setX_STATE_ID(rs.getString("STATE_ID"));
+					tbean.setX_PRODUCT_ID(rs.getString("ITEM_ID"));
+					tbean.setX_PRODUCT(rs.getString("ITEM_NAME"));
+					tbean.setX_WASTAGE_RECEIVED_DATE(rs.getString("WASTAGE_RECEIVED_DATE"));
+					tbean.setX_WASTAGE_REASON_TYPE(rs.getString("REASON_TYPE"));
+					tbean.setX_WASTAGE_QTY(rs.getString("WASTAGE_QUANTITY"));
+				}
+				tbean.setX_CUSTOMER(rs.getString("CUSTOMER_NAME"));
+				list.add(tbean);
+			}
+		}catch(SQLException | NullPointerException ex){
+			System.out.println("Error occur while "+ex.getMessage());
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+		}finally{
+			System.out.println("LGA Wastage Report Query : "+pstmt.toString());
+		}
+		return list;
+	}
+
 	/**
 	 * this service return hfbean card data
 	 * */

@@ -119,7 +119,7 @@ public class TransactionRegisterController {
 	public void refreshTransactionRegisterTable() {
 		System.out.println("In TransactionRegistercontroller.refreshTransactionRegisterTable() method: ");
 		int selectedIndex = transactionRegisterTable.getSelectionModel().getSelectedIndex();
-		transactionRegisterTable.setItems(null);
+		transactionRegisterTable.getItems().clear();
 		transactionRegisterTable.layout();
 		System.out.println("dataset");
 		transactionRegisterTable.setItems(transactionRegisterService.getTransactionRegisterList(transactionRegisterBean));
@@ -134,7 +134,7 @@ public class TransactionRegisterController {
 		new SelectKeyComboBoxListener(x_TRANSACTION_TYPE_DROP_DOWN);
 	}
 	@FXML public void onLGAChange(){
-		transactionRegisterTable.setItems(null);
+		transactionRegisterTable.getItems().clear();
 		x_ITEM_DROP_DOWN.getItems().clear();
 		//scco sio sifp and seleted day then we want item in x_pro_tra dropdown according to lga
 		if(MainApp.getUserRole().getLabel().equals("SCCO")
@@ -155,7 +155,7 @@ public class TransactionRegisterController {
 	@FXML public void onChangeProduct(){
 		x_TRANSACTION_TYPE_DROP_DOWN.getSelectionModel().clearSelection();
 		x_FROM_DATE_PICKER.setValue(null);
-		transactionRegisterTable.setItems(null);
+		transactionRegisterTable.getItems().clear();
 		if(x_ITEM_DROP_DOWN.getValue()!=null){
 			transactionRegisterBean.setX_ITEM_ID(x_ITEM_DROP_DOWN.getValue().getValue());
 		}
@@ -164,10 +164,19 @@ public class TransactionRegisterController {
 	public void handleTransactionTypeChange() {
 		System.out.println("In TransactionRegisterController.handleTransactionTypeChange() ");
 		if (x_TRANSACTION_TYPE_DROP_DOWN.getValue() != null) {
+			transactionRegisterTable.getItems().clear();
 			if(x_TRANSACTION_TYPE_DROP_DOWN.getValue().getLabel().equals("LGA Receipt")){
 				x_VVM_STATUS.setVisible(true);
 			}else{
 				x_VVM_STATUS.setVisible(false);
+			}
+			if(x_TRANSACTION_TYPE_DROP_DOWN.getValue().getLabel().equals("Stock Wastages")
+					|| x_TRANSACTION_TYPE_DROP_DOWN.getValue().getLabel().equals("Stock Adjustments") ){
+				x_FROM_NAME.setVisible(false);
+				x_TO_NAME.setVisible(false);
+			}else{
+				x_FROM_NAME.setVisible(true);
+				x_TO_NAME.setVisible(true);
 			}
 			transactionRegisterBean.setX_TRANSACTION_TYPE_ID(x_TRANSACTION_TYPE_DROP_DOWN.getValue().getValue());
 		}

@@ -20,6 +20,7 @@ import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.NotificationBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.model.UserWarehouseLabelValue;
+import com.chai.inv.service.TransactionRegisterService;
 import com.chai.inv.service.UserService;
 import com.chai.inv.util.FileUtil;
 
@@ -50,7 +51,7 @@ import javafx.stage.WindowEvent;
 public class MainApp extends Application {
 	
 	Task<Boolean> syncScreenCloseWorker;
-	
+	public static String excepMsgBfrLogin="";
 	private static Stage syncProgressStage = new Stage();
 	private Stage primaryStage;
 	private AnchorPane rootLayout;
@@ -70,6 +71,7 @@ public class MainApp extends Application {
 	public static HBox notificationTitleBox = new HBox();
 	private static LabelValueBean role;
 	public final static Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	public final static Logger LOGGER2 = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	public static String GLOBAL_EXCEPTION_STRING = "";
 	public Task<Boolean> createWorker() {
 		System.out.println("********In createWorker()*******");
@@ -92,9 +94,7 @@ public class MainApp extends Application {
 					}
 					System.out.println("While loop in TASK is breaked;");
 				} catch (NullPointerException ex) {
-					System.out
-							.println("Exception occur in performing the CreateWorker Task: "
-									+ ex.getMessage());
+					System.out.println("Exception occur in performing the CreateWorker Task: "+ ex.getMessage());
 					MainApp.LOGGER.setLevel(Level.SEVERE);
 					MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
 					ex.printStackTrace();
@@ -186,8 +186,7 @@ public class MainApp extends Application {
 
 	@Override
 	public void start(Stage primaryStage) {
-		LOGGER.setLevel(Level.INFO);
-		LOGGER.info("start is called");
+		excepMsgBfrLogin+="2. Start method is Called\n";
 		// primaryStage.initStyle(StageStyle.TRANSPARENT);
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("N-LMIS");
@@ -197,6 +196,8 @@ public class MainApp extends Application {
 
 		try {
 			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/LoginForm.fxml"));
+			System.out.println("getPath : "+MainApp.class.getResource("/com/chai/inv/view/LoginForm.fxml").getPath());
+			System.out.println("toExternalForm : "+MainApp.class.getResource("/com/chai/inv/view/LoginForm.fxml").toExternalForm());
 			// Parent root =
 			// FXMLLoader.load(getClass().getResource("ClientArea.fxml"));
 			rootLayout = (AnchorPane) loader.load();
@@ -222,7 +223,7 @@ public class MainApp extends Application {
 			LoginController loginController = loader.getController();
 			loginController.setMainApp(this);
 			loginController.setPrimaryStage(primaryStage);
-			// CHE	CK FOR DATABASE Exist OR NOT ?
+			// CHECK FOR DATABASE Exist OR NOT ?
 			if (DatabaseOperation.isDatabaseExist()) {
 				loginController.setActiveUserBtnVisible();
 			} else {
@@ -251,7 +252,7 @@ public class MainApp extends Application {
 									"Confirm Application Exit"
 									+ "\nDo you want to logout and close the Application?",
 									ButtonType.YES, ButtonType.NO);
-							alert.initOwner(getPrimaryStage());
+							alert.initOwner(primaryStage);
 							alert.initModality(Modality.WINDOW_MODAL);
 							response = alert.showAndWait();
 							MainApp.LOGGER.info("logout mesage");
@@ -294,17 +295,16 @@ public class MainApp extends Application {
 							}
 						}
 					} catch (Exception e) {
-						MainApp.LOGGER.setLevel(Level.SEVERE);
-						MainApp.LOGGER.severe("Exception occur while closing the Application : "+MyLogger.getStackTrace(e));
+						MainApp.LOGGER2.setLevel(Level.SEVERE);
+						excepMsgBfrLogin+="3. Exception occur while closing the Application"+MyLogger.getStackTrace(e);
 						GLOBAL_EXCEPTION_STRING = "Exception occur while closing the Application : "+MyLogger.getStackTrace(e);
 					}
 				}
 			});
 		} catch (IOException e) {
+			MainApp.LOGGER2.setLevel(Level.SEVERE);
+			MainApp.LOGGER2.severe(MyLogger.getStackTrace(e));
 			System.out.print("Error Occured While Loding Login Page.. "+ e.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error Occured While Loding Login Page.. "+
-			MyLogger.getStackTrace(e));
 			e.printStackTrace();
 		}
 	}
@@ -343,8 +343,7 @@ public class MainApp extends Application {
 
 	public void showRootLayout(LabelValueBean role) throws SQLException {
 		try {
-			System.out.println("################Current Thread : "
-					+ Thread.currentThread().getName());
+			System.out.println("################Current Thread : "+ Thread.currentThread().getName());
 			// notificationPaneListView.setPrefSize(150, 1);
 			// notificationTitle.setTextAlignment(TextAlignment.CENTER);
 			// notificationTitle.setFill(Color.GREEN);
@@ -385,10 +384,9 @@ public class MainApp extends Application {
 			MainApp.setUserId(userBean.getX_USER_ID());
 			try {
 			      MyLogger.setup(userBean.getX_LOGIN_NAME(),warehouseLvb.getLabel());
-			      MainApp.LOGGER.setLevel(Level.SEVERE);
-				  MainApp.LOGGER.severe(GLOBAL_EXCEPTION_STRING);
 			} catch (IOException e) {
-			      e.printStackTrace();
+			      MainApp.LOGGER2.setLevel(Level.SEVERE);
+				  MainApp.LOGGER2.severe(MyLogger.getStackTrace(e));
 			      throw new RuntimeException("Problems with creating the log files");
 			}
 			System.out.println("warehouse type : " + warehouseLvb.getExtra());
@@ -399,16 +397,22 @@ public class MainApp extends Application {
 			if (DatabaseOperation.CONNECT_TO_SERVER) {
 				CheckData.threadFlag = false;
 			} else {
-			 CheckData.threadFlag = true;
-//				 try{
-////				  calling synchronizing thread
-//				 CheckData.startSyncThread();
-//				 }catch(InterruptedException ex){
-//				 System.out.println("Exception Occurred in MainApp .. Sync Thread Block:: "+ex.getMessage());
-//				 }
-				if (new UserService().isShowSyncProgressScreen()) {
+//				Boolean showSyncProgessScreen = false;
+				Boolean showSyncProgessScreen = true;
+//				if (showSyncProgessScreen=new UserService().isShowSyncProgressScreen()) {
+				if (showSyncProgessScreen) {
 					System.out.println("*new UserService().isShowSyncProgressScreen() is trueee*");
-					showSynchronizeProgress();
+					new TransactionRegisterService().disableItemTransactionTriggers(true);
+				}
+				CheckData.threadFlag = true;
+				try{
+					//calling synchronizing thread
+					CheckData.startSyncThread();
+					if(showSyncProgessScreen){
+						showSynchronizeProgress();
+					}
+				} catch(InterruptedException ex) {
+					System.out.println("Exception Occurred in MainApp .. Sync Thread Block:: "+ex.getMessage());
 				}
 			}
 			rootLayoutController.setUserBean(userBean);
@@ -424,17 +428,13 @@ public class MainApp extends Application {
 			userWarehouseLabelValue.setUserwarehouseLabelValue();
 			rootLayoutController.getUserLabel().setVisible(true);
 			rootLayoutController.getX_USER_WAREHOUSE_NAME().setVisible(true);
-			// if(role.getLabel().equals("SIO") ||
-			// role.getLabel().equals("SCCO") | role.getLabel().equals("SIFP")){
-			// rootLayoutController.setChangeFacilityMenuitemVisible(true);
-			// }else
-			// rootLayoutController.setChangeFacilityMenuitemVisible(false);
 			primaryStage.setMaximized(true);
 			primaryStage.show();
 			// NotificationService.startNotificatonThread();
 		} catch (Exception e) {
 			System.out.println("Error Occured While Rootlayout Loading.. "+ e.getMessage());
-			e.printStackTrace();
+			MainApp.LOGGER2.setLevel(Level.SEVERE);
+			MainApp.LOGGER2.severe(MyLogger.getStackTrace(e));
 		}
 	}
 
@@ -508,6 +508,7 @@ public class MainApp extends Application {
 						if (Boolean.parseBoolean(newValue)) {
 							System.out.println("Synchronizing Transparent Screen Closed!");
 							MainApp.getSyncProgressStage().close();
+							new TransactionRegisterService().disableItemTransactionTriggers(false);
 						} else {
 							System.out.println("Synchronizing Transparent Screen NOT Closed!");
 						}
@@ -517,6 +518,16 @@ public class MainApp extends Application {
 	}
 
 	public static void main(String[] args) {
+		excepMsgBfrLogin+="1. main method is called\n";
+		try {
+		      MyLogger.setup2();
+		      MainApp.LOGGER.setLevel(Level.SEVERE);
+			  MainApp.LOGGER.severe(GLOBAL_EXCEPTION_STRING);
+		} catch (IOException e) {
+		      e.printStackTrace();
+		      throw new RuntimeException("Problems with creating the log files");
+		}
 		launch(args);
+		
 	}
 }

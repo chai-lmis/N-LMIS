@@ -26,31 +26,25 @@ public class CheckItemEnvironmentConditions {
 	static Connection serverConn = null;
 
 	public static void insertUpdateTables(int warehouseId) {
-		System.out
-				.println("******************* Check ITEM ENVIRONMENT CONDITIONS Started *********************");
+		System.out.println("******************* Check ITEM ENVIRONMENT CONDITIONS Started *********************");
 		DatabaseConnectionManagement dbm = null;
-		System.out
-				.println("................. Step1 Started ................. ");
+		System.out.println("................. Step1 Started ................. ");
 		try {
 			dbm = new DatabaseConnectionManagement();
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
-				System.out
-						.println("................. Checking whether any data available on warehouse to be sync ................. ");
+//				dbm.setAutoCommit();
+				System.out.println("................. Checking whether any data available on warehouse to be sync ................. ");
 				sqlQuery = "SELECT ITEM_ENVIRONMENT_ID, COMPANY_ID, ITEM_ID, MAXIMUM_TEMPRATURE, MINIMUM_TEMPRATURE, COMMENT, "
 						+ "STATUS, START_DATE, END_DATE, CREATED_BY, CREATED_ON, UPDATED_BY, LAST_UPDATED_ON ,SYNC_FLAG,WAREHOUSE_ID "
 						+ "FROM ITEM_ENVIRONMENT_CONDITIONS "
 						+ "WHERE SYNC_FLAG = 'N' ";
-				System.out
-						.println("Query to check whether any data available on warehouse to be sync :: "
-								+ sqlQuery);
+				System.out.println("Query to check whether any data available on warehouse to be sync :: "+ sqlQuery);
 				localPStmt = localConn.prepareStatement(sqlQuery);
 				localRs = localPStmt.executeQuery();
 				while (localRs.next()) {
-					System.out
-							.println("..... Data availbale to sync on warehouse ....");
+					System.out.println("..... Data availbale to sync on warehouse ....");
 					sqlQuery = "SELECT COMPANY_ID, ITEM_ID, MAXIMUM_TEMPRATURE, MINIMUM_TEMPRATURE, COMMENT, "
 							+ "STATUS, START_DATE, END_DATE, CREATED_BY, CREATED_ON, UPDATED_BY, LAST_UPDATED_ON "
 							+ "FROM ITEM_ENVIRONMENT_CONDITIONS "
@@ -59,14 +53,12 @@ public class CheckItemEnvironmentConditions {
 							+ " "
 							+ "  AND WAREHOUSE_ID = "
 							+ localRs.getString("WAREHOUSE_ID");
-					System.out
-							.println("Query to check whether the data need to be insert or update on server :: "
+					System.out.println("Query to check whether the data need to be insert or update on server :: "
 									+ sqlQuery);
 					serverPStmt = serverConn.prepareStatement(sqlQuery);
 					serverRs = serverPStmt.executeQuery();
 					if (serverRs.next()) {
-						System.out
-								.println("...Record available, Need to update on server.....");
+						System.out.println("...Record available, Need to update on server.....");
 						sqlQuery = "UPDATE ITEM_ENVIRONMENT_CONDITIONS "
 								+ "SET COMPANY_ID = ? , "// 1
 								+ "ITEM_ID = ?, "// 2
@@ -112,8 +104,7 @@ public class CheckItemEnvironmentConditions {
 						System.out.println("commonPStmt :: "
 								+ commonPStmt.toString());
 						commonPStmt.executeUpdate();
-						System.out
-								.println("Record updated successfully on server........");
+						System.out.println("Record updated successfully on server........");
 					} else {
 						System.out
 								.println("...Record not available, Need to insert.....");
@@ -172,7 +163,7 @@ public class CheckItemEnvironmentConditions {
 					System.out
 							.println("Record updated successfully on warehouse ......");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("... Oops Internet not available recently ... Try Again Later !!!");
@@ -200,7 +191,7 @@ public class CheckItemEnvironmentConditions {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				System.out
 						.println("................. Checking whether any data available on server to be sync .................");
 				sqlQuery = "SELECT ITEM_ENVIRONMENT_ID, COMPANY_ID, ITEM_ID, MAXIMUM_TEMPRATURE, MINIMUM_TEMPRATURE, COMMENT, "
@@ -335,7 +326,7 @@ public class CheckItemEnvironmentConditions {
 					commonPStmt.executeUpdate();
 					System.out.println("Record Updated successfully");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("...Oops Internet not available recently...Try Again Later !!!");

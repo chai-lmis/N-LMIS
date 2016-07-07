@@ -74,19 +74,19 @@
                </font>
             </Label>
             <ComboBox layoutX="10.0" layoutY="10.0" onAction="#onWeekChange" prefHeight="25.0" prefWidth="107.0" promptText="Select Week" visibleRowCount="3" fx:id="x_WEEK_FILTER" />
-            <Button mnemonicParsing="false" onAction="#handleLGADashboardRefresh" text="Refresh" />
+            <Button mnemonicParsing="false" onAction="#handleLGADashboardRefresh" text="View Dashboard" />
             <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export" />
-            <Label prefHeight="17.0" prefWidth="106.0" />
+            <Label prefHeight="17.0" prefWidth="10.0" />
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="16.0" prefWidth="15.0" style="-fx-background-color: red;" />
-            <Label alignment="CENTER_RIGHT" prefHeight="26.0" prefWidth="228.0" text="3 or more antigens below min stock level">
+            <Label prefHeight="26.0" prefWidth="165.0" text=" Antigen below minimum level">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
             </Label>
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: green;" />
-            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="223.0" text="No antigens below minimum stock level" />
-            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="104.0" text="Sufficient Stock :" />
+            <Label layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="104.0" text=" Antigen sufficient" />
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #ffc000;" />
+            <Label layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="168.0" text="Antigen need to be re-ordered" />
          </items>
       </ToolBar>
    </top>

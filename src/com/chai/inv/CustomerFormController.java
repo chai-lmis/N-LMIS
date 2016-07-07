@@ -5,6 +5,8 @@ import java.time.LocalDate;
 
 import org.controlsfx.dialog.Dialogs;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -34,6 +36,7 @@ public class CustomerFormController {
 	private Stage dialogStage;
 	private UserBean userBean;
 	private CustomerBean customerBean;
+	private ObservableList<LabelValueBean> countryStateList=FXCollections.observableArrayList();
 	@FXML
 	private Button x_VIEW_CLOSE_BTN;
 	@FXML
@@ -312,13 +315,27 @@ public class CustomerFormController {
 		// x_STATE.setItems(customerService.getDropdownList("StateList"));
 		// x_STATE.getItems().addAll(new
 		// LabelValueBean("----(select none)----",null));
-		if (!statelabelValueBean.getValue().equals("0")) {
-			x_STATE.setDisable(true);
-			x_STATE.setValue(statelabelValueBean);// to be correcrted
-		}else{
-			x_STATE.setDisable(true);
-			x_STATE.setValue(new CustomerService().getStateLvb(new FacilityService().getStateStoreId(MainApp.getUSER_WAREHOUSE_ID())));
+		if(statelabelValueBean.getValue()!=null){
+			if (!statelabelValueBean.getValue().equals("0") ) {
+				//edit
+				countryStateList=customerService.getDropdownList("StateList", x_COUNTRY
+						.getValue().getValue());
+				countryStateList.add(0, new LabelValueBean("----(select none)----", null));
+				x_STATE.setItems(countryStateList);
+				x_STATE.setValue(statelabelValueBean);
+				new SelectKeyComboBoxListener(x_STATE);// to be correcrted
+			}else{
+				countryStateList=customerService.getDropdownList("StateList", x_COUNTRY
+						.getValue().getValue());
+				countryStateList.add(0, new LabelValueBean("----(select none)----", null));
+				x_STATE.setItems(countryStateList);
+				x_STATE.getSelectionModel().select(0);
+				new SelectKeyComboBoxListener(x_STATE);
+				
+				//x_STATE.setValue(new CustomerService().getStateLvb(new FacilityService().getStateStoreId(MainApp.getUSER_WAREHOUSE_ID())));
+			}
 		}
+		
 		x_DAY_PHONE_NUMBER.setText(customerBean.getX_DAY_PHONE_NUMBER());
 		x_EMAIL_ADDRESS.setText(customerBean.getX_EMAIL_ADDRESS());
 		if ((customerBean != null) && (customerBean.getX_STATUS() != null)) {
@@ -430,7 +447,6 @@ public class CustomerFormController {
 //			if (x_STATE.getValue() != null
 //					&& !x_STATE.getValue().getLabel()
 //							.equals("----(select none)----")) {
-//				customerBean.setX_STATE(x_STATE.getValue().getValue());
 //				customerBean.setX_STATE_ID(x_STATE.getValue().getValue());
 //			}
 			customerBean.setX_DAY_PHONE_NUMBER(x_DAY_PHONE_NUMBER.getText());
@@ -494,12 +510,12 @@ public class CustomerFormController {
 							.equals("----(select none)----")) {
 				errorMessage += "select a Country\n";
 			}
-			if (x_STATE.getValue() == null
-					|| x_STATE.getValue().toString().length() == 0
-					|| x_STATE.getValue().getLabel()
-							.equals("----(select none)----")) {
-				errorMessage += "select a State\n";
-			}
+//			if (x_STATE.getValue() == null
+//					|| x_STATE.getValue().toString().length() == 0
+//					|| x_STATE.getValue().getLabel()
+//							.equals("----(select none)----")) {
+//				errorMessage += "select a State\n";
+//			}
 			if (x_DEFAULT_ORDERING_STORE.getValue() == null
 					|| x_DEFAULT_ORDERING_STORE.getValue().toString().length() == 0
 					|| x_DEFAULT_ORDERING_STORE.getValue().getLabel()

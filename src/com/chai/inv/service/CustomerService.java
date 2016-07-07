@@ -12,8 +12,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import com.chai.inv.CustomChoiceDialog;
+import com.chai.inv.CustomerMainController;
 import com.chai.inv.MainApp;
 import com.chai.inv.DAO.DatabaseOperation;
+import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.CustomerBean;
@@ -34,7 +36,7 @@ public class CustomerService {
 			x_QUERY = "SELECT COUNTRY_ID, " + "		  COUNTRY_NAME,"
 					+ "		  COMPANY_ID  " + "  FROM VIEW_COUNTRIES "
 					+ " WHERE COUNTRY_NAME IS NOT NULL "
-					+ "   AND COUNTRY_NAME <> '' AND STATUS!='I' "
+					+ "   AND COUNTRY_NAME <> '' AND STATUS='A' "					
 					+ " ORDER BY COUNTRY_NAME ";
 			break;
 		case "StateList":
@@ -42,14 +44,8 @@ public class CustomerService {
 					+ "		  STATE_NAME "
 					+ "  FROM VIEW_STATES "
 					+ " WHERE STATE_NAME IS NOT NULL "
-					+ "   AND STATE_NAME <> '' AND STATUS!='I' AND COUNTRY_ID = "
+					+ "   AND STATE_NAME <> '' AND STATUS='A' AND COUNTRY_ID = "
 					+ action[1] + " ORDER BY STATE_NAME ";
-			break;
-		case "CityList":
-			x_QUERY = "SELECT CITY_ID, " + "		  CITY_NAME "
-					+ "  FROM VIEW_CITIES " + " WHERE CITY_NAME IS NOT NULL "
-					+ "   AND CITY_NAME <> '' AND STATUS!='I' "
-					+ " ORDER BY CITY_NAME";
 			break;
 		case "defaultstorelist":
 			if (MainApp.getUserRole() != null
@@ -93,14 +89,13 @@ public class CustomerService {
 				x_QUERY = " SELECT CUSTOMER_ID, " 
 						+ "        CUSTOMER_NAME  "
 						+ "   FROM VIEW_CUSTOMERS  "
-						+ "  WHERE STATUS='A' AND DEFAULT_STORE_ID = "
-						+ action[1] 
+						+ "  WHERE DEFAULT_STORE_ID = "+ action[1] 
 						+ "  ORDER BY CUSTOMER_NAME ";
 			} else {
 				x_QUERY = " SELECT CUSTOMER_ID, "
 						+ "        CUSTOMER_NAME  "
 						+ "   FROM VIEW_CUSTOMERS  "
-						+ "  WHERE STATUS='A' AND DEFAULT_STORE_ID IN "
+						+ "  WHERE DEFAULT_STORE_ID IN "
 						+ " (SELECT WAREHOUSE_ID FROM VIEW_INVENTORY_WAREHOUSES "
 						+ " WHERE DEFAULT_ORDERING_WAREHOUSE_ID = "
 						+ MainApp.getUSER_WAREHOUSE_ID() + ") "
@@ -143,35 +138,6 @@ public class CustomerService {
 		return null;
 	}
 
-//	public boolean prodYearlyDataExist(String customer_id, String item_id,String year) {
-//		boolean flag = false;
-//		String query = "select count(cus_prod_alloc_id) AS ROWCOUNT "
-//				+ "  from customer_yearly_product_allocation  "
-//				+ " where customer_id=?  " + " and item_id=?  "
-//				+ " and DATE_FORMAT(year,'%Y')=? ";
-//		try {
-//			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
-//				System.out.println("**In CustomerService.prodYearlyDataExist() ");
-//				dao = DatabaseOperation.getDbo();
-//			}
-//			pstmt = dao.getPreparedStatement(query);
-//			pstmt.setString(1, customer_id);
-//			pstmt.setString(2, item_id);
-//			pstmt.setString(3, year);
-//			rs = pstmt.executeQuery();
-//			if (rs.next()) {
-//				if (Integer.parseInt(rs.getString("ROWCOUNT")) > 0) {
-//					flag = true;
-//				}
-//			}
-//		} catch (Exception ex) {
-//			System.out.println("Error occur In prodYearlyDataExist() method.."+ ex.getMessage());
-//		} finally {
-//			System.out.println("" + pstmt.toString());
-//		}
-//		return flag;
-//	}
-
 	public boolean checkPreExistenceOfProdDetail(String customer_id,String x_VIEW_PRODUCT_ALLOCATION_AS) {
 		boolean flag = false;
 		String query = null;
@@ -180,12 +146,14 @@ public class CustomerService {
 				+ " where customer_id=?  "
 				+ "   and upper(ALLOCATION_TYPE) = 'MONTHLY' "
 				+ "   and month = DATE_FORMAT(NOW(),'%b')  "
-				+ "   and year=DATE_FORMAT(NOW(),'%Y') ";
+				+ "   and year=DATE_FORMAT(NOW(),'%Y') "
+				+ "   and order_created_flag = 'Y' ";
 		String x_weekly_query = "select count(cust_product_detail_id) AS ROWCOUNT "
 				+ "  from customers_monthly_product_detail  "
 				+ " where customer_id=? "
 				+ "   and upper(ALLOCATION_TYPE) = 'WEEKLY' "
-				+ " 	 and WEEK = WEEKOFYEAR(NOW())";
+				+ " 	 and WEEK = WEEKOFYEAR(NOW()) "
+				+ "   and order_created_flag = 'Y' ";
 		if (x_VIEW_PRODUCT_ALLOCATION_AS.toUpperCase().equals("MONTHLY")) {
 			query = x_monthly_query;
 		} else if (x_VIEW_PRODUCT_ALLOCATION_AS.toUpperCase().equals("WEEKLY")) {
@@ -220,13 +188,19 @@ public class CustomerService {
 		return flag;
 	}
 
-	public ObservableList<CustomerBean> getCustomerList(String... storeID) {
+	public ObservableList<CustomerBean> getCustomerList(String... storeID) {		
 		ObservableList<CustomerBean> customerData = FXCollections.observableArrayList();
 		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
-			String x_QUERY_PART = " DEFAULT_STORE_ID = "+ MainApp.getUSER_WAREHOUSE_ID();
+			String status="";
+			if(CustomerMainController.showButtons){
+				status="STATUS='A' AND";
+			}else{
+				status="";
+			}
+			String x_QUERY_PART = status+" DEFAULT_STORE_ID = "+ MainApp.getUSER_WAREHOUSE_ID();
 			if (MainApp.getUserRole() != null && storeID[0].equals("")) {
 				if ((MainApp.getUserRole().getLabel().equals("SIO")
 						|| MainApp.getUserRole().getLabel().equals("SCCO") || MainApp
@@ -246,8 +220,7 @@ public class CustomerService {
 							+ MainApp.getUSER_WAREHOUSE_ID() + ") ";
 				}
 			} else if (MainApp.getUserRole() != null && storeID[0] != null) {
-				System.out
-						.println("iN ELSE CustomerService.getCustomerList() storeID[0]!=null ");
+				System.out.println("iN ELSE CustomerService.getCustomerList() storeID[0]!=null ");
 				if (MainApp.getUserRole().getLabel().equals("NTO")
 						|| MainApp.getUserRole().getLabel().equals("SCCO")
 						|| MainApp.getUserRole().getLabel().equals("SIO")
@@ -258,7 +231,8 @@ public class CustomerService {
 					} else if (storeID[1].equals("LGA_STORES")) {
 						x_QUERY_PART = " DEFAULT_STORE_ID = " + storeID[0];
 					} else if (storeID[1].equals("HEALTH_FACILITIES")) {
-						x_QUERY_PART = " CUSTOMER_ID = " + storeID[0];
+						x_QUERY_PART = " CUSTOMER_ID = " + storeID[0]
+								+" AND DEFAULT_STORE_ID = " + storeID[2];
 					}
 				}
 			}
@@ -285,7 +259,7 @@ public class CustomerService {
 					+ "		   MONTHLY_PREGNANT_WOMEN_TP, "
 					+ "	       DATE_FORMAT(EDIT_DATE, '%d-%b-%Y') EDIT_DATE "
 					+ "   FROM VIEW_CUSTOMERS " 
-					+ "  WHERE STATUS='A' AND "
+					+ "  WHERE "
 					+ x_QUERY_PART + "  ORDER BY CUSTOMER_NAME ");
 			rs = pstmt.executeQuery();
 			System.out.println("Execute Query: Customers List : "+ pstmt.toString());
@@ -320,11 +294,9 @@ public class CustomerService {
 				customerData.add(customerBean);
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("An error occured while Customer list, error: "
-		+ ex.getMessage());
+			System.out.println("An error occured while Customer list, error: "+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("An error occured while Customer list, error:..\n"
-			+MyLogger.getStackTrace(ex));	
+			MainApp.LOGGER.severe("An error occured while Customer list, error:..\n"+MyLogger.getStackTrace(ex));	
 		} finally {
 			System.out.println("finally block : Customers Select Query: "+ pstmt.toString());
 		}
@@ -387,7 +359,8 @@ public class CustomerService {
 						+ "  DEFAULT_STORE_ID=?, " // 16
 						+ "  CUSTOMER_TYPE_ID=?, " // 17
 						+ " UPDATED_BY=?," // 18
-						+ " LAST_UPDATED_ON=NOW()," + " SYNC_FLAG='N',"
+						+ " LAST_UPDATED_ON=NOW()," 
+						+ " SYNC_FLAG='N',"
 						+ " VACCINE_FLAG=?, " // 19
 						+ " TARGET_POPULATION=?, " // 20
 						+ " EDIT_DATE=? " // 21
@@ -467,7 +440,7 @@ public class CustomerService {
 							+ "	  AND STATE_NAME = IFNULL(?, STATE_NAME) "
 							+ "	  AND COUNTRY_NAME = IFNULL(?, COUNTRY_NAME) "
 							+ "	  AND IFNULL(DAY_PHONE_NUMBER, 'ASDFGHJK1234567') = IFNULL(?, IFNULL(DAY_PHONE_NUMBER, 'ASDFGHJK1234567')) "
-							+ "	  AND ( EMAIL_ADDRESS is null or UPPER(EMAIL_ADDRESS) LIKE CONCAT('%',UPPER(IFNULL(?, EMAIL_ADDRESS)),'%')) "
+							+ "	  AND (EMAIL_ADDRESS is null or UPPER(EMAIL_ADDRESS) LIKE CONCAT('%',UPPER(IFNULL(?, EMAIL_ADDRESS)),'%')) "
 							+ "	  AND STATUS = IFNULL(?, STATUS) "
 							+ "	  AND IFNULL(DATE_FORMAT(START_DATE, '%Y-%m-%d'), 'AAAAA') = IFNULL(?, IFNULL(DATE_FORMAT(START_DATE, '%Y-%m-%d'), 'AAAAA')) "
 							+ "	  AND IFNULL(DATE_FORMAT(END_DATE, '%Y-%m-%d'), 'AAAAA') = IFNULL(?, IFNULL(DATE_FORMAT(END_DATE, '%Y-%m-%d'), 'AAAAA')) "
@@ -708,8 +681,7 @@ public class CustomerService {
 		return list;
 	}
 
-	public boolean callProcedureCust_monthly_prod_detail_VW(String customer_id,
-			String user_warehouse_id, String product_alloc_type)
+	public boolean callProcedureCust_monthly_prod_detail_VW(String customer_id, String user_warehouse_id, String product_alloc_type)
 			throws SQLException {
 		System.out.println("In callProcedureCust_monthly_prod_detail_VW()... customerService");
 		boolean flag = false;
@@ -717,14 +689,14 @@ public class CustomerService {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
+			CheckCustomerMothlyProductDetail.doSync=false;
 			System.out.println("customer_id: " + customer_id);
 			System.out.println("user_warehouse_id: " + user_warehouse_id);
 			System.out.println("product_alloc_type: " + product_alloc_type);
 			// Step-2: identify the stored procedure
 			// String simpleProc = "";
 			// Step-3: prepare the callable statement
-			CallableStatement cs = dao.getConnectionObject().prepareCall(
-					"{call cust_monthly_prod_detail_PRC(?,?,?)}");
+			CallableStatement cs = dao.getConnectionObject().prepareCall("{call cust_monthly_prod_detail_PRC(?,?,?)}");
 			// Step-4: register output parameters ...
 			cs.setInt(1, Integer.parseInt(customer_id));
 			cs.setInt(2, Integer.parseInt(user_warehouse_id));
@@ -751,11 +723,9 @@ public class CustomerService {
 				cs.executeUpdate();
 				System.out.println("After cs.execute() SYRINGE_BOX_ALLOC_CAL_PRC... customerService");
 			} catch (SQLException | NullPointerException excp) {
-				System.out.println("Error occured while executing Procedure SYRINGE_BOX_ALLOC_CAL_PRC:\n"
-			+ excp.getMessage());
+				System.out.println("Error occured while executing Procedure SYRINGE_BOX_ALLOC_CAL_PRC:\n"+ excp.getMessage());
 				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Error occured while executing Procedure SYRINGE_BOX_ALLOC_CAL_PRC\n"
-						+MyLogger.getStackTrace(excp));	
+				MainApp.LOGGER.severe("Error occured while executing Procedure SYRINGE_BOX_ALLOC_CAL_PRC\n"+MyLogger.getStackTrace(excp));	
 			}
 		}
 		return flag;
@@ -785,80 +755,6 @@ public class CustomerService {
 		}
 		return yearsList;
 	}
-
-//	public boolean saveYearlyProdAlloc(CustomerYearlyProdAllocBean yearlyDataBean) {
-//		boolean flag = false;
-//		String Query = " INSERT INTO CUSTOMER_YEARLY_PRODUCT_ALLOCATION "
-//				+ " (CUS_PROD_ALLOC_ID, " + " CUSTOMER_ID, " + " ITEM_ID, "
-//				+ " TARGET_COVERAGE, " + " TARGET_POPULATION, "
-//				+ " MAX_FACTOR, " + " MIN_FACTOR, " + " ALLOCATION_FACTOR, "
-//				+ " YEAR, " + " STATUS, " + " START_DATE, " + " END_DATE, "
-//				+ " CREATED_BY, " + " CREATED_ON, " + " UPDATED_BY, "
-//				+ " LAST_UPDATED_ON," + " SYNC_FLAG," + " WAREHOUSE_ID) "
-//				+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),?,NOW(),'N',?) ";
-//		try {
-//			if (dao == null || dao.getConnection() == null
-//					|| dao.getConnection().isClosed()) {
-//				dao = DatabaseOperation.getDbo();
-//			}
-//			int CUS_PROD_ALLOC_ID;
-//			pstmt = dao.getPreparedStatement("SELECT MAX(CUS_PROD_ALLOC_ID) AS CUS_PROD_ALLOC_ID "
-//							+ "FROM CUSTOMER_YEARLY_PRODUCT_ALLOCATION");
-//			rs = pstmt.executeQuery();
-//			if (rs.next()) {
-//				if (rs.getString("CUS_PROD_ALLOC_ID") != null) {
-//					CUS_PROD_ALLOC_ID = Integer.parseInt(rs
-//							.getString("CUS_PROD_ALLOC_ID")) + 1;
-//				} else {
-//					CUS_PROD_ALLOC_ID = Integer.parseInt("1"
-//							+ MainApp.getUSER_WAREHOUSE_ID() + "1");
-//				}
-//			} else {
-//				CUS_PROD_ALLOC_ID = Integer.parseInt("1"
-//						+ MainApp.getUSER_WAREHOUSE_ID() + "1");
-//			}
-//			pstmt = dao.getPreparedStatement(Query);
-//			pstmt.setString(1, yearlyDataBean.getX_CUS_PROD_ALLOC_ID());
-//			pstmt.setString(2, yearlyDataBean.getX_CUSTOMER_ID());
-//			pstmt.setString(3, yearlyDataBean.getX_ITEM_ID());
-//			pstmt.setString(4, yearlyDataBean.getX_TARGET_COVERAGE());
-//			pstmt.setString(5, yearlyDataBean.getX_TARGET_POPULATION());
-//			pstmt.setString(6, yearlyDataBean.getX_MAX_FACTOR());
-//			pstmt.setString(7, yearlyDataBean.getX_MIN_FACTOR());
-//			pstmt.setString(8, yearlyDataBean.getX_ALLOCATION_FACTOR());
-//			pstmt.setString(9, yearlyDataBean.getX_YEAR() + "-01-01 "
-//					+ CalendarUtil.getCurrentTime());
-//			pstmt.setString(10, yearlyDataBean.getX_STATUS());
-//			if (yearlyDataBean.getX_START_DATE() == null) {
-//				pstmt.setString(11, null);
-//			} else {
-//				pstmt.setString(11, yearlyDataBean.getX_START_DATE() + " "
-//						+ CalendarUtil.getCurrentTime());
-//			}
-//			if (yearlyDataBean.getX_END_DATE() == null) {
-//				pstmt.setString(12, null);
-//			} else {
-//				pstmt.setString(12, yearlyDataBean.getX_END_DATE() + " "
-//						+ CalendarUtil.getCurrentTime());
-//			}
-//			pstmt.setString(13, yearlyDataBean.getX_CREATED_BY());
-//			// pstmt.setString(14, yearlyDataBean.getX_CREATED_ON());
-//			pstmt.setString(14, yearlyDataBean.getX_UPDATED_BY());
-//			// pstmt.setString(16, yearlyDataBean.getX_LAST_UPDATED_ON());
-//			pstmt.setString(15, MainApp.getUSER_WAREHOUSE_ID());
-//			pstmt.executeUpdate();
-//			flag = true;
-//		} catch (Exception e) {
-//			flag = false;
-//			System.out
-//					.println("Error occurs while saving product allocation data... \n"
-//							+ e.getMessage());
-//		} finally {
-//			System.out.println("Insert Query : product allocation:\n "
-//					+ pstmt.toString());
-//		}
-//		return flag;
-//	}
 
 	public boolean callAutoGenerateSalesOrderPrc(String x_USER_WAREHOUSE_ID,
 			String x_CUSTOMER_ID, String allocation_type) {
@@ -930,18 +826,14 @@ public class CustomerService {
 			System.out.println("After CustomerService.checkForRecordAvailablility() ");
 		} catch (SQLException | NullPointerException ex) {
 			flag = false;
-			System.out.println("Error: occur while calling Customers DB Sales order PROCEDURE : error--> "
-							+ ex.getMessage());
+			System.out.println("Error: occur while calling Customers DB Sales order PROCEDURE : error--> "+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error: occur while calling Customers DB Sales order PROCEDURE : error-->"
-					+MyLogger.getStackTrace(ex));
-			ex.printStackTrace();
+			MainApp.LOGGER.severe("Error: occur while calling Customers DB Sales order PROCEDURE : error-->"+MyLogger.getStackTrace(ex));
 		}
 		return flag;
 	}
 
-	public boolean manualHfStockEntry(String customerId,
-			ArrayList<LabelValueBean> list) {
+	public boolean manualHfStockEntry(String customerId, ArrayList<LabelValueBean> list) {
 		boolean flag = true;
 		String x_HF_QUERY = "INSERT INTO MANUAL_HF_STOCK_ENTRY( "
 				+ " CUSTOMER_ID, " + " ITEM_ID, " + " STOCK_BALANCE, "
@@ -985,14 +877,15 @@ public class CustomerService {
 			}
 			pstmt = dao.getPreparedStatement("DELETE FROM CUSTOMERS_MONTHLY_PRODUCT_DETAIL "
 							+ " WHERE WAREHOUSE_ID = ? AND CUSTOMER_ID = ? "
-							+ " AND UPPER(ALLOCATION_TYPE) = '"
-							+ ALLOCATION_TYPE.toUpperCase()
-							+ "' "
+							+ " AND UPPER(ALLOCATION_TYPE) = '"+ ALLOCATION_TYPE.toUpperCase()+"' "
 							+ " AND CURRENT_DATA_FLAG = 'A' "
 							+ " AND MONTH = DATE_FORMAT(NOW(),'%b') AND YEAR = DATE_FORMAT(NOW(),'%Y')");
 			pstmt.setString(1, x_USER_WAREHOUSE_ID);
 			pstmt.setString(2, x_CUSTOMER_ID);
-			if (pstmt.executeUpdate() > 0) {
+			int count = pstmt.executeUpdate();
+			if (count > 0) {
+				System.out.println("Deleted Record Count : "+ count);
+				CheckCustomerMothlyProductDetail.doSync=true;
 				flag = true;
 			}
 		} catch (SQLException | NullPointerException e) {

@@ -33,13 +33,13 @@
         <columnConstraints>
             <ColumnConstraints fillWidth="false" halignment="RIGHT" hgrow="NEVER" maxWidth="1.7976931348623157E308" />
             <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="NEVER" maxWidth="1.7976931348623157E308" />
-          <ColumnConstraints fillWidth="false" halignment="LEFT" hgrow="NEVER" maxWidth="1.7976931348623157E308" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints fillHeight="false" vgrow="NEVER" />
+            <RowConstraints fillHeight="false" vgrow="NEVER" />
         </rowConstraints>
          <children>
-            <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="630.0" mnemonicParsing="false" onAction="#handleHFMinMaxStockBalReport" prefHeight="121.0" prefWidth="141.0" text="Minimum / Maximum Stock Level Report" textAlignment="CENTER" wrapText="true" fx:id="x_HF_MIN_MAX_STOCK_REPORT_BTN">
+            <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="630.0" mnemonicParsing="false" onAction="#handleHFMinMaxStockBalReport" prefHeight="121.0" prefWidth="141.0" text="Minimum / Maximum Stock Level Report" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_HF_MIN_MAX_STOCK_REPORT_BTN">
                <graphic>
                   <ImageView fitHeight="59.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -63,7 +63,19 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" layoutX="27.0" layoutY="184.0" mnemonicParsing="false" onAction="#handleHfBinCardBtn" prefHeight="101.0" prefWidth="141.0" text="HF Bin Cards" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="2" fx:id="x_HANDLE_HF_BIN_CARD_BTN">
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHfWastageReportBtn" prefHeight="101.0" prefWidth="141.0" text="HF Wastage Report" textAlignment="CENTER" wrapText="true" fx:id="x_HF_WASTAGE_REPORT_BTN">
+               <graphic>
+                  <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../resources/icons/Wastage-Report.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleHfBinCardBtn" prefHeight="101.0" prefWidth="141.0" text="HF Bin Cards" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" fx:id="x_HF_BIN_CARD_BTN">
                <graphic>
                   <ImageView fitHeight="95.0" fitWidth="125.0" pickOnBounds="true" preserveRatio="true">
                      <image>

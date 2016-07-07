@@ -30,19 +30,40 @@ public class UserService {
 	Statement stmt;
 
 	public ObservableList<LabelValueBean> getDropdownList(String dropDown) {
+		// , boolean excludeCCO
 		String x_QUERY = "";
 		switch (dropDown) {
 		case "TYPE":
-			x_QUERY = "SELECT TYPE_ID,	 " + " 	  TYPE_NAME, "
-					+ "		  COMPANY_ID " + "  FROM VIEW_TYPES "
-					+ " WHERE SOURCE_TYPE = 'USER TYPES'";
+			x_QUERY = "SELECT TYPE_ID, TYPE_NAME, "
+					+ "		  COMPANY_ID FROM VIEW_TYPES "
+					+ " WHERE SOURCE_TYPE = 'USER TYPES' ORDER BY TYPE_NAME ";
 			break;
 		case "ROLE":
 			x_QUERY = " SELECT ROLE_ID,  	" 
 					+ "		  ROLE_NAME, "
 					+ "       ROLE_DETAILS " 
 					+ "  FROM ADM_ROLES	"
-					+ " WHERE STATUS = 'A'	" 
+					+ " WHERE STATUS = 'A' "
+					+ " AND ROLE_NAME <> 'NTO' "
+					+ " AND ROLE_NAME <> 'CCO' "
+					+ " ORDER BY ROLE_NAME ";
+			break;
+		case "ROLE_NTO":
+			x_QUERY = " SELECT ROLE_ID,  	" 
+					+ "		  ROLE_NAME, "
+					+ "       ROLE_DETAILS " 
+					+ "  FROM ADM_ROLES	"
+					+ " WHERE STATUS = 'A' "
+					+ " AND ROLE_NAME = 'NTO' "
+					+ " ORDER BY ROLE_NAME ";
+			break;
+		case "ROLE_CCO":
+			x_QUERY = " SELECT ROLE_ID,  	" 
+					+ "		  ROLE_NAME, "
+					+ "       ROLE_DETAILS " 
+					+ "  FROM ADM_ROLES	"
+					+ " WHERE STATUS = 'A' "
+					+ " AND ROLE_NAME = 'CCO' "
 					+ " ORDER BY ROLE_NAME ";
 			break;
 		}
@@ -55,20 +76,6 @@ public class UserService {
 		}
 		return null;
 	}
-
-	// public void checkAdminUsernameLogin(String username){
-	// if(username.equals("cadmin") | username.equals("lioadmin") |
-	// username.equals("mohadmin")
-	// | username.equals("sioadmin") | username.equals("sccoadmin") |
-	// username.equals("sifpadmin") ){
-	// //TODO : make connection to main server
-	// DatabaseOperation.CONNECT_TO_SERVER = true;
-	// System.out.println("DatabaseOperation.CONNECT_TO_SERVER = true");
-	// }else{
-	// DatabaseOperation.CONNECT_TO_SERVER = false;
-	// System.out.println("DatabaseOperation.CONNECT_TO_SERVER = false");
-	// }
-	// }
 
 	public boolean validateUser(UserBean userBean) {
 		boolean validateFlag = false;
@@ -445,12 +452,13 @@ public class UserService {
 								+ "		 (COMPANY_ID, FIRST_NAME, LAST_NAME, LOGIN_NAME, "
 								+ "		 	USER_TYPE_ID, STATUS, ACTIVATED, ACTIVATED_ON, START_DATE, "
 								+ "		 	END_DATE, EMAIL, TELEPHONE_NUMBER, UPDATED_BY, ACTIVATED_BY, CREATED_BY,"
-								+ " 		CREATED_ON, LAST_UPDATED_ON, PASSWORD,SYNC_FLAG,WAREHOUSE_ID) "
+								+ " 		CREATED_ON, LAST_UPDATED_ON, PASSWORD, SYNC_FLAG, WAREHOUSE_ID) "
 								+ " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(),NOW(),?,'N',?)");
 				pstmt.setString(14, userBean.getX_ACTIVATED_BY());
 				pstmt.setString(15, userBean.getX_CREATED_BY());
 				pstmt.setString(16, userBean.getX_PASSWORD());
 				pstmt.setString(17, userBean.getX_ASSIGN_LGA_ID());
+				System.out.println("Assign_lga_id() : "+userBean.getX_ASSIGN_LGA_ID());
 			} else {
 				pstmt = dao.getPreparedStatement("UPDATE ADM_USERS SET COMPANY_ID=?, "
 								+ "		 FIRST_NAME=?, LAST_NAME=?, LOGIN_NAME=?, "
@@ -469,26 +477,20 @@ public class UserService {
 			pstmt.setString(5, userBean.getX_USER_TYPE_ID());
 			pstmt.setString(6, userBean.getX_STATUS());
 			pstmt.setString(7, userBean.getX_ACTIVATED());
-			if (userBean.getX_ACTIVATED_ON() == null
-					|| userBean.getX_ACTIVATED_ON().equals("")) {
+			if (userBean.getX_ACTIVATED_ON() == null || userBean.getX_ACTIVATED_ON().equals("")) {
 				pstmt.setString(8, null);
 			} else {
-				pstmt.setString(8, userBean.getX_ACTIVATED_ON() + " "
-						+ CalendarUtil.getCurrentTime());
+				pstmt.setString(8, userBean.getX_ACTIVATED_ON() + " " + CalendarUtil.getCurrentTime());
 			}
-			if (userBean.getX_START_DATE() == null
-					|| userBean.getX_START_DATE().equals("")) {
+			if (userBean.getX_START_DATE() == null || userBean.getX_START_DATE().equals("")) {
 				pstmt.setString(9, null);
 			} else {
-				pstmt.setString(9, userBean.getX_START_DATE() + " "
-						+ CalendarUtil.getCurrentTime());
+				pstmt.setString(9, userBean.getX_START_DATE() + " " + CalendarUtil.getCurrentTime());
 			}
-			if (userBean.getX_END_DATE() == null
-					|| userBean.getX_END_DATE().equals("")) {
+			if (userBean.getX_END_DATE() == null || userBean.getX_END_DATE().equals("")) {
 				pstmt.setString(10, null);
 			} else {
-				pstmt.setString(10, userBean.getX_END_DATE() + " "
-						+ CalendarUtil.getCurrentTime());
+				pstmt.setString(10, userBean.getX_END_DATE() + " " + CalendarUtil.getCurrentTime());
 			}
 			pstmt.setString(11, userBean.getX_EMAIL());
 			pstmt.setString(12, userBean.getX_TELEPHONE_NUMBER());
@@ -496,11 +498,8 @@ public class UserService {
 			if (MainApp.getUserRole().getLabel().equals("CCO")) {
 				DatabaseOperation.CONNECT_TO_SERVER = true;
 				DatabaseOperation dao2 = new DatabaseOperation();
-				PreparedStatement pstmtTemp = dao2
-						.getPreparedStatement("UPDATE ADM_USERS SET LOGIN_NAME = '"
-								+ userBean.getX_LOGIN_NAME()
-								+ "' WHERE USER_ID = "
-								+ userBean.getX_USER_ID());
+				PreparedStatement pstmtTemp = dao2.getPreparedStatement("UPDATE ADM_USERS SET LOGIN_NAME = '"+ userBean.getX_LOGIN_NAME()
+								+ "' WHERE USER_ID = "+ userBean.getX_USER_ID());
 				if (pstmtTemp.executeUpdate() > 0) {
 					pstmt.executeUpdate();
 				} else {
@@ -531,9 +530,6 @@ public class UserService {
 				DatabaseOperation.CONNECT_TO_SERVER = false;
 			}
 			System.out.println("user insert/update query: " + pstmt.toString());
-			dao.closeConnection();
-			DatabaseOperation.getDbo().closeConnection();
-			DatabaseOperation.setDbo(null);
 		}
 		return flag;
 	}
@@ -556,12 +552,8 @@ public class UserService {
 		} catch (SQLException | NullPointerException ex) {
 			System.out.println("error while getting active warehouse list, error: "+ ex);
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error while getting active warehouse list, error:\n"
-			+MyLogger.getStackTrace(ex));
-		} finally {
-//			dao.closeConnection();
-//			dao = null;
-		}
+			MainApp.LOGGER.severe("error while getting active warehouse list, error:\n"+MyLogger.getStackTrace(ex));
+		} 
 		return warehouseList;
 	}
 
@@ -909,14 +901,16 @@ public class UserService {
 					}
 				}
 			}
-		} catch (SQLException | NullPointerException e) {
-			System.out.println("Count User record Query: " + pstmt.toString());
-			System.out.println("error in getting getLastInsertUserID: "+ e.getMessage());
+			
+		}catch(CommunicationsException ex1){
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Count User record Query: " + ex1.toString());
+		}catch (SQLException | NullPointerException e) {
 			flag = false;
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error in getting getLastInsertUserID::\n"
-			+MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			MainApp.LOGGER.severe("Count User record Query: " + pstmt.toString());
+			MainApp.LOGGER.severe("Exception : UserService.isUserRecordExist() method: "+ e.getMessage());
+			MainApp.LOGGER.severe("Exception : UserService.isUserRecordExist() method StackTrace::\n"+MyLogger.getStackTrace(e));
 		} finally {
 			dao.closeConnection();
 			dao = null;

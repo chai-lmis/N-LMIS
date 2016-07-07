@@ -32,7 +32,7 @@ public class CheckOnhandFreezQuantities {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				System.out
 						.println("................. Checking whether any data available on warehouse to be sync................. ");
 
@@ -205,7 +205,7 @@ public class CheckOnhandFreezQuantities {
 					System.out
 							.println("Record updated successfully on warehouse......");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("...Oops Internet not available recently...Try Again Later !!!");
@@ -232,7 +232,7 @@ public class CheckOnhandFreezQuantities {
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
+//				dbm.setAutoCommit();
 				System.out
 						.println("................. Checking whether any data available on server to be sync .................");
 
@@ -400,7 +400,7 @@ public class CheckOnhandFreezQuantities {
 					commonPStmt.executeUpdate();
 					System.out.println("Record inserted successfully");
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out
 						.println("...Oops Internet not available recently...Try Again Later !!!");

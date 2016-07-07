@@ -404,14 +404,15 @@ public class ItemEditDialogController {
 				itemService.saveItem(itemBean, actionBtnString);
 				itemMain.refreshItemTable();
 				if (actionBtnString.equals("add")) {
-					if(x_ITEM_TYPE_NAME.getValue().getLabel().equals("VACCINE")){
-						masthead = "Successfully Added!";
-						message = "Item is Saved to the Items List";
-						alertSaveItem.setTitle("Information");
-						alertSaveItem.setHeaderText(masthead);
-						alertSaveItem.setContentText(message);
-						alertSaveItem.initOwner(dialogStage);
-						alertSaveItem.showAndWait();
+					masthead = "Successfully Added!";
+					message = "Item is Saved to the Items List";
+					alertSaveItem.setTitle("Information");
+					alertSaveItem.setHeaderText(masthead);
+					alertSaveItem.setContentText(message);
+					alertSaveItem.initOwner(dialogStage);
+					alertSaveItem.showAndWait();
+					if(x_ITEM_TYPE_NAME.getValue().getLabel().equals("VACCINE")
+							&& x_STATUS.isSelected()){
 						Alert alert = new Alert(AlertType.CONFIRMATION);
 						alert.setTitle("Device Association Confirmation");
 						alert.setHeaderText("Click to Associate Device");
@@ -421,7 +422,8 @@ public class ItemEditDialogController {
 						alert.initOwner(dialogStage);
 						Optional<ButtonType> result = alert.showAndWait();
 						if (result.get() == ButtonType.YES){
-							handleDeviceAssociation();
+							handleDeviceAssociation(itemBean.getX_ITEM_NAME());
+							System.out.println("itemBean.getX_ITEM_NAME()"+itemBean.getX_ITEM_NAME());
 						} else {
 							dialogStage.close();
 						}
@@ -513,13 +515,11 @@ public class ItemEditDialogController {
 	private void handleCancel() {
 		dialogStage.close();
 	}
-	public void handleDeviceAssociation() {
-		System.out
-				.println("In IssuesSubMenuController.handleDeviceAssociation()");
+	public void handleDeviceAssociation(String newAddItem) {
+		System.out.println("In IssuesSubMenuController.handleDeviceAssociation()");
 		try {
 			FXMLLoader loader = new FXMLLoader(
-					MainApp.class
-							.getResource("/com/chai/inv/view/DeviceAssociation.fxml"));
+					MainApp.class.getResource("/com/chai/inv/view/DeviceAssociation.fxml"));
 				BorderPane syrngAssociationDialog = (BorderPane) loader.load();
 				Stage dialogStage = new Stage();
 				dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -531,6 +531,7 @@ public class ItemEditDialogController {
 				controller.setDialogStage(dialogStage);
 				controller.callFromAddProduct=true;
 				controller.setUserBean(userBean);
+				controller.setNewAddItemBean(newAddItem);
 				controller.setSyringeAssociation(new DeviceAssoiationGridBean(),
 						false);
 				dialogStage.showAndWait();

@@ -92,8 +92,7 @@ public class ItemsOnHandListController {
 
 	public void setFormDefaults() {
 		if(MainApp.getUserRole().getLabel().equals("CCO")){
-			itemsOnHandListTable.setItems(itemsOnHandListService
-					.getItemsOnHandList(itemsOnHandListBean));
+			itemsOnHandListTable.setItems(itemsOnHandListService.getItemsOnHandList(itemsOnHandListBean));
 		}
 	}
 
@@ -292,7 +291,7 @@ public class ItemsOnHandListController {
 	public void setRootLayoutController(
 			RootLayoutController rootLayoutController) {
 		this.rootLayoutController = rootLayoutController;
-		rootLayoutController.getX_ROOT_COMMON_LABEL().setText("Product Stock Balance");
+		rootLayoutController.getX_ROOT_COMMON_LABEL().setText("LGA Stock Balance");
 	}
 
 	public void setPrimaryStage(Stage primaryStage) {

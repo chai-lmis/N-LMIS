@@ -8,93 +8,128 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane prefHeight="500.0" prefWidth="1013.0" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.SalesOrderMainController">
+<BorderPane prefHeight="500.0" stylesheets="@DisabledComboBoxOpacity.css" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.chai.inv.SalesOrderMainController">
    <top>
-      <ToolBar>
-         <items>
-            <Button mnemonicParsing="false" onAction="#handleEditSalesOrderAction" text="Edit Order">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../resources/icons/file_edit.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#handleSearchOrderAction" text="Search">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../resources/icons/file_search.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../resources/icons/file_history.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../../resources/icons/Export_load_upload.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Button mnemonicParsing="false" onAction="#refreshOrderTable" text="Refresh">
-               <graphic>
-                  <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/icons/refreshIcon.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-            </Button>
-            <Label text="Month">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-               <font>
-                  <Font name="System Bold" size="14.0" />
-               </font>
-            </Label>
-            <ComboBox editable="true" onAction="#handleMonthSelect" prefWidth="150.0" promptText="Select Month" fx:id="x_MONTH_FILTER" />
-            <Label layoutX="406.0" layoutY="13.0" text="Filter By Health Facility">
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </Label>
-            <ComboBox editable="true" layoutX="465.0" layoutY="11.0" onAction="#handleOnHealthFacilitySelected" prefWidth="150.0" promptText="Select Facility" fx:id="x_HF_FILTER" />
-         </items>
-      </ToolBar>
+      <VBox>
+         <children>
+            <GridPane fx:id="x_GRIDPANE_LBL">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="509.0" minWidth="10.0" prefWidth="292.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Label style="-fx-background-color: #e2efd9;" text="Step 4" textFill="#01031e">
+                     <GridPane.margin>
+                        <Insets left="34.0" />
+                     </GridPane.margin>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+               </children>
+            </GridPane>
+            <ToolBar>
+               <items>
+                  <Button mnemonicParsing="false" onAction="#handleEditSalesOrderAction" text="Edit Order">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_edit.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleSearchOrderAction" text="Search">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_search.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleHistoryAction" text="History">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/file_history.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleExportAction" text="Export">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../../resources/icons/Export_load_upload.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <Label text="*Filter By Month">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox editable="true" onAction="#handleMonthSelect" prefWidth="150.0" promptText="Select Month" fx:id="x_MONTH_FILTER" />
+                  <Label layoutX="406.0" layoutY="13.0" text="*Filter By Health Facility">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox editable="true" layoutX="465.0" layoutY="11.0" onAction="#handleOnHealthFacilitySelected" prefWidth="150.0" promptText="Select Facility" fx:id="x_HF_FILTER" />
+                  <Label layoutX="568.0" layoutY="15.0" text="*Filter By Order Status">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <ComboBox editable="true" layoutX="702.0" layoutY="11.0" onAction="#handleOrderStatusFilter" prefWidth="150.0" promptText="Select Order Status" fx:id="x_ORDER_STATUS_FILTER" />
+                  <Button mnemonicParsing="false" onAction="#refreshOrderTable" text="Refresh">
+                     <graphic>
+                        <ImageView fitHeight="15.0" fitWidth="15.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../../resources/icons/refreshIcon.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+               </items>
+            </ToolBar>
+         </children>
+      </VBox>
    </top>
    <center>
       <TableView fx:id="orderTable" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
         <columns>
-          <TableColumn fx:id="orderNumberColumn" prefWidth="91.0" style="-fx-alignment: center;" text="Order Number" />
-          <TableColumn fx:id="orderDateColumn" prefWidth="86.0" style="-fx-alignment: center;" text="Order Date" />
+          <TableColumn fx:id="orderNumberColumn" minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Order Number" />
+          <TableColumn fx:id="orderDateColumn" minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Order Date" />
             <TableColumn fx:id="orderToColumn" prefWidth="86.0" text="Order To" visible="false" />
-            <TableColumn fx:id="orderToNameColumn" prefWidth="86.0" style="-fx-alignment: center-left;" text="Ship To" />
-            <TableColumn prefWidth="91.0" text="Store Type" fx:id="x_STORE_TYPE_COL" />
-            <TableColumn fx:id="expectedDateColumn" prefWidth="115.0" style="-fx-alignment: center;" text="Expected Date" />
-            <TableColumn fx:id="orderStatusColumn" prefWidth="91.0" style="-fx-alignment: center;" text="Order Status" />
-            <TableColumn fx:id="commentColumn" prefWidth="91.0" text="Comment" />
-            <TableColumn fx:id="shipDateColumn" prefWidth="115.0" style="-fx-alignment: center;" text="Schedule Ship Date" />
-            <TableColumn fx:id="cancelDateColumn" prefWidth="91.0" style="-fx-alignment: center;" text="Cancel Date" />
-            <TableColumn fx:id="cancelReasonColumn" prefWidth="91.0" text="Cancel Reason" />
+            <TableColumn fx:id="orderToNameColumn" minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Ship To" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" text="Store Type" fx:id="x_STORE_TYPE_COL" />
+            <TableColumn fx:id="expectedDateColumn" minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Expected Date" />
+            <TableColumn fx:id="orderStatusColumn" minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Order Status" />
+            <TableColumn minWidth="100.0" prefWidth="-1.0" text="Allocation" fx:id="x_ALLOCATION_TYPE_COL" />
+            <TableColumn fx:id="commentColumn" prefWidth="91.0" text="Comment" visible="false" />
+            <TableColumn fx:id="shipDateColumn" minWidth="120.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Schedule Ship Date" />
+            <TableColumn fx:id="cancelDateColumn" minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Cancel Date" />
+            <TableColumn fx:id="cancelReasonColumn" minWidth="150.0" prefWidth="-1.0" text="Cancel Reason" />
             <TableColumn prefWidth="91.0" text="Order To ID" visible="false" fx:id="x_ORDER_TO_ID_COL" />
             <TableColumn prefWidth="91.0" text="Order Status ID" visible="false" fx:id="x_ORDER_STATUS_ID_COL" />
             <TableColumn prefWidth="91.0" text="Store Type ID" visible="false" fx:id="x_STORE_TYPE_ID_COL" />
             <TableColumn prefWidth="91.0" text="Order Header ID" visible="false" fx:id="x_ORDER_HEADER_ID_COL" />
             <TableColumn prefWidth="91.0" text="Reference Order Header Id" visible="false" fx:id="x_REFERENCE_ORDER_HEADER_ID_COL" />
-            <TableColumn fx:id="shippedDateOnReceiveColumn" prefWidth="115.0" style="-fx-alignment: center;" text="Shipped Date" />
+            <TableColumn fx:id="shippedDateOnReceiveColumn" minWidth="100.0" prefWidth="-1.0" style="-fx-alignment: center;" text="Shipped Date" />
         </columns>
       </TableView>
    </center>

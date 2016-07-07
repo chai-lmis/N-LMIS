@@ -33,7 +33,7 @@
 						<Cursor fx:constant="HAND" />
 					</cursor>
 				</Button>
-            <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="136.0" mnemonicParsing="false" onAction="#handleOnhandItemsAction" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="Stock Onhand" textAlignment="CENTER" wrapText="true" fx:id="x_ONHAND_ITEMS_BTN">
+            <Button alignment="CENTER" contentDisplay="TOP" layoutX="10.0" layoutY="136.0" mnemonicParsing="false" onAction="#handleOnhandItemsAction" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="LGA Stock Balance" textAlignment="CENTER" wrapText="true" fx:id="x_ONHAND_ITEMS_BTN">
                <graphic>
                   <ImageView fitHeight="58.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -45,19 +45,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLGAStockReceiptDashboardBtn" prefHeight="131.0" prefWidth="126.0" styleClass="dark-blue-button" text="LGA Stock Receipt from State" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_LGA_RECEIPT_FRM_STATE">
-               <graphic>
-                  <ImageView fitHeight="59.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/icons/Stock_Receipt.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
-            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLGAStockIssueToHf" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="LGA Stock Issue to Facility" textAlignment="CENTER" wrapText="true" GridPane.rowIndex="1" fx:id="x_LGA_STOCK_ISSUE_TO_HF">
+            <Button alignment="CENTER" contentDisplay="TOP" mnemonicParsing="false" onAction="#handleLGAStockIssueToHf" prefHeight="131.0" prefWidth="125.0" styleClass="dark-blue-button" text="LGA Stock Issue to Facility" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" fx:id="x_LGA_STOCK_ISSUE_TO_HF">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

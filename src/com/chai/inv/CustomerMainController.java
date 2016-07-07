@@ -8,6 +8,7 @@ import java.util.logging.Level;
 
 import org.controlsfx.dialog.Dialogs;
 
+import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.CustomerBean;
 import com.chai.inv.model.HistoryBean;
@@ -43,7 +44,7 @@ public class CustomerMainController {
 	private MainApp mainApp;
 	private CustomerService customerService;
 	private ObservableList<CustomerBean> list;
-
+	@FXML GridPane x_GRIDPANE_LBL;
 	@FXML
 	private Button x_ADD_CUSTOMER_BTN;
 	@FXML
@@ -249,6 +250,7 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0, 2);
 				x_TOOLBAR.getItems().remove(4, 9);				
 			}
@@ -258,6 +260,7 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0, 2);
 				x_TOOLBAR.getItems().remove(4, 9);
 			}
@@ -267,6 +270,7 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0,2);
 				x_TOOLBAR.getItems().remove(4,9);
 			}
@@ -294,6 +298,7 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0,6);
 			} else {
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(2, 3);
 				x_TOOLBAR.getItems().remove(5, 10);
 			}
@@ -320,6 +325,7 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0,2);
 				x_TOOLBAR.getItems().remove(4,9);
 			}
@@ -343,6 +349,8 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
+				//if called from administration
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(6, 11);
 				x_TOOLBAR.getItems().remove(2, 3);
 			}
@@ -354,6 +362,7 @@ public class CustomerMainController {
 				x_TOOLBAR.getItems().remove(1, 2);
 				x_TOOLBAR.getItems().remove(2, 4);
 			} else {
+				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(6, 11);
 				x_TOOLBAR.getItems().remove(2, 3);
 			}
@@ -383,52 +392,40 @@ public class CustomerMainController {
 
 	@FXML
 	void handleOnStateSelected() {
-		System.out
-				.println("**In CustomerMainController.handleOnStateSelected() listener **");
+		System.out.println("**In CustomerMainController.handleOnStateSelected() listener **");
 		if (x_STATE_STORE.getValue() != null) {
-			x_LGA_STORE.setItems(new FacilityService().getDropdownList(
-					"LGA_STORES", x_STATE_STORE.getValue().getValue()));
+			x_LGA_STORE.setItems(new FacilityService().getDropdownList("LGA_STORES", x_STATE_STORE.getValue().getValue()));
 			new SelectKeyComboBoxListener(x_LGA_STORE);
-			customerTable.setItems(customerService.getCustomerList(
-					x_STATE_STORE.getValue().getValue(), "STATE_STORES"));
-			x_ROW_COUNT.setText("Row Count : "
-					+ customerTable.getItems().size());
+			customerTable.setItems(customerService.getCustomerList(x_STATE_STORE.getValue().getValue(), "STATE_STORES"));
+			x_ROW_COUNT.setText("Row Count : "+ customerTable.getItems().size());
 		}
 	}
 
 	@FXML
 	void handleOnLGASelected() {
-		System.out
-				.println("**In CustomerMainController.handleOnLGASelected() listener **");
+		System.out.println("**In CustomerMainController.handleOnLGASelected() listener **");
 		if (x_LGA_STORE.getValue() != null) {
-			x_HEALTH_FACILITY.setItems(new CustomerService().getDropdownList(
-					"HEALTH_FACILITIES", x_LGA_STORE.getValue().getValue()));
+			x_HEALTH_FACILITY.setItems(new CustomerService().getDropdownList("HEALTH_FACILITIES", x_LGA_STORE.getValue().getValue()));
 			new SelectKeyComboBoxListener(x_HEALTH_FACILITY);
-			customerTable.setItems(customerService.getCustomerList(x_LGA_STORE
-					.getValue().getValue(), "LGA_STORES"));
-			x_ROW_COUNT.setText("Row Count : "
-					+ customerTable.getItems().size());
+			customerTable.setItems(customerService.getCustomerList(x_LGA_STORE.getValue().getValue(), "LGA_STORES"));
+			x_ROW_COUNT.setText("Row Count : "+ customerTable.getItems().size());
 		}
 	}
 
 	@FXML
 	void handleOnHealthFacilitySelected() {
-		System.out
-				.println("**In CustomerMainController.handleOnLGASelected() listener **");
+		System.out.println("**In CustomerMainController.handleOnLGASelected() listener **");
 		if (x_HEALTH_FACILITY.getValue() != null) {
-			customerTable.setItems(customerService.getCustomerList(
-					x_HEALTH_FACILITY.getValue().getValue(),
-					"HEALTH_FACILITIES"));
-			x_ROW_COUNT.setText("Row Count : "
-					+ customerTable.getItems().size());
+			customerTable.setItems(customerService.getCustomerList(x_HEALTH_FACILITY.getValue().getValue(),
+																					   "HEALTH_FACILITIES",
+																	   x_LGA_STORE.getValue().getValue()));
+			x_ROW_COUNT.setText("Row Count : "+ customerTable.getItems().size());
 		}
 	}
 
 	public void refreshCustomerTable() {
-		System.out
-				.println("In CustomerMaincontroller.refreshCustomerTable() method: ");
-		int selectedIndex = customerTable.getSelectionModel()
-				.getSelectedIndex();
+		System.out.println("In CustomerMaincontroller.refreshCustomerTable() method: ");
+		int selectedIndex = customerTable.getSelectionModel().getSelectedIndex();
 		customerTable.setItems(null);
 		customerTable.layout();
 		customerTable.setItems(customerService.getCustomerList(""));
@@ -437,22 +434,19 @@ public class CustomerMainController {
 	}
 
 	public void refreshCustomerTable(ObservableList<CustomerBean> list) {
-		System.out
-				.println("In CustomerMainController.refrshCustomerTable(list) method: search");
+		System.out.println("In CustomerMainController.refrshCustomerTable(list) method: search");
 		if (list == null) {
-			org.controlsfx.dialog.Dialogs.create().owner(getPrimaryStage())
+			Dialogs.create().owner(getPrimaryStage())
 					.title("Information").masthead("Search Result")
 					.message("Record(s) not found!").showInformation();
 		} else {
-			int selectedIndex = customerTable.getSelectionModel()
-					.getSelectedIndex();
+			int selectedIndex = customerTable.getSelectionModel().getSelectedIndex();
 			customerTable.setItems(null);
 			customerTable.layout();
 			customerTable.setItems(list);
 			customerTable.getSelectionModel().select(selectedIndex);
-			x_ROW_COUNT.setText("Row Count : "
-					+ customerTable.getItems().size());
-			org.controlsfx.dialog.Dialogs.create().owner(getPrimaryStage())
+			x_ROW_COUNT.setText("Row Count : "+ customerTable.getItems().size());
+			Dialogs.create().owner(getPrimaryStage())
 					.title("Information").masthead("Search Result")
 					.message(list.size() + " Record(s) found!")
 					.showInformation();
@@ -462,9 +456,7 @@ public class CustomerMainController {
 	@FXML
 	public boolean handleAddAction() {
 		System.out.println("Hey We are in Add Action Handler");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/CustomerForm.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/CustomerForm.fxml"));
 		try {
 			BorderPane customerAddEditDialog = (BorderPane) loader.load();
 			Stage dialogStage = new Stage();
@@ -506,8 +498,7 @@ public class CustomerMainController {
 
 			LabelValueBean selectedStateLabelValueBean = new LabelValueBean(
 					selectedCustomerBean.getX_STATE(),
-					selectedCustomerBean.getX_STATE_ID(),
-					selectedCustomerBean.getX_COUNTRY_ID());
+					selectedCustomerBean.getX_STATE_ID());
 
 			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/CustomerForm.fxml"));
 			try {
@@ -801,16 +792,12 @@ public class CustomerMainController {
 	public boolean handleCustomersAutoProcess() throws SQLException {
 		System.out.println("In handleCustomersAutoProcess().. method");
 		boolean flag = false;
-		CustomerBean selectedCustomerBean = customerTable.getSelectionModel()
-				.getSelectedItem();
+		CustomerBean selectedCustomerBean = customerTable.getSelectionModel().getSelectedItem();
 		if (selectedCustomerBean != null) {
-			if (!customerService.checkPreExistenceOfProdDetail(
-					selectedCustomerBean.getX_CUSTOMER_ID(),
+			if (!customerService.checkPreExistenceOfProdDetail(selectedCustomerBean.getX_CUSTOMER_ID(),
 					ChooseProductAllocationController.selectedRadioText)) {
-				if (customerService.callProcedureCust_monthly_prod_detail_VW(
-						selectedCustomerBean.getX_CUSTOMER_ID(),
-						userBean.getX_USER_WAREHOUSE_ID(),
-						ChooseProductAllocationController.selectedRadioText)) {
+				if (customerService.callProcedureCust_monthly_prod_detail_VW(selectedCustomerBean.getX_CUSTOMER_ID(),
+						userBean.getX_USER_WAREHOUSE_ID(),ChooseProductAllocationController.selectedRadioText)) {
 					Dialogs.create()
 							.owner(primaryStage)
 							.title("Information")
@@ -821,21 +808,16 @@ public class CustomerMainController {
 				}
 			} else {
 				String str = null;
-				if (ChooseProductAllocationController.selectedRadioText
-						.equals("Monthly")) {
+				if (ChooseProductAllocationController.selectedRadioText.equals("Monthly")) {
 					str = " for the month " + LocalDate.now().getMonth();
-				} else if (ChooseProductAllocationController.selectedRadioText
-						.equals("Weekly")) {
+				} else if (ChooseProductAllocationController.selectedRadioText.equals("Weekly")) {
 					str = " for the current week ";
 				}
 				Dialogs.create()
 						.owner(primaryStage)
 						.title("Warning")
 						.masthead("Cannot Calculate Min/Max Stock")
-						.message(
-								"Data Already processed for "
-										+ selectedCustomerBean
-												.getX_CUSTOMER_NAME() + str)
+						.message("Data Already processed for "+ selectedCustomerBean.getX_CUSTOMER_NAME() + str)
 						.showWarning();
 				flag = false;
 			}
@@ -849,33 +831,30 @@ public class CustomerMainController {
 	}
 
 	public boolean callStockConfirmationDialog() throws SQLException {
-		System.out
-				.println("In CustomerMainController.callStockConfirmationDialog()");
+		System.out.println("In CustomerMainController.callStockConfirmationDialog()");
 		boolean flag = false;
-		CustomerBean selectedCustomerBean = customerTable.getSelectionModel()
-				.getSelectedItem();
+		CustomerBean selectedCustomerBean = customerTable.getSelectionModel().getSelectedItem();
 		if (selectedCustomerBean != null) {
-			FXMLLoader loader = new FXMLLoader(
-					MainApp.class.getResource("/com/chai/inv/view/AutoStockAllocationConfirmDialog.fxml"));
+			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/AutoStockAllocationConfirmDialog.fxml"));
 			try {
 				// Load the fxml file and create a new stage for the popup
 				BorderPane stockConfirmDialog = (BorderPane) loader.load();
 				Stage dialogStage = new Stage();
-				dialogStage
-						.setTitle("Health Facility's Auto-Order Stock Confirmation");
+				dialogStage.setTitle("Health Facility's Auto-Order Stock Confirmation");
 				dialogStage.initModality(Modality.WINDOW_MODAL);
 				dialogStage.initOwner(primaryStage);
 				Scene scene = new Scene(stockConfirmDialog);
 				dialogStage.setScene(scene);
-				AutoStockAllocationConfirmDialogController controller = loader
-						.getController();
+				AutoStockAllocationConfirmDialogController controller = loader.getController();
 				controller.setDialogStage(dialogStage);
 				controller.setUserBean(userBean);
 				controller.setCustomerMain(this);
 				controller.setFormDefaults(selectedCustomerBean);
+				System.out.println("isOkClicked before showAndWait() : "+controller.isOkClicked());
 				dialogStage.showAndWait();
 				System.out.println("Waiting.. for confirmation....");
-				return controller.isOkClicked();
+				flag = controller.isOkClicked();
+				System.out.println("okclicked flag : "+flag);
 			} catch (IOException e) {
 				// Exception gets thrown if the fxml file could not be loaded
 				MainApp.LOGGER.setLevel(Level.SEVERE);
@@ -887,8 +866,7 @@ public class CustomerMainController {
 					.owner(primaryStage)
 					.title("Warning")
 					.masthead("No Health Facility Selected")
-					.message(
-							"Please select a Health Facility to see allocation")
+					.message("Please select a Health Facility to see allocation")
 					.showWarning();
 		}
 		return flag;
@@ -945,10 +923,10 @@ public class CustomerMainController {
 											selectedCustomerBean.getX_CUSTOMER_ID(),
 											ChooseProductAllocationController.selectedRadioText)) {
 								Dialogs.create()
-										.owner(primaryStage)
-										.title("Information")
-										.masthead("Orders Created successfully!")
-										.showInformation();
+									   .owner(primaryStage)
+									   .title("Information")
+									   .masthead("Orders Created successfully!")
+									   .showInformation();
 								flag = true;
 							} else {
 								Dialogs.create().owner(primaryStage)
@@ -958,7 +936,8 @@ public class CustomerMainController {
 										.showWarning();
 							}
 						} else {
-							// delete calulated min./max. for selected LGA
+							// delete calulated min./max. for selected LGA and then set CheckCustomerMothlyProductDetail.doSync=true;
+							// in the customerService.deleteCalculatedMinMaxAllocDetails() method
 							if (customerService.deleteCalculatedMinMaxAllocDetails(
 											userBean.getX_USER_WAREHOUSE_ID(),
 											selectedCustomerBean.getX_CUSTOMER_ID(),
@@ -986,12 +965,10 @@ public class CustomerMainController {
 
 	@FXML
 	public boolean handleManualStockEntryAction() {
-		System.out
-				.println("ManualHFStockEntryController.handleManualStockEntryAction()...");
+		System.out.println("ManualHFStockEntryController.handleManualStockEntryAction()...");
 		CustomerBean selectedCustomerBean = customerTable.getSelectionModel().getSelectedItem();
 		if (selectedCustomerBean != null) {
-			FXMLLoader loader = new FXMLLoader(
-					MainApp.class.getResource("/com/chai/inv/view/ManualHFStockEntry.fxml"));
+			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/ManualHFStockEntry.fxml"));
 			try {
 				// Load the fxml file and create a new stage for the popup
 				BorderPane entryDialog = (BorderPane) loader.load();

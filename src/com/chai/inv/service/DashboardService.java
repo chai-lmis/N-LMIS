@@ -38,23 +38,7 @@ public class DashboardService {
 			+" ITEM_NUMBER, YEAR ,WEEK,ONHAND_QUANTITY,LEGEND_FLAG ,LEGEND_COLOR"
 			+" from STATE_LCCO_stock_performance_dashbord_v "
 			+ " where year="+year+" and week="+weekNumber+""
-			+ " AND STATE_ID="+MainApp.getUSER_WAREHOUSE_ID()
-			+" union"
-			+" SELECT  "
-			+" INV.WAREHOUSE_ID AS STATE_ID, '' STATE_NAME,    "
-			+" INV2.WAREHOUSE_ID AS LGA_ID, INV2.WAREHOUSE_CODE AS LGA_NAME,"
-			+"'' ITEM_ID,"
-			+"'' ITEM_NUMBER,"
-			+"'' YEAR,'' WEEK, 0 ONHAND_QUANTITY,"
-			+"'RED' LEGEND_FLAG,'#FF0000' LEGEND_COLOR    "
-			+" FROM INVENTORY_WAREHOUSES INV "
-			+" JOIN INVENTORY_WAREHOUSES INV2   "
-			+" ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID   "
-			+" WHERE INV.WAREHOUSE_ID=IFNULL("+MainApp.getUSER_WAREHOUSE_ID()+",inv.WAREHOUSE_ID)    "
-			+" AND INV2.WAREHOUSE_ID NOT IN (SELECT DISTINCT LGA_ID  "
-			+"                                FROM STATE_LCCO_stock_performance_dashbord_v   "
-			+ " where year="+year+" and week="+weekNumber+""
-			+ " AND STATE_ID="+MainApp.getUSER_WAREHOUSE_ID()+")";			
+			+ " AND STATE_ID="+MainApp.getUSER_WAREHOUSE_ID();
 		}else{
 			x_QUERY="SELECT STATE_ID,"
 					+ " STATE_NAME, "
@@ -78,7 +62,8 @@ public class DashboardService {
 			   + " 0 MIN_STOCK,0  MAX_STOCK,  'R' LEGEND_FLAG,  'red' LEGEND_COLOR" 
 			   +" from customers where customer_id not in( SELECT CUSTOMER_ID "
 			   + " FROM hf_stock_performance_dashbord_v"+x_WHERE_CONDITION+")"
-			   		+ "AND default_store_id=IFNULL("+MainApp.getUSER_WAREHOUSE_ID()+",default_store_id)";
+			   + "AND default_store_id=IFNULL("+MainApp.getUSER_WAREHOUSE_ID()+",default_store_id)"
+			   		+ " AND STATUS='A'" ;
 		}
 	
 		if(year==null || weekNumber==null){
@@ -146,7 +131,7 @@ public class DashboardService {
 			+"'' ITEM_NUMBER,"
 			+"'' YEAR,'' WEEK, 0 ONHAND_QUANTITY,"
 			+"'RED' LEGEND_FLAG,'#FF0000' LEGEND_COLOR    "
-			+" FROM INVENTORY_WAREHOUSES INV "
+			+" FROM ACTIVE_WAREHOUSES_V INV "
 			+" JOIN INVENTORY_WAREHOUSES INV2   "
 			+" ON INV.DEFAULT_ORDERING_WAREHOUSE_ID = INV2.WAREHOUSE_ID    "
 			+" WHERE INV2.WAREHOUSE_ID=IFNULL("+bean.getX_STATE_ID()+",inv2.WAREHOUSE_ID)    "
@@ -235,7 +220,7 @@ public class DashboardService {
 						+"  0 REORDER_STOCK_COUNT_Y_PER, '' REORDER_STOCK_COUNT_Y_FLAG,   "
 						+"  100 INSUFFICIENT_STOCK_COUNT_R_PER, 'RED' INSUFFICIENT_STOCK_COUNT_FLAG,   "
 						+"  0 SUFFICIENT_STOCK_COUNT_G_PER,'' SUFFICIENT_STOCK_COUNT_G_FLAG   "
-						+"  FROM INVENTORY_WAREHOUSES INV  "
+						+"  FROM ACTIVE_WAREHOUSES_V INV  "
 						+"   JOIN INVENTORY_WAREHOUSES INV2   "
 						+"     ON INV.DEFAULT_ORDERING_WAREHOUSE_ID = INV2.WAREHOUSE_ID   "
 						+"   WHERE INV.DEFAULT_ORDERING_WAREHOUSE_ID<>'"+MainApp.getUSER_WAREHOUSE_ID()+"'"
@@ -256,7 +241,7 @@ public class DashboardService {
 						+"  100 INSUFFICIENT_STOCK_COUNT_R_PER, 'RED' INSUFFICIENT_STOCK_COUNT_FLAG,   "
 						+"  0 SUFFICIENT_STOCK_COUNT_G_PER,'' SUFFICIENT_STOCK_COUNT_G_FLAG   "
 					   +"  FROM INVENTORY_WAREHOUSES INV "
-					   +"  JOIN INVENTORY_WAREHOUSES INV2 "
+					   +"  JOIN ACTIVE_WAREHOUSES_V INV2 "
 					   +"  ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID "
 					   +"  WHERE ";
 			  		x_QUERY+=" INV.WAREHOUSE_ID = IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
@@ -298,7 +283,7 @@ public class DashboardService {
 							+"  0 REORDER_STOCK_COUNT_Y_PER, '' REORDER_STOCK_COUNT_Y_FLAG,   "
 							+"  100 INSUFFICIENT_STOCK_COUNT_R_PER, 'RED' INSUFFICIENT_STOCK_COUNT_FLAG,   "
 							+"  0 SUFFICIENT_STOCK_COUNT_G_PER,'' SUFFICIENT_STOCK_COUNT_G_FLAG   "
-							+"  FROM INVENTORY_WAREHOUSES INV  "
+							+"  FROM ACTIVE_WAREHOUSES_V INV  "
 							+"   JOIN INVENTORY_WAREHOUSES INV2   "
 							+"     ON INV.DEFAULT_ORDERING_WAREHOUSE_ID = INV2.WAREHOUSE_ID   "
 							+"   WHERE INV.DEFAULT_ORDERING_WAREHOUSE_ID<>'"+MainApp.getUSER_WAREHOUSE_ID()+"'"
@@ -326,7 +311,7 @@ public class DashboardService {
 							+"  100 INSUFFICIENT_STOCK_COUNT_R_PER, 'RED' INSUFFICIENT_STOCK_COUNT_FLAG,   "
 							+"  0 SUFFICIENT_STOCK_COUNT_G_PER,'' SUFFICIENT_STOCK_COUNT_G_FLAG   "
 						   +"  FROM INVENTORY_WAREHOUSES INV "
-						   +"  JOIN INVENTORY_WAREHOUSES INV2 "
+						   +"  JOIN ACTIVE_WAREHOUSES_V INV2 "
 						   +"  ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID "
 						   +"  WHERE ";
 							if(bean.getX_LGA_ID()==null){
@@ -345,29 +330,31 @@ public class DashboardService {
 			while(rs.next()){
 				LgaDashBoardPerfBean databean=new LgaDashBoardPerfBean();
 				if(MainApp.getUserRole().getLabel().equals("NTO")){
-					rs2.next();
-					if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
-							>Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))){
-						databean.setX_ROTATION(270);
-					}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
-							<Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))){
-						databean.setX_ROTATION(90);
-					}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
-							==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))){
-						if(Integer.parseInt(rs.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))
-								>Integer.parseInt(rs2.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))){
-							databean.setX_ROTATION(90);
-						}else if(Integer.parseInt(rs.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))
-								<Integer.parseInt(rs2.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))){
+					if(rs2.next()){
+						if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
+								>Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))){
 							databean.setX_ROTATION(270);
+						}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
+								<Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))){
+							databean.setX_ROTATION(90);
+						}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
+								==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))){
+							if(Integer.parseInt(rs.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))
+									>Integer.parseInt(rs2.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))){
+								databean.setX_ROTATION(90);
+							}else if(Integer.parseInt(rs.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))
+									<Integer.parseInt(rs2.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))){
+								databean.setX_ROTATION(270);
+							}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
+									==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
+									&& Integer.parseInt(rs.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))
+									==Integer.parseInt(rs2.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))){
+										databean.setX_ROTATION(0);
+							}
 						}
-					}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
-							==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_COUNT_G_PER"))
-					&& Integer.parseInt(rs.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))
-					==Integer.parseInt(rs2.getString("INSUFFICIENT_STOCK_COUNT_R_PER"))){
-						databean.setX_ROTATION(0);
 					}
-				}
+					}
+					
 				databean.setX_LGA_ID(rs.getString("LGA_ID"));
 				databean.setX_LGA_NAME(rs.getString("LGA_NAME"));
 				databean.setX_STATE_NAME(rs.getString("STATE_NAME"));
@@ -448,7 +435,7 @@ public class DashboardService {
 						+"  0 LESS_3_ANTIGENS_TOTAL_HF_PER, '' LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG,   "
 						+"  100 GREATER_2_ANTIGENS_TOTAL_HF_PER, 'RED' GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG,   "
 						+"  0 SUFFICIENT_STOCK_TOTAL_HF_PER,'' SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG   "
-						+"  FROM INVENTORY_WAREHOUSES INV  "
+						+"  FROM ACTIVE_WAREHOUSES_V INV  "
 						+"   JOIN INVENTORY_WAREHOUSES INV2   "
 						+"     ON INV.DEFAULT_ORDERING_WAREHOUSE_ID = INV2.WAREHOUSE_ID   "
 						+"   WHERE INV.DEFAULT_ORDERING_WAREHOUSE_ID<>'"+MainApp.getUSER_WAREHOUSE_ID()+"'"
@@ -459,44 +446,44 @@ public class DashboardService {
 						+"  ORDER BY STATE_NAME,LGA_NAME";
 			
 		}else{
-			  x_QUERY+=" union "
-					   +"  SELECT "
-					   +"  INV.WAREHOUSE_ID AS STATE_ID,"
-					   +"  '' STATE_NAME,  "
-					   +"  INV2.WAREHOUSE_ID AS LGA_ID,"
-					   +"  INV2.WAREHOUSE_CODE AS LGA_NAME,"
-					   +"  '' STOCK_RECEIVED_YEAR,''  STOCK_RECEIVED_WEEK,"
-					   +"  0 LESS_3_ANTIGENS_TOTAL_HF_PER, '' LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG, "
-					   +"  100 GREATER_2_ANTIGENS_TOTAL_HF_PER, 'RED' GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG, "
-					   +"  0 SUFFICIENT_STOCK_TOTAL_HF_PER,'' SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG "
-					   +"  FROM INVENTORY_WAREHOUSES INV "
-					   +"  JOIN INVENTORY_WAREHOUSES INV2 "
-					   +"  ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID "
-					   +"  WHERE ";
-					if(MainApp.getUserRole().getLabel().equals("SCCO")
-							|| MainApp.getUserRole().getLabel().equals("SIO")
-							|| MainApp.getUserRole().getLabel().equals("SIFP")){
-						if(bean.getX_LGA_ID()==null){
-							x_QUERY+=" INV.WAREHOUSE_ID=IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
-						}else{
-							x_QUERY+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
-						}
-						}else if(MainApp.getUserRole().getLabel().equals("NTO")){
-							if(bean.getX_STATE_ID()!=null){
-								x_QUERY+=" INV.WAREHOUSE_ID = IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
-							}
-						}else{
-							x_QUERY+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
-						}
-					   
-					x_QUERY+="  AND INV2.WAREHOUSE_ID NOT IN (SELECT LGA_ID  FROM LGA_STOCK_PERFORMANCE_DASHBOARD_V  ";
+//			  x_QUERY+=" union "
+//					   +"  SELECT "
+//					   +"  INV.WAREHOUSE_ID AS STATE_ID,"
+//					   +"  '' STATE_NAME,  "
+//					   +"  INV2.WAREHOUSE_ID AS LGA_ID,"
+//					   +"  INV2.WAREHOUSE_CODE AS LGA_NAME,"
+//					   +"  '' STOCK_RECEIVED_YEAR,''  STOCK_RECEIVED_WEEK,"
+//					   +"  0 LESS_3_ANTIGENS_TOTAL_HF_PER, '' LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG, "
+//					   +"  100 GREATER_2_ANTIGENS_TOTAL_HF_PER, 'RED' GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG, "
+//					   +"  0 SUFFICIENT_STOCK_TOTAL_HF_PER,'' SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG "
+//					   +"  FROM INVENTORY_WAREHOUSES INV "
+//					   +"  JOIN ACTIVE_WAREHOUSES_V INV2 "
+//					   +"  ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID "
+//					   +"  WHERE ";
+//					if(MainApp.getUserRole().getLabel().equals("SCCO")
+//							|| MainApp.getUserRole().getLabel().equals("SIO")
+//							|| MainApp.getUserRole().getLabel().equals("SIFP")){
+//						if(bean.getX_LGA_ID()==null){
+//							x_QUERY+=" INV.WAREHOUSE_ID=IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
+//						}else{
+//							x_QUERY+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
+//						}
+//						}else if(MainApp.getUserRole().getLabel().equals("NTO")){
+//							if(bean.getX_STATE_ID()!=null){
+//								x_QUERY+=" INV.WAREHOUSE_ID = IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
+//							}
+//						}else{
+//							x_QUERY+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
+//						}
+//					   
+//					x_QUERY+="  AND INV2.WAREHOUSE_ID NOT IN (SELECT LGA_ID  FROM LGA_STOCK_PERFORMANCE_DASHBOARD_V  ";
 		}
 		if(!(MainApp.getUserRole().getLabel().equals("NTO") 
 				&& bean.getX_STATE_ID()==null)){
 			if(bean.getX_WEEK()==null || bean.getX_YEAR()==null){
 				x_QUERY+=" WHERE 1=0 ";
 			}else{
-				x_QUERY+=x_WHERE_CONDITION+")";
+//				x_QUERY+=x_WHERE_CONDITION+")";
 			}
 		}
 		try {
@@ -536,7 +523,7 @@ public class DashboardService {
 							+"  0 LESS_3_ANTIGENS_TOTAL_HF_PER, '' LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG,   "
 							+"  100 GREATER_2_ANTIGENS_TOTAL_HF_PER, 'RED' GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG,   "
 							+"  0 SUFFICIENT_STOCK_TOTAL_HF_PER,'' SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG   "
-							+"  FROM INVENTORY_WAREHOUSES INV  "
+							+"  FROM ACTIVE_WAREHOUSES_V INV  "
 							+"   JOIN INVENTORY_WAREHOUSES INV2   "
 							+"     ON INV.DEFAULT_ORDERING_WAREHOUSE_ID = INV2.WAREHOUSE_ID   "
 							+"   WHERE INV.DEFAULT_ORDERING_WAREHOUSE_ID<>'"+MainApp.getUSER_WAREHOUSE_ID()+"'"
@@ -559,31 +546,7 @@ public class DashboardService {
 							+"  SUFFICIENT_STOCK_TOTAL_HF_PER,"
 							+ " SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG"
 							+ " FROM LGA_STOCK_PERFORMANCE_DASHBOARD_V  "+x_WHERE_CONDFORSUMM;
-					x_QUERY2+=" union "
-						   +"  SELECT "
-						   +"  INV.WAREHOUSE_ID AS STATE_ID,"
-						   +"  '' STATE_NAME,  "
-						   +"  INV2.WAREHOUSE_ID AS LGA_ID,"
-						   +"  INV2.WAREHOUSE_CODE AS LGA_NAME,"
-						   +"  '' STOCK_RECEIVED_YEAR,''  STOCK_RECEIVED_WEEK,"
-						   +"  0 LESS_3_ANTIGENS_TOTAL_HF_PER, '' LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG, "
-						   +"  100 GREATER_2_ANTIGENS_TOTAL_HF_PER, 'RED' GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG, "
-						   +"  0 SUFFICIENT_STOCK_TOTAL_HF_PER,'' SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG "
-						   +"  FROM INVENTORY_WAREHOUSES INV "
-						   +"  JOIN INVENTORY_WAREHOUSES INV2 "
-						   +"  ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID "
-						   +"  WHERE ";
-							if(bean.getX_LGA_ID()==null){
-								x_QUERY2+=" INV.WAREHOUSE_ID=IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
-							}else{
-								x_QUERY2+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
-							}
-						   
-						x_QUERY2+="  AND INV2.WAREHOUSE_ID NOT IN (SELECT LGA_ID  FROM LGA_STOCK_PERFORMANCE_DASHBOARD_V "
-								+ x_WHERE_CONDFORSUMM+")";	
-				}
-				
-			
+				}			
 			pstmt = dao.getPreparedStatement(x_QUERY2);
 			rs2 = pstmt.executeQuery();
 			}
@@ -593,33 +556,34 @@ public class DashboardService {
 						|| MainApp.getUserRole().getLabel().equals("SIO")
 						|| MainApp.getUserRole().getLabel().equals("SIFP")
 						|| MainApp.getUserRole().getLabel().equals("NTO")){
-					rs2.next();
-					System.out.println("According to week compare start");
-					if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
-							>Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
-						System.out.println("green greater previous week");
-						databean.setX_ROTATION(270);
-					}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
-							<Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
-						System.out.println("green less previous week");
-						databean.setX_ROTATION(90);
-					}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
-							==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
-						System.out.println("green Equel");
-						if(Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
-								>Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
-							databean.setX_ROTATION(90);
-						}else if(Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
-								<Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
+					if(rs2.next()){
+						System.out.println("According to week compare start");
+						if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
+								>Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
+							System.out.println("green greater previous week");
 							databean.setX_ROTATION(270);
+						}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
+								<Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
+							System.out.println("green less previous week");
+							databean.setX_ROTATION(90);
+						}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
+								==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
+							System.out.println("green Equel");
+							if(Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
+									>Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
+								databean.setX_ROTATION(90);
+							}else if(Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
+									<Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
+								databean.setX_ROTATION(270);
+							}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
+									==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
+									&& Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
+									==Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
+										System.out.println("red green Equel");
+										databean.setX_ROTATION(0);
+							}
 						}
-					}else if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
-							==Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
-					&& Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
-					==Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
-						System.out.println("red green Equel");
-						databean.setX_ROTATION(0);
-					}
+					}	
 				}
 				databean.setX_LGA_ID(rs.getString("LGA_ID"));
 				databean.setX_LGA_NAME(rs.getString("LGA_NAME"));
@@ -719,8 +683,7 @@ public class DashboardService {
 			rs2 = pstmt.executeQuery();
 			while(rs.next()){
 				LgaDashBoardPerfBean databean=new LgaDashBoardPerfBean();
-				rs2.next();
-				
+				if(rs2.next()){
 					if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))
 							>Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER"))){
 						databean.setX_ROTATION(270);
@@ -735,14 +698,14 @@ public class DashboardService {
 						}else if(Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))
 								<Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER"))){
 							databean.setX_ROTATION(90);
-						}
-					}else if(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER")
-							==rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER")
-					&& rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER")
-					==rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER")){
-						databean.setX_ROTATION(0);
-					}
-				
+						}else if(rs.getString("SUFFICIENT_STOCK_TOTAL_HF_PER")
+								==rs2.getString("SUFFICIENT_STOCK_TOTAL_HF_PER")
+								&& rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER")
+								==rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER")){
+									databean.setX_ROTATION(0);
+								}
+					}				
+				}
 				databean.setX_STATE_NAME(rs.getString("STATE_NAME"));
 				databean.setX_STATE_ID(rs.getString("STATE_ID"));
 				databean.setX_LESS_3_ANTIGENS_TOTAL_HF_PER(rs.getString("LESS_3_ANTIGENS_TOTAL_HF_PER"));
@@ -842,8 +805,7 @@ public class DashboardService {
 			rs2 = pstmt.executeQuery();
 			while(rs.next()){
 				LgaDashBoardPerfBean databean=new LgaDashBoardPerfBean();
-				rs2.next();
-				
+				if(rs2.next()){
 					if(Integer.parseInt(rs.getString("SUFFICIENT_STOCK_TOTAL_LGA_PER"))
 							>Integer.parseInt(rs2.getString("SUFFICIENT_STOCK_TOTAL_LGA_PER"))){
 						databean.setX_ROTATION(270);
@@ -858,14 +820,15 @@ public class DashboardService {
 						}else if(Integer.parseInt(rs.getString("GREATER_2_ANTIGENS_TOTAL_LGA_PER"))
 								<Integer.parseInt(rs2.getString("GREATER_2_ANTIGENS_TOTAL_LGA_PER"))){
 							databean.setX_ROTATION(90);
-						}
-					}else if(rs.getString("SUFFICIENT_STOCK_TOTAL_LGA_PER")
-							==rs2.getString("SUFFICIENT_STOCK_TOTAL_LGA_PER")
-					&& rs.getString("GREATER_2_ANTIGENS_TOTAL_LGA_PER")
-					==rs2.getString("GREATER_2_ANTIGENS_TOTAL_LGA_PER")){
-						databean.setX_ROTATION(0);
+						}else if(rs.getString("SUFFICIENT_STOCK_TOTAL_LGA_PER")
+								==rs2.getString("SUFFICIENT_STOCK_TOTAL_LGA_PER")
+								&& rs.getString("GREATER_2_ANTIGENS_TOTAL_LGA_PER")
+								==rs2.getString("GREATER_2_ANTIGENS_TOTAL_LGA_PER")){
+									databean.setX_ROTATION(0);
+								}
 					}
 				
+				}
 				databean.setX_STATE_NAME(rs.getString("STATE_NAME"));
 				databean.setX_STATE_ID(rs.getString("STATE_ID"));
 				databean.setX_WEEK(rs.getString("STOCK_RECEIVED_WEEK"));

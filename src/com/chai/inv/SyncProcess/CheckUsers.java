@@ -21,17 +21,16 @@ public class CheckUsers {
 	static Connection serverConn = null;
 
 	public static void insertUpdateTables(int warehouseId) {
-		System.out
-				.println("******************* Users Sync Started *********************");
+		System.out.println("******************* Users Sync Started *********************");
 		DatabaseConnectionManagement dbm = null;
-		System.out.println("................. Step1 Started................. ");
+		System.out.println("................. Step1 Started - ADM USERS.................");
 		try {
 			dbm = new DatabaseConnectionManagement();
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
-				System.out.println("................. Checking whether any data available on warehouse to be sync................. ");
+//				dbm.setAutoCommit();
+				System.out.println("...... Checking whether any data available on LOCAL DB to sync on SERVER......");
 				sqlQuery = " SELECT COMPANY_ID, " // 1
 						+ " 	 USER_ID, " // 2
 						+ " 	 EMPLOYEE_ID, " // 3
@@ -57,12 +56,13 @@ public class CheckUsers {
 						+ " 	 EMAIL, " // 23
 						+ " 	 TELEPHONE_NUMBER, " // 24
 						+ " 	 SYNC_FLAG  " // 25
-						+ " FROM ADM_USERS " + " WHERE SYNC_FLAG = 'N' ";
+						+ " FROM ADM_USERS WHERE SYNC_FLAG = 'N' ";
 				System.out.println("Query to check whether any data available on warehouse to be sync :: "+ sqlQuery);
 				localPStmt = localConn.prepareStatement(sqlQuery);
 				localRs = localPStmt.executeQuery();
 				while (localRs.next()) {
-					System.out.println("..... Data availbale to sync on warehouse ....");
+					int syncFlagUpdate = 0;
+					System.out.println(".....Step1 - ADM USERS - Data availbale on LOCAL DB to sync on SERVER....");
 					sqlQuery = " SELECT COMPANY_ID, " // 1
 							+ " 	 USER_ID, " // 2
 							+ " 	 EMPLOYEE_ID, " // 3
@@ -89,10 +89,8 @@ public class CheckUsers {
 							+ " 	 TELEPHONE_NUMBER, " // 24
 							+ " 	 SYNC_FLAG  " // 25
 							+ " FROM ADM_USERS "
-							+ "WHERE USER_ID = "
-							+ localRs.getString("USER_ID") // 26
-							+ "  AND WAREHOUSE_ID = "
-							+ localRs.getString("WAREHOUSE_ID"); // 27
+							+ " WHERE USER_ID = "+ localRs.getString("USER_ID") // 26
+							+ "  AND WAREHOUSE_ID = "+ localRs.getString("WAREHOUSE_ID"); // 27
 					System.out.println("Query to check whether the data need to be insert or update on server :: "+ sqlQuery);
 					serverPStmt = serverConn.prepareStatement(sqlQuery);
 					serverRs = serverPStmt.executeQuery();
@@ -146,11 +144,11 @@ public class CheckUsers {
 						commonPStmt.setString(21,serverRs.getString("USER_ID"));
 						commonPStmt.setString(22,serverRs.getString("WAREHOUSE_ID"));
 						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						commonPStmt.executeUpdate();
+						syncFlagUpdate = commonPStmt.executeUpdate();
 						System.out.println("Record updated successfully on server........");
 						CheckData.updateCheckFromClient = true;
 					} else {
-						System.out.println("...Record not available, Need to insert.....");
+						System.out.println("...Record not available, Need to insert on server.....");
 						sqlQuery = " INSERT INTO ADM_USERS "
 								+ " (COMPANY_ID, " // 1
 								+ "  FIRST_NAME, " // 2
@@ -197,27 +195,27 @@ public class CheckUsers {
 						commonPStmt.setString(19,localRs.getString("EMAIL"));
 						commonPStmt.setString(20,localRs.getString("TELEPHONE_NUMBER"));
 						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						commonPStmt.executeUpdate();
-						System.out.println("Record inserted successfully.......");
+						syncFlagUpdate = commonPStmt.executeUpdate();
+						System.out.println("Record inserted successfully...");
 					}
-					System.out.println("Record is ready to update on warehouse !!!");
-					sqlQuery = "UPDATE ADM_USERS SET " + " SYNC_FLAG='Y' "
-							+ " WHERE USER_ID = "
-							+ localRs.getString("USER_ID")+" "+" AND  WAREHOUSE_ID =  "
-							+ localRs.getString("WAREHOUSE_ID");
-					System.out.println("Query to update USER DETAIL sync flag on warehouse :: "+ sqlQuery);
-					commonPStmt = localConn.prepareStatement(sqlQuery);
-					commonPStmt.executeUpdate();
-					System.out.println("Record updated successfully on warehouse......");
+					if(syncFlagUpdate > 0){
+						System.out.println("Step1 - SYNC FLAG is ready to update on LOCAL DB");
+						sqlQuery = "UPDATE ADM_USERS SET SYNC_FLAG='Y' "
+								+ " WHERE USER_ID = "+ localRs.getString("USER_ID")
+								   +" AND  WAREHOUSE_ID = "+ localRs.getString("WAREHOUSE_ID");
+						System.out.println("Query to update USER DETAIL sync flag on warehouse :: "+ sqlQuery);
+						commonPStmt = localConn.prepareStatement(sqlQuery);
+						commonPStmt.executeUpdate();
+						System.out.println("ADM USERS Step1 - SYNC FLAG updated successfully on LOCAL DB.");
+					}					
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out.println("...Oops Internet not available recently...Try Again Later !!!");
 			}
 		} catch (SQLException | NullPointerException | SecurityException e) {
-			System.out.println("**********Exception Found************ "
-					+ e.getMessage());
-			dbm.rollback();
+			System.out.println("**********Exception Found************ "+ e.getMessage());
+//			dbm.rollback();
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
@@ -229,14 +227,14 @@ public class CheckUsers {
 		/**
 		 * One Process Completed*
 		 */
-		System.out.println("................. Step2 Started................. ");
+		System.out.println("................. ADM USERS - Step2 Started................. ");
 		try {
 			dbm = new DatabaseConnectionManagement();
 			localConn = dbm.localConn;
 			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
-				dbm.setAutoCommit();
-				System.out.println("................. Checking whether any data available on server to be sync .................");
+//				dbm.setAutoCommit();
+				System.out.println("...ADM USERS - STEP2 Checking whether any data available on SERVER to sync on LOCAL DB....");
 				sqlQuery = " SELECT COMPANY_ID, " // 1
 						+ " 	 USER_ID, " // 2
 						+ " 	 EMPLOYEE_ID, " // 3
@@ -268,11 +266,12 @@ public class CheckUsers {
 						+ " WHERE USER_ID = "+ MainApp.getUserId()
 						+ " AND WAREHOUSE_ID = "+ warehouseId 
 						+ "  AND SYNC_FLAG = 'N' ";
-				System.out.println("Query to check whether any data available on server to be sync :: "+ sqlQuery);
+				System.out.println("Query to check whether any data available on server to be sync on LOCAL DB :: "+ sqlQuery);
 				serverPStmt = serverConn.prepareStatement(sqlQuery);
 				serverRs = serverPStmt.executeQuery();
 				while (serverRs.next()) {
-					System.out.println("Data availbale to sync on server!!!");
+					int syncFlagUpdate = 0;
+					System.out.println("Data availbale on SERVER to sync to LOCAL DB");
 					sqlQuery = " SELECT COMPANY_ID, " // 1
 							+ " 	 USER_ID, " // 2
 							+ " 	 EMPLOYEE_ID, " // 3
@@ -301,13 +300,13 @@ public class CheckUsers {
 							+ " 	 DB_VERSION, " //25
 							+ "		 APPLICATION_VERSION  " // 26
 							+ " FROM ADM_USERS "
-							+ "WHERE USER_ID = "+ serverRs.getString("USER_ID") // 27
+							+ " WHERE USER_ID = "+ serverRs.getString("USER_ID") // 27
 							+ "  AND WAREHOUSE_ID = "+ serverRs.getString("WAREHOUSE_ID"); // 28
-					System.out.println("Query to check whether the data need to be insert or update on warehouse :: "+ sqlQuery);
+					System.out.println("Query to check whether the data need to be insert or update on LOCAL DB :: "+ sqlQuery);
 					localPStmt = localConn.prepareStatement(sqlQuery);
 					localRs = localPStmt.executeQuery();
 					if (localRs.next()) {
-						System.out.println("Record available, Need to update on warehouse......");
+						System.out.println("Record available, Need to update on LOCAL DB......");
 						sqlQuery = "   UPDATE ADM_USERS "
 								+ " 	 SET COMPANY_ID = ? , "// 1
 								+ " 		 FIRST_NAME = ?, " // 2
@@ -332,8 +331,8 @@ public class CheckUsers {
 								+ " 		 SYNC_FLAG = 'Y', "
 								+ " 	 	 DB_VERSION=?, " //21
 								+ "		 	 APPLICATION_VERSION=?  " // 22
-								+ " WHERE USER_ID = ? "// 23
-								+ "   AND WAREHOUSE_ID = ? "; // 24
+								+ "    WHERE USER_ID = ? "// 23
+								+ "      AND WAREHOUSE_ID = ? "; // 24
 						commonPStmt = localConn.prepareStatement(sqlQuery);
 						commonPStmt.setString(1,serverRs.getString("COMPANY_ID")); // 1
 						commonPStmt.setString(2,serverRs.getString("FIRST_NAME")); // 2
@@ -360,11 +359,11 @@ public class CheckUsers {
 						commonPStmt.setString(23,localRs.getString("USER_ID"));
 						commonPStmt.setString(24,localRs.getString("WAREHOUSE_ID"));
 						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						commonPStmt.executeUpdate();
-						System.out.println("Record updated successfully on warehouse....");
+						syncFlagUpdate = commonPStmt.executeUpdate();
+						System.out.println("STEP2 - ADM USERS Record updated successfully on LOCAL DB.");
 						CheckData.updateCheckFromServer = true;
 					} else {
-						System.out.println("Record not available, Need to insert.....");
+						System.out.println("STEP2 - ADM USERS Record not available, Need to insert LOCAL DB.");
 						sqlQuery = " INSERT INTO ADM_USERS "
 								+ " (COMPANY_ID, " // 1
 								+ "  FIRST_NAME, " // 2
@@ -412,25 +411,28 @@ public class CheckUsers {
 						commonPStmt.setString(21,serverRs.getString("DB_VERSION"));
 						commonPStmt.setString(22,serverRs.getString("APPLICATION_VERSION"));
 						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						commonPStmt.executeUpdate();
-						System.out.println("Record inserted successfully on warehouse.....");
+						syncFlagUpdate = commonPStmt.executeUpdate();
+						System.out.println("ADM USERS - STEP 2 - Record inserted successfully on LOCAL DB.");
 					}
-					System.out.println("Record is ready to update on warehouse !!!");
-					sqlQuery = "UPDATE ADM_USERS SET " 
-									+ " SYNC_FLAG='Y' "
-									+ " WHERE USER_ID = "+ serverRs.getString("USER_ID")
-									+ "   AND WAREHOUSE_ID = "+ serverRs.getString("WAREHOUSE_ID");
-					commonPStmt = serverConn.prepareStatement(sqlQuery);
-					commonPStmt.executeUpdate();
-					System.out.println("Record inserted successfully");
+					if (syncFlagUpdate > 0) {
+						System.out.println("ADM USERS - STEP2 - SYNC FLAG is ready to update on SERVER.");
+						sqlQuery = "UPDATE ADM_USERS SET SYNC_FLAG='Y' "
+								+ " WHERE USER_ID = "+ serverRs.getString("USER_ID")
+								+ "   AND WAREHOUSE_ID = "+ serverRs.getString("WAREHOUSE_ID");
+						commonPStmt = serverConn.prepareStatement(sqlQuery);
+						commonPStmt.executeUpdate();
+						System.out.println("ADM USERS - STEP2 - SYNC FLAG updated successfully on SERVER");
+					}
 				}
-				dbm.commit();
+//				dbm.commit();
 			} else {
 				System.out.println("...Oops Internet not available recently...Try Again Later !!!");
 			}
 		} catch (Exception e) {
 			System.out.println("**********Exception Found************ "+ e.getMessage());
-			dbm.rollback();
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+//			dbm.rollback();
 		} finally {
 			dbm.closeConnection();
 			closeObjects();

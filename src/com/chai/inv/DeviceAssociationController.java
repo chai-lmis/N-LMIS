@@ -1,9 +1,10 @@
 package com.chai.inv;
 
 import java.sql.SQLException;
-
 import org.controlsfx.dialog.Dialogs;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -40,8 +41,10 @@ public class DeviceAssociationController {
 	private Stage dialogStage;
 	private boolean alreadyAssociated;
 	boolean editFlag = false;
+	private ObservableList<LabelValueBean> itemList=FXCollections.observableArrayList();
 	private DeviceAssociationGridController deviceAssociationGridController;
 	private DeviceAssoiationGridBean deviceAssociationBean;
+	private String newAddItem;
 
 	public boolean isOkClicked() {
 		return okClicked;
@@ -81,9 +84,27 @@ public class DeviceAssociationController {
 					deviceAssociationBean.getX_RECONSTITUTE_SYRNG_ID()));
 		} else {
 			// control will reach here when adding new associaton
+			
 			x_SAFETY_BOX_CHECKBOX.setSelected(true);
-			x_PRODUCTS.setItems(itemService
-					.getDropdownList("deviceAssociationProducts"));
+			itemList=itemService.getDropdownList("deviceAssociationProducts");
+			int index;
+			if(newAddItem!=null && newAddItem.length()!=0){
+				LabelValueBean newAddItemBean=null;
+				for (LabelValueBean listofItem : itemList) {
+					if(listofItem.getLabel().equalsIgnoreCase(newAddItem)){
+						index=itemList.indexOf(listofItem);
+						newAddItemBean=itemList.get(index);
+					}
+				}
+				itemList.clear();
+				itemList.add(0, newAddItemBean);
+				x_PRODUCTS.setDisable(true);
+				x_PRODUCTS.setItems(itemList);
+				x_PRODUCTS.setValue(newAddItemBean);
+			}else{
+				itemList=itemService.getDropdownList("deviceAssociationProducts");
+				x_PRODUCTS.setItems(itemList);
+			}
 			new SelectKeyComboBoxListener(x_PRODUCTS);
 		}
 	}
@@ -198,5 +219,9 @@ public class DeviceAssociationController {
 			DeviceAssociationGridController deviceAssociationGridController) {
 		this.deviceAssociationGridController = deviceAssociationGridController;
 
+	}
+
+	public void setNewAddItemBean(String newAddItem) {
+	this.newAddItem=newAddItem;	
 	}
 }

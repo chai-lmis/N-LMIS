@@ -31,9 +31,9 @@ public class LGAStockReceiptService {
 			pstmt = dao.getPreparedStatement("SELECT ITM.ITEM_ID,"
 					+ " UCASE(ITM.ITEM_NUMBER) AS ITEM_NUMBER ,ITM.ITEM_TYPE_ID,"
 					+ " SUM(ONHV.ONHAND_QUANTITY) AS ONHAND_QTY "
-					+ " FROM ITEM_MASTERS ITM "
+					+ " FROM ITEM_MASTERS ITM  "
 					+ " LEFT JOIN ITEM_ONHAND_QUANTITIES_VW ONHV "
-					+ " ON ITM.ITEM_ID = ONHV.ITEM_ID "
+					+ " ON ITM.ITEM_ID = ONHV.ITEM_ID WHERE ITM.STATUS='A' "
 					+ " GROUP BY ITM.ITEM_ID ORDER BY itm.ITEM_TYPE_ID , itm.ITEM_NUMBER");
 			rs = pstmt.executeQuery();
 			System.out.println("Query executed for itemonhand list"+pstmt.toString());

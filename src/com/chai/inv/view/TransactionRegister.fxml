@@ -15,14 +15,14 @@
           <TableColumn prefWidth="75.0" style="-fx-alignment: center-left;" text="Item" fx:id="x_ITEM_NUMBER" />
             <TableColumn prefWidth="75.0" style="-fx-alignment: center;" text="Quantity" fx:id="x_TRANSACTION_QUANTITY" />
             <TableColumn prefWidth="75.0" style="-fx-alignment: center;" text="UOM" fx:id="x_TRANSACTION_UOM" />
-            <TableColumn prefWidth="139.0" style="-fx-alignment: center;" text="Transaction DateTime" fx:id="x_TRANSACTION_DATE" />
-            <TableColumn prefWidth="113.0" style="-fx-alignment: center-left;" text="Transaction Type" fx:id="x_TRANSACTION_TYPE" />
+            <TableColumn minWidth="54.0" prefWidth="139.0" style="-fx-alignment: center;" text="Transaction DateTime" fx:id="x_TRANSACTION_DATE" />
+            <TableColumn minWidth="31.0" prefWidth="113.0" style="-fx-alignment: center-left;" text="Transaction Type" fx:id="x_TRANSACTION_TYPE" />
             <TableColumn maxWidth="-1.0" minWidth="150.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Reason" fx:id="x_REASON_TYPE" />
             <TableColumn prefWidth="89.0" style="-fx-alignment: center-left;" text="Comment" fx:id="x_REASON" />
             <TableColumn prefWidth="100.0" style="-fx-alignment: center-left;" text="Source" fx:id="x_FROM_NAME" />
-            <TableColumn prefWidth="-1.0" style="-fx-alignment: center-left;" text="Destination" fx:id="x_TO_NAME" />
+            <TableColumn minWidth="21.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="Destination" fx:id="x_TO_NAME" />
             <TableColumn prefWidth="75.0" text="Reason Type Id" visible="false" fx:id="x_REASON_TYPE_ID" />
-            <TableColumn prefWidth="-1.0" style="-fx-alignment: center-left;" text="VVM Status" fx:id="x_VVM_STATUS" />
+            <TableColumn minWidth="17.0" prefWidth="-1.0" style="-fx-alignment: center-left;" text="VVM Status" fx:id="x_VVM_STATUS" />
         </columns>
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

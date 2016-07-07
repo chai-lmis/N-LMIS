@@ -145,10 +145,12 @@ public class HFBinCardsGridController {
 	@FXML public void onHFChange(){
 		x_HF_BINCARD_REPORT_TABLE.setItems(null);
 		System.out.println("hf change");
-		if(x_HF_DRPDN.getValue().getLabel().equals("All")){
-			x_HF_COLUMN.setVisible(true);
-		}else{
-			x_HF_COLUMN.setVisible(false);
+		if(x_HF_DRPDN.getValue()!=null){
+			if(x_HF_DRPDN.getValue().getLabel().equals("All")){
+				x_HF_COLUMN.setVisible(true);
+			}else{
+				x_HF_COLUMN.setVisible(false);
+			}
 		}
 	}
 	@FXML public void onStockTypeChange(){

@@ -489,12 +489,9 @@ public class ItemMainController {
 	@FXML
 	public boolean handleHistoryAction() {
 		System.out.println("Hey We are in History Action Handler");
-		ItemBean selectedItemBean = itemTable.getSelectionModel()
-				.getSelectedItem();
+		ItemBean selectedItemBean = itemTable.getSelectionModel().getSelectedItem();
 		if (selectedItemBean != null) {
-			FXMLLoader loader = new FXMLLoader(
-					MainApp.class
-							.getResource("/com/chai/inv/view/HistoryInformation.fxml"));
+			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/HistoryInformation.fxml"));
 			try {
 				GridPane historyDialog = (GridPane) loader.load();
 				Stage dialogStage = new Stage();
@@ -585,24 +582,18 @@ public class ItemMainController {
 	@FXML
 	public boolean handleEnvironmentConditionAction() {
 		System.out.println("We are in Environment Conditions Action Handler");
-		ItemBean selectedItemBean = itemTable.getSelectionModel()
-				.getSelectedItem();
+		ItemBean selectedItemBean = itemTable.getSelectionModel().getSelectedItem();
 		if (selectedItemBean != null) {
-			ItemEnvironmentConditionBean envBean = itemService
-					.getEnvironmentCondition(selectedItemBean.getX_ITEM_ID());
-			FXMLLoader loader = new FXMLLoader(
-					MainApp.class
-							.getResource("/com/chai/inv/view/ItemEnvironmentCondition.fxml"));
+			ItemEnvironmentConditionBean envBean = itemService.getEnvironmentCondition(selectedItemBean.getX_ITEM_ID());
+			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/ItemEnvironmentCondition.fxml"));
 			try {
-				BorderPane envConditionAddEditDialog = (BorderPane) loader
-						.load();
+				BorderPane envConditionAddEditDialog = (BorderPane) loader.load();
 				Stage dialogStage = new Stage();
 				dialogStage.initModality(Modality.WINDOW_MODAL);
 				dialogStage.initOwner(primaryStage);
 				Scene scene = new Scene(envConditionAddEditDialog);
 				dialogStage.setScene(scene);
-				ItemEnvironmentConditionController controller = loader
-						.getController();
+				ItemEnvironmentConditionController controller = loader.getController();
 				controller.setDialogStage(dialogStage);
 				controller.setItemMain(this);
 				controller.setUserBean(userBean);
@@ -648,7 +639,6 @@ public class ItemMainController {
 				itemTable.setItems(itemService.getItemList(x_STATE_STORE_COMBOX.getValue().getValue()));
 			}
 		}
-
 	}
 
 	@FXML
@@ -666,10 +656,8 @@ public class ItemMainController {
 	@FXML
 	public void onCheckBoxSelect() {
 		if (x_CHECK_BOX.isSelected()) {
-			itemTable.setItems(itemService.getItemList(x_CHECK_BOX
-					.getAccessibleText()));
-			if (itemTable == null || itemTable.getItems() == null
-					|| itemTable.getItems().size() == 0) {
+			itemTable.setItems(itemService.getItemList(x_CHECK_BOX.getAccessibleText()));
+			if (itemTable == null || itemTable.getItems() == null || itemTable.getItems().size() == 0) {
 				x_CHECK_BOX.setSelected(false);
 			}
 		} else {
@@ -700,7 +688,7 @@ public class ItemMainController {
 	@FXML
 	public void handleHomeDashBoardBtn() {
 		System.out.println("entered handleHomeDashBoardBtn()");
-		rootLayoutController.handleHomeMenuAction();
+		this.rootLayoutController.handleHomeMenuAction();
 	}
 
 	@FXML

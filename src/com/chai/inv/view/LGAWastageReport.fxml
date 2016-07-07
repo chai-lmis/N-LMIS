@@ -12,7 +12,7 @@
    <top>
       <HBox alignment="CENTER" BorderPane.alignment="CENTER">
          <children>
-            <Text fill="#09861c" strokeType="OUTSIDE" strokeWidth="0.0" text=" Wastage Report">
+            <Text fill="#09861c" strokeType="OUTSIDE" strokeWidth="0.0" text="LGA Wastage Report">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>

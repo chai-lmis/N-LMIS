@@ -166,36 +166,12 @@ public class LGAStockReceiptController {
 				x_VVM_STAGE.setVisible(false);
 				field.add(x_QTY_RECEIVED);
 			}else{
-				x_GRID_PANE.addRow(i, x_ITEM_LBL, x_QTY_RECEIVED, x_OLD_STOCK,
-						x_NEW_STOCK, x_VVM_STAGE);
+				x_GRID_PANE.addRow(i, x_ITEM_LBL, x_QTY_RECEIVED, x_OLD_STOCK, x_NEW_STOCK, x_VVM_STAGE);
 				transactionList.add(transactionBean);
 				fieldForProduct.add(lvb.getX_ITEM_TYPE_ID());
 				fieldForStages.add(x_VVM_STAGE);
 				field.add(x_QTY_RECEIVED);
-			}
-			//for hide row for product muac strips and saftybox
-//			if(lvb.getX_PRODUCT_NAME().equals("MUAC STRIPS") 
-//					|| lvb.getX_PRODUCT_NAME().equals("SAFETY BOXES")){
-//				//x_GRID_PANE.addRow(i);
-//			}else if(lvb.getX_ITEM_TYPE_ID().equals("148430")){
-//				x_GRID_PANE.addRow(i, x_ITEM_LBL, x_QTY_RECEIVED, x_OLD_STOCK,
-//						x_NEW_STOCK, x_VVM_STAGE);
-//				transactionList.add(transactionBean);
-//				fieldForProduct.add(lvb.getX_ITEM_TYPE_ID());
-//				fieldForStages.add(x_VVM_STAGE);
-//				field.add(x_QTY_RECEIVED);
-//			}else if(!lvb.getX_ITEM_TYPE_ID().equals("148430")){
-////				x_GRID_PANE.getChildren().remove(x_VVM_STAGE);
-//				x_GRID_PANE.addRow(i, x_ITEM_LBL, x_QTY_RECEIVED, x_OLD_STOCK,
-//						x_NEW_STOCK,x_VVM_STAGE);
-//				x_VVM_STAGE.setVisible(false);
-//				fieldForStages.add(x_VVM_STAGE);
-//				transactionList.add(transactionBean);
-//				fieldForProduct.add(lvb.getX_ITEM_TYPE_ID());
-////				fieldForStages.add(x_VVM_STAGE);
-//				field.add(x_QTY_RECEIVED);
-//			}
-			
+			}			
 			i++;
 		}
 	}
@@ -248,10 +224,7 @@ public class LGAStockReceiptController {
 			for (TransactionBean index : removeIndexList) {
 				transactionListCopy.remove(index);
 			}
-//			for (TransactionBean index : transactionListCopy) {
-//				System.out.println("pro"+index.getX_TRANSACTION_QUANTITY()
-//						+"vvm"+index.getX_VVM_STAGE());
-//			}
+
 		}else{
 			Dialogs.create().masthead("Quantity Received is Empty")
 			.message("Please Select Quantity Received").owner(dialogStage)
