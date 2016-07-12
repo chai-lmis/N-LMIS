@@ -174,8 +174,7 @@ public class CustomerFormController {
 		this.customerBean = customerBean;
 		x_CUSTOMER_NUMBER.setText(customerBean.getX_CUSTOMER_NUMBER());
 		x_CUSTOMER_NAME.setText(customerBean.getX_CUSTOMER_NAME());
-		x_CUSTOMER_DESCRIPTION
-				.setText(customerBean.getX_CUSTOMER_DESCRIPTION());
+		x_CUSTOMER_DESCRIPTION.setText(customerBean.getX_CUSTOMER_DESCRIPTION());
 		if (actionBtnString.equals("add")) {
 			System.out.println("action button string: " + actionBtnString);
 			if (MainApp.getUserRole().getLabel().equals("NTO")
@@ -267,8 +266,7 @@ public class CustomerFormController {
 				x_STATE_STORE.setItems(customerService.getDropdownList(
 						"defaultstorelist", null));
 				new SelectKeyComboBoxListener(x_STATE_STORE);
-				x_STATE_STORE.setValue(new FacilityService()
-						.getStateStoreId(customerBean.getX_DEFAULT_STORE_ID()));
+				x_STATE_STORE.setValue(new FacilityService().getStateStoreId(customerBean.getX_DEFAULT_STORE_ID()));
 				x_DEFAULT_ORDERING_STORE.setItems(customerService
 						.getDropdownList("defaultstorelist", x_STATE_STORE
 								.getValue().getValue()));

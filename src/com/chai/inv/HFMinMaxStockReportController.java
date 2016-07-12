@@ -135,12 +135,14 @@ public class HFMinMaxStockReportController {
 			hfList=new CustomerService().getDropdownList("HEALTH_FACILITIES",MainApp.getUSER_WAREHOUSE_ID());
 			hfList.add(0,new LabelValueBean("All", null));
 			x_HF_DRPDN.setItems(hfList);
+			new SelectKeyComboBoxListener(x_HF_DRPDN);
 			break;
 		case "MOH": // - LGA level admin access restricted to
 					// particular views.
 			hfList=new CustomerService().getDropdownList("HEALTH_FACILITIES",MainApp.getUSER_WAREHOUSE_ID());
 			hfList.add(0,new LabelValueBean("All", null));
 			x_HF_DRPDN.setItems(hfList);
+			new SelectKeyComboBoxListener(x_HF_DRPDN);
 			break;
 		case "SIO": // Should have state level admin access ( they can correct
 					// orders placed/ monitor data entered by the CCOs as well

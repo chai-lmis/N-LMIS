@@ -414,11 +414,12 @@ public class HomePageController {
 				if(MainApp.selectedLGA==null){
 					System.out.println("called NTO switch.case");
 					x_GRID_PANE.getChildren().remove(x_PRODUCTS_BTN);
-					x_GRID_PANE.add(x_PRODUCTS_BTN, 1, 1);
-					GridPane.setHalignment(x_PRODUCTS_BTN, HPos.CENTER);
 					x_STOCK_MANAGE_BTN.setVisible(false);
 					x_DATA_ENTRY_BTN.setVisible(false);
 					x_CCO_ADMIN_BTN.setVisible(false);
+					x_GRID_PANE.getChildren().remove(x_REPORTS_BTN);
+					x_GRID_PANE.add(x_PRODUCTS_BTN, 2, 0);
+					GridPane.setHalignment(x_PRODUCTS_BTN, HPos.LEFT);
 				}else{
 					x_GRID_PANE.getChildren().remove(x_PRODUCTS_BTN);
 					x_GRID_PANE.add(x_PRODUCTS_BTN, 2, 1);

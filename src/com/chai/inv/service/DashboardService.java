@@ -703,7 +703,7 @@ public class DashboardService {
 								&& rs.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER")
 								==rs2.getString("GREATER_2_ANTIGENS_TOTAL_HF_PER")){
 									databean.setX_ROTATION(0);
-								}
+						}
 					}				
 				}
 				databean.setX_STATE_NAME(rs.getString("STATE_NAME"));

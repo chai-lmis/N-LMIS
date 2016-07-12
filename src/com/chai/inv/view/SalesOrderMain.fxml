@@ -20,7 +20,7 @@
                   <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Label style="-fx-background-color: #e2efd9;" text="Step 4" textFill="#01031e">
+                  <Label style="-fx-text-fill: #f68a1f;" text="Step 4" textFill="#01031e">
                      <GridPane.margin>
                         <Insets left="34.0" />
                      </GridPane.margin>

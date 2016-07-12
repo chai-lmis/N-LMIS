@@ -44,7 +44,6 @@ public class CustomerMainController {
 	private MainApp mainApp;
 	private CustomerService customerService;
 	private ObservableList<CustomerBean> list;
-	@FXML GridPane x_GRIDPANE_LBL;
 	@FXML
 	private Button x_ADD_CUSTOMER_BTN;
 	@FXML
@@ -250,7 +249,6 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0, 2);
 				x_TOOLBAR.getItems().remove(4, 9);				
 			}
@@ -260,7 +258,6 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0, 2);
 				x_TOOLBAR.getItems().remove(4, 9);
 			}
@@ -270,7 +267,6 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0,2);
 				x_TOOLBAR.getItems().remove(4,9);
 			}
@@ -298,7 +294,6 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0,6);
 			} else {
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(2, 3);
 				x_TOOLBAR.getItems().remove(5, 10);
 			}
@@ -325,7 +320,6 @@ public class CustomerMainController {
 			if (showButtons) {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(0,2);
 				x_TOOLBAR.getItems().remove(4,9);
 			}
@@ -350,7 +344,6 @@ public class CustomerMainController {
 				x_TOOLBAR.getItems().remove(0, 6);
 			}else{
 				//if called from administration
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(6, 11);
 				x_TOOLBAR.getItems().remove(2, 3);
 			}
@@ -362,7 +355,6 @@ public class CustomerMainController {
 				x_TOOLBAR.getItems().remove(1, 2);
 				x_TOOLBAR.getItems().remove(2, 4);
 			} else {
-				x_VBOX.getChildren().remove(x_GRIDPANE_LBL);
 				x_TOOLBAR.getItems().remove(6, 11);
 				x_TOOLBAR.getItems().remove(2, 3);
 			}
