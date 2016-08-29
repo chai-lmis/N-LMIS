@@ -2,11 +2,6 @@ package com.chai.inv;
 
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.CustomerBean;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -15,6 +10,11 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.CustomerBean;
 
 public class ChooseProductAllocationController {
 

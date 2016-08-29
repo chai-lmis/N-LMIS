@@ -6,13 +6,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.logging.Level;
 
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.ButtonBar.ButtonType;
-import org.controlsfx.control.action.AbstractAction;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,12 +26,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import org.controlsfx.control.ButtonBar;
+import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.action.AbstractAction;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
+
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.HistoryBean;
 import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.service.UserService;
-import com.chai.inv.MainApp;
 
 public class UserMainController {
 

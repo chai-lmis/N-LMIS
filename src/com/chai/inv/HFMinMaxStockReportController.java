@@ -2,8 +2,6 @@ package com.chai.inv;
 
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +15,8 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.LabelValueBean;
@@ -190,6 +190,7 @@ public class HFMinMaxStockReportController {
 	
 	public void setDefaults(){
 		CalendarUtil.setDateFormat(x_DATE);
+		new CalendarUtil().setDisableDateAfterNow(x_DATE);
 		x_YEAR_DRPDN.setVisible(false);
 		x_YEAR_LBL.setVisible(false);
 		x_MONTH_DRPDN.setVisible(false);

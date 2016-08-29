@@ -4,15 +4,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.DAO.DatabaseOperation;
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.CreateLogin;
-import com.chai.inv.service.UserService;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -26,6 +17,15 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.DAO.DatabaseOperation;
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.CreateLogin;
+import com.chai.inv.service.UserService;
 
 public class LoginController {
 	private MainApp mainApp;
@@ -170,8 +170,7 @@ public class LoginController {
 					.owner(primaryStage)
 					.title("No Internet connection")
 					.masthead("No Internet Connection Available at the moment.")
-					.message(
-							"Please check your internet connection and try Again Later! ")
+					.message("Please check your internet connection and try Again Later! ")
 					.showError();
 			return false;
 		}
@@ -204,10 +203,9 @@ public class LoginController {
 	}
 
 	public void setActiveUserButtonOff() {
-		x_ACTIVE_USER_BTN.setVisible(false); // set false beacuse first install
-												// database then restart the app
-		loginStatus
-				.setText("*Local Database Not Exist. Install Database & Restart the Application");
+		// set false beacuse first install database then restart the app
+		x_ACTIVE_USER_BTN.setVisible(false); 
+		loginStatus.setText("*Local Database Not Exist. Install Database & Restart the Application");
 		loginStatus.setWrapText(true);
 		loginStatus.setTextFill(Color.web("#e70b07"));
 	}

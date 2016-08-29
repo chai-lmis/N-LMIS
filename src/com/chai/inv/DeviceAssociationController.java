@@ -1,7 +1,6 @@
 package com.chai.inv;
 
 import java.sql.SQLException;
-import org.controlsfx.dialog.Dialogs;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +10,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.model.DeviceAssoiationGridBean;
 import com.chai.inv.model.ItemBean;

@@ -2,16 +2,6 @@ package com.chai.inv;
 
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.AddOrderLineFormBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.TransactionBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.OrderFormService;
-import com.chai.inv.util.CalendarUtil;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -28,6 +18,16 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.AddOrderLineFormBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.TransactionBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.OrderFormService;
+import com.chai.inv.util.CalendarUtil;
 
 public class AddOrderLineController {
 

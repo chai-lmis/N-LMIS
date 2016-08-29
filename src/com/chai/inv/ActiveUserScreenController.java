@@ -1,16 +1,16 @@
 package com.chai.inv;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.service.CreateLogin;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.service.CreateLogin;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class ActiveUserScreenController {
 

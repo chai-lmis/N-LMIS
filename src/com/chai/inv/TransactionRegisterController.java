@@ -2,15 +2,6 @@ package com.chai.inv;
 
 import java.io.File;
 
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.TransactionRegisterBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.FacilityService;
-import com.chai.inv.service.ItemService;
-import com.chai.inv.service.TransactionRegisterService;
-import com.chai.inv.service.TransactionService;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,6 +16,15 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.TransactionRegisterBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.FacilityService;
+import com.chai.inv.service.ItemService;
+import com.chai.inv.service.TransactionRegisterService;
+import com.chai.inv.service.TransactionService;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class TransactionRegisterController {
 	private MainApp mainApp;

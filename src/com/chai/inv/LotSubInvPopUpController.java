@@ -1,12 +1,6 @@
 package com.chai.inv;
 import java.util.ArrayList;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.model.AddOrderLineFormBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.TransactionBean;
-import com.chai.inv.model.UserBean;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -17,6 +11,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.model.AddOrderLineFormBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.TransactionBean;
+import com.chai.inv.model.UserBean;
 //
 public class LotSubInvPopUpController {
 	int textFieldIndex = 0, sum = 0, LINE_SHIP_QTY = 0;

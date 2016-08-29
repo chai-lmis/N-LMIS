@@ -2,16 +2,6 @@ package com.chai.inv;
 
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.model.CustProdMonthlyDetailBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.CustomerService;
-import com.chai.inv.service.ReportsService;
-import com.chai.inv.util.CalendarUtil;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,6 +14,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.model.CustProdMonthlyDetailBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.CustomerService;
+import com.chai.inv.service.ReportsService;
+import com.chai.inv.util.CalendarUtil;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class HfWastageReportController {
 
@@ -124,6 +124,7 @@ public class HfWastageReportController {
 	}
 	
 	public void setDefaults(){
+		new CalendarUtil().setDisableDateAfterNow(x_DATE);
 		ObservableList<LabelValueBean> hfList=FXCollections.observableArrayList();
 		hfList=new CustomerService().getDropdownList("HEALTH_FACILITIES",MainApp.getUSER_WAREHOUSE_ID());
 		hfList.add(0,new LabelValueBean("All",null));

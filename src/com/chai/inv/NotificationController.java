@@ -1,15 +1,15 @@
 package com.chai.inv;
 
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.NotificationBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.NotificationService;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.NotificationBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.NotificationService;
 
 public class NotificationController {
 	@FXML

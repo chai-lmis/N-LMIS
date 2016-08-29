@@ -1,12 +1,5 @@
 package com.chai.inv.loader;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.MainApp;
-import com.chai.inv.RootLayoutController;
-import com.chai.inv.DAO.DatabaseOperation;
-import com.chai.inv.SyncProcess.CheckData;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -15,6 +8,13 @@ import javafx.scene.control.ProgressIndicator;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.RootLayoutController;
+import com.chai.inv.DAO.DatabaseOperation;
+import com.chai.inv.SyncProcess.CheckData;
 
 public class ProgressIndicatorTest {
 	Task<Boolean> copyWorker;
@@ -103,7 +103,8 @@ public class ProgressIndicatorTest {
 								.showInformation();
 						System.out.println("logging out... ");
 						// logoutFlag = true;
-						mainApp.setLogoutFlag(true);
+						//mainApp.setLogoutFlag(true);
+						MainApp.logoutFlag=false;
 						mainApp.start(primaryStage);
 					} else {
 						System.out.println("remove databse call return false.");

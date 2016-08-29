@@ -1,28 +1,35 @@
 package com.chai.inv.test;
 
-import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 
-public class Main extends Application{
+public class Main {
 	public static void main(String[] args) {
-//		SendLogToServer
-//				.sendLogToServer("C:\\Users\\yusata24\\AppData\\Roaming\\n-lmis\\logs\\su-Test_lga21-2016-03-04-17-39-48.html");
-	
-		launch(args);
+		String s="2.4";
+		int a=(int)Double.parseDouble(s);
+		System.out.println(a);
+//String s[]={"LGA_ID",
+//		"WAREHOUSE_CODE",
+//		"ITEM_ID",
+//		"ITEM_NUMBER",
+//		"PHYSICAL_COUNT_DATE",
+//		"REASON",
+//		"STOCK_BALANCE",
+//		"PHYSICAL_STOCK_COUNT",
+//		"DIFFERENCE"
+//		};
+//
+//
+//		
+////		for (String string : s) {
+////			if(string.contains("ID") || string.contains("BY") || string.contains("NUMBER")){
+////				System.out.println("@Column(name="+"  "+string+") private Integer x_"+string+";");
+////			}else if(string.contains("DATE") || string.contains("ON")){
+////				System.out.println("@Column(name="+string+") private Date x_"+string+";");
+////			}else {
+////				System.out.println("@Column(name="+string+") private String x_"+string+";");
+////			}
+////		}{field:'EMAIL',title:'EMAIL',sortable:true}
+//for (String string : s) {
+//	System.out.println("{field:'"+string+"',title:'"+string+"',sortable:true},");
+//}
 	}
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		primaryStage.centerOnScreen();
-		Label lbl = new Label("Hemant Kumar Veerwal");
-		Group grp = new Group();
-		Scene scene = new Scene(grp);
-		grp.getChildren().add(lbl);
-		
-	}
-	
-	 
 }

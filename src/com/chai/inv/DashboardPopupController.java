@@ -1,14 +1,6 @@
 package com.chai.inv;
 import java.util.logging.Level;
 
-import org.controlsfx.control.PopOver;
-
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.CustProdMonthlyDetailBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.util.CalendarUtil;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +12,14 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.control.PopOver;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.CustProdMonthlyDetailBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.util.CalendarUtil;
 
 public class DashboardPopupController {
 	String movePageDirection = "farward";

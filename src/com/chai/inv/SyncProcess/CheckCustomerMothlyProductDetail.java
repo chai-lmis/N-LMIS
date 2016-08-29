@@ -1,14 +1,14 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.DBConnection.DatabaseConnectionManagement;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckCustomerMothlyProductDetail {
 	static ResultSet localRs = null;
@@ -110,10 +110,15 @@ public class CheckCustomerMothlyProductDetail {
 							commonPStmt.setString(21,localRs.getString("CONSUMPTION_ID"));
 							commonPStmt.setString(22,localRs.getString("cust_product_detail_id"));
 							commonPStmt.setString(23,localRs.getString("item_id"));
-							commonPStmt.setString(24,localRs.getString("customer_id"));
-							System.out.println("commonPStmt :: "+ commonPStmt.toString());
-							syncFlagUpdate = commonPStmt.executeUpdate();
-							System.out.println("Record updated successfully on server........step1");
+							commonPStmt.setString(24,localRs.getString("customer_id"));							
+							try{
+								syncFlagUpdate=commonPStmt.executeUpdate();
+								System.out.println("Record updated successfully on server........STEP1");
+							}catch(Exception ee){
+								System.out.println("commonPStmt :: "+ commonPStmt.toString());
+								MainApp.LOGGER.setLevel(Level.SEVERE);
+								MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+							}							
 							CheckData.updateCheckFromClient = true;
 						} else {
 							System.out.println("...Record not available, Need to insert.....");
@@ -147,9 +152,14 @@ public class CheckCustomerMothlyProductDetail {
 							commonPStmt.setString(19,localRs.getString("STOCK_RECEIVED_DATE"));
 							commonPStmt.setString(20,localRs.getString("STOCK_BALANCE"));
 							commonPStmt.setString(21,localRs.getString("CONSUMPTION_ID"));
-							System.out.println("STEP1 : commonPStmt :: "+ commonPStmt.toString());
-							syncFlagUpdate = commonPStmt.executeUpdate();
-							System.out.println("Record inserted successfully....... step1");
+							try{
+								syncFlagUpdate=commonPStmt.executeUpdate();
+								System.out.println("Record inserted successfully....... step1");
+							}catch(Exception ee){
+								System.out.println("STEP1 : commonPStmt :: "+ commonPStmt.toString());
+								MainApp.LOGGER.setLevel(Level.SEVERE);
+								MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+							}							
 						}
 						System.out.println("step1 - SYNC FLAG is ready to update on Local DB !!!");
 						if(syncFlagUpdate > 0){
@@ -275,10 +285,15 @@ public class CheckCustomerMothlyProductDetail {
 						commonPStmt.setString(21,serverRs.getString("CONSUMPTION_ID"));
 						commonPStmt.setString(22,serverRs.getString("cust_product_detail_id"));
 						commonPStmt.setString(23, serverRs.getString("item_id"));
-						commonPStmt.setString(24,serverRs.getString("customer_id"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate = commonPStmt.executeUpdate();
-						System.out.println("Record updated successfully on warehouse....");
+						commonPStmt.setString(24,serverRs.getString("customer_id"));						
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();							
+							System.out.println("Step2 - Record updated successfully on warehouse....");
+						}catch(Exception ee){
+							System.out.println("Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}						
 						CheckData.updateCheckFromServer = true;
 					} else {
 						System.out.println("Record not available, Need to insert.....");
@@ -311,9 +326,14 @@ public class CheckCustomerMothlyProductDetail {
 						commonPStmt.setString(19,serverRs.getString("STOCK_RECEIVED_DATE"));
 						commonPStmt.setString(20,serverRs.getString("STOCK_BALANCE"));
 						commonPStmt.setString(21,serverRs.getString("CONSUMPTION_ID"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate = commonPStmt.executeUpdate();
-						System.out.println("Record inserted successfully on warehouse.....");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();							
+							System.out.println("Step2 - Record Inserted successfully on warehouse....");
+						}catch(Exception ee){
+							System.out.println("Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}						
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("Step2 - SYNC FLAG is ready to update on server !!!");

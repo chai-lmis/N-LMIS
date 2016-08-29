@@ -7,8 +7,6 @@ import java.time.LocalDate;
 import java.util.Optional;
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +27,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.DeviceAssoiationGridBean;

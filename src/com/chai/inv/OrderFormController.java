@@ -5,21 +5,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.DAO.DatabaseOperation;
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.AddOrderLineFormBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.OrderFormBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.OrderFormService;
-import com.chai.inv.util.CalendarUtil;
-import com.chai.inv.util.OrderStatusValidation;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -44,6 +29,21 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.DAO.DatabaseOperation;
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.AddOrderLineFormBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.OrderFormBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.OrderFormService;
+import com.chai.inv.util.CalendarUtil;
+import com.chai.inv.util.OrderStatusValidation;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class OrderFormController {
 

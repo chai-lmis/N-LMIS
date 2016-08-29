@@ -1,9 +1,5 @@
 package com.chai.inv;
 
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.ItemService;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -11,6 +7,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.ItemService;
 
 public class StockOrdersSubMenuController {
 	@FXML

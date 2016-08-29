@@ -1,14 +1,13 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckItemMaster {
 
@@ -18,18 +17,12 @@ public class CheckItemMaster {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 
 		System.out.println("******************* Check ITEM MASTER Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println(".................ITEM MASTER - Step1 Started ................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("......ITEM MASTER - Step1 Checking whether any data available on LOCAL DB to sync on SERVER........ ");
@@ -217,8 +210,8 @@ public class CheckItemMaster {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. ITEM MASTER - Step1 Ended Successfully .................");
 
@@ -227,9 +220,7 @@ public class CheckItemMaster {
 		 */
 		System.out.println(".................ITEM MASTER - Step2 Started ................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
+		
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".................ITEM MASTER - Step2 Checking whether any data available on SERVER to sync LOCAL DB.................");
@@ -424,8 +415,8 @@ public class CheckItemMaster {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................ITEM MASTER - Step2 Ended Successfully .................");
 	}

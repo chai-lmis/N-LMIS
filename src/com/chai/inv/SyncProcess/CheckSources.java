@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
 import com.chai.inv.logger.MyLogger;
 
 public class CheckSources {
@@ -17,17 +16,11 @@ public class CheckSources {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables() {
+	public static void insertUpdateTables(Connection localConn, Connection serverConn) {
 		System.out.println("******************* Sources table Sync Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println("................. Step2 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("................. Checking whether any data available on server to be sync .................");
@@ -147,8 +140,8 @@ public class CheckSources {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Step2 Ended Successfully .................");
 	}

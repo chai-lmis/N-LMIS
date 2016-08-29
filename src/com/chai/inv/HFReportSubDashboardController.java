@@ -3,16 +3,16 @@ package com.chai.inv;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.ItemService;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.ItemService;
 
 public class HFReportSubDashboardController {
 	String movePageDirection="farward";

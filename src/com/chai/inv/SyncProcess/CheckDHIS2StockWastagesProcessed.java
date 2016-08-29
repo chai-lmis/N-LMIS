@@ -17,10 +17,8 @@ public class CheckDHIS2StockWastagesProcessed {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* Check DHIS2_STOCK_WASTAGES_PROCESSED Started *********************");
 		DatabaseConnectionManagement dbm = null;
 		System.out.println("................. Step1 DHIS2_STOCK_WASTAGES_PROCESSED Started ................. ");
@@ -89,8 +87,8 @@ public class CheckDHIS2StockWastagesProcessed {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Step1 DHIS2_STOCK_WASTAGES_PROCESSED Ended Successfully .................");
 
@@ -165,8 +163,8 @@ public class CheckDHIS2StockWastagesProcessed {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. DHIS2_STOCK_WASTAGES_PROCESSED Step2 Ended Successfully .................");
 	}

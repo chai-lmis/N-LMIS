@@ -2,6 +2,16 @@ package com.chai.inv;
 
 import java.sql.SQLException;
 
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import org.controlsfx.control.ButtonBar;
 import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.action.AbstractAction;
@@ -12,16 +22,6 @@ import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.service.UserService;
-
-import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 
 public class CustomChoiceDialog {
 	public UserBean userBean;

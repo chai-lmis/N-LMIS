@@ -2,12 +2,6 @@ package com.chai.inv;
 
 import java.util.logging.Level;
 
-import org.controlsfx.control.PopOver;
-
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -17,6 +11,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.control.PopOver;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
 
 public class DataEntryPopupController {
 	public ImageView x_CLOSE_BTN;

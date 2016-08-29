@@ -3,8 +3,6 @@ package com.chai.inv;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -19,6 +17,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.model.CustomerBean;
 import com.chai.inv.model.LabelValueBean;
@@ -508,12 +508,12 @@ public class CustomerFormController {
 							.equals("----(select none)----")) {
 				errorMessage += "select a Country\n";
 			}
-//			if (x_STATE.getValue() == null
-//					|| x_STATE.getValue().toString().length() == 0
-//					|| x_STATE.getValue().getLabel()
-//							.equals("----(select none)----")) {
-//				errorMessage += "select a State\n";
-//			}
+			if (x_TARGET_POPULATION.getText() == null
+					|| x_TARGET_POPULATION.getText().length() == 0){
+				errorMessage += "Target Population is not entered.\n";				
+			}else if(!x_TARGET_POPULATION.getText().matches("\\d")){
+				errorMessage += "Target Population must be numeric.\n";
+			}
 			if (x_DEFAULT_ORDERING_STORE.getValue() == null
 					|| x_DEFAULT_ORDERING_STORE.getValue().toString().length() == 0
 					|| x_DEFAULT_ORDERING_STORE.getValue().getLabel()
@@ -561,7 +561,5 @@ public class CustomerFormController {
 	@FXML
 	private void handleCancel() {
 		dialogStage.close();
-		// DatabaseOperation.getDbo().closeConnection();
-		// DatabaseOperation.setDbo(null);
 	}
 }

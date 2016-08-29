@@ -1,18 +1,18 @@
 package com.chai.inv;
 
-import org.controlsfx.control.PopOver;
-
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.model.UserWarehouseLabelValue;
-import com.chai.inv.service.ItemService;
-
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.control.PopOver;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.model.UserWarehouseLabelValue;
+import com.chai.inv.service.ItemService;
 
 public class AdminPopupController {
 

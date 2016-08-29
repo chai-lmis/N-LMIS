@@ -2,16 +2,6 @@ package com.chai.inv;
 
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.TransactionBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.FacilityService;
-import com.chai.inv.service.ReportsService;
-import com.chai.inv.util.CalendarUtil;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -22,6 +12,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.TransactionBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.FacilityService;
+import com.chai.inv.service.ReportsService;
+import com.chai.inv.util.CalendarUtil;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class LGAWastageReportController {
 

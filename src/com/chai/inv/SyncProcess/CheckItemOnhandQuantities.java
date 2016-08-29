@@ -1,14 +1,14 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.DBConnection.DatabaseConnectionManagement;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckItemOnhandQuantities {
 	static ResultSet localRs = null;
@@ -17,10 +17,8 @@ public class CheckItemOnhandQuantities {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* Onhand Quantities Started *********************");
 		DatabaseConnectionManagement dbm = null;
 		System.out.println(".................Onhand Quantities - STEP1 - Started................. ");

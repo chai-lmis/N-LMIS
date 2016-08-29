@@ -3,8 +3,6 @@ package com.chai.inv;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -15,6 +13,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.model.CategoryBean;
 import com.chai.inv.model.LabelValueBean;

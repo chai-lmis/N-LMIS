@@ -1,10 +1,14 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.logger.MyLogger;
-
+import java.sql.Connection;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.DBConnection.DatabaseConnectionManagement;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckData implements Runnable {
 	Thread t;
@@ -13,6 +17,8 @@ public class CheckData implements Runnable {
 	public static boolean updateCheckFromClient = false;
 	public static boolean threadCycleComplete = true;
 	public static int completeThreadCount=0;
+	static Connection localConn = null;
+	static Connection serverConn = null;
 	
 	@Override
 	public void run() {
@@ -24,173 +30,107 @@ public class CheckData implements Runnable {
 			System.out.println("updateCheckFromClient :: "+ updateCheckFromClient);
 			int warehouseid = Integer.parseInt(MainApp.getUSER_WAREHOUSE_ID());
 			System.out.println("updateCheckFromClient :: "+ updateCheckFromClient);
-
-			new Thread()
-			{	//thread 0
-			    @Override
-				public void run() {
-			    	CheckApplicationVersion.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();	
+			DatabaseConnectionManagement dbm = new DatabaseConnectionManagement();
+			localConn=dbm.localConn;
+			serverConn=dbm.serverConn;
+			ExecutorService  executor = Executors.newFixedThreadPool(18);
+			executor.submit(() -> {
+				CheckApplicationVersion.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});	
+			executor.submit(() -> {
+				CheckSources.insertUpdateTables(localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});	
+			executor.submit(() -> {
+				CheckUsers.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});			
+			executor.submit(() -> {
+				CheckUserRoleMapp.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});	
+			executor.submit(() -> {
+				 CheckUserWarehouseAssignment.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	 completeThreadCount++;
+		    	 System.out.println("threadcount="+CheckData.completeThreadCount);
+			});
+			executor.submit(() -> {
+			 	CheckTypes.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});                                    			
+			executor.submit(() -> {
+				CheckCategories.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			}); 			
+			executor.submit(() -> {
+				 CheckInventoryWarehouse.insertUpdateTables(warehouseid,localConn,serverConn); 
+		    	 completeThreadCount++;
+		    	 System.out.println("threadcount="+CheckData.completeThreadCount);
+			});		
+			executor.submit(() -> {
+				 CheckItemMaster.insertUpdateTables(warehouseid,localConn,serverConn); 
+		    	 completeThreadCount++;
+		    	 System.out.println("threadcount="+CheckData.completeThreadCount);
+			});		
+			executor.submit(() -> {
+				CheckCustomers.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});		
+			executor.submit(() -> {
+				 CheckCustomerProductConsumption.insertUpdateTables(warehouseid,localConn,serverConn); 
+		    	 completeThreadCount++;
+		    	 System.out.println("threadcount="+CheckData.completeThreadCount);
+			});	
+			executor.submit(() -> {
+				CheckSyringeAssociation.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});
+			executor.submit(() -> {
+				 CheckCustomerMothlyProductDetail.insertUpdateTables(warehouseid);
+		    	 completeThreadCount++;
+		    	 System.out.println("threadcount="+CheckData.completeThreadCount);
+			});			
+			executor.submit(() -> {
+				CheckItemOnhandQuantities.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});			
+			executor.submit(() -> {
+				CheckOrderHeader.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});						
+			executor.submit(() -> {
+				CheckOrderLine.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});				
+			executor.submit(() -> {
+				CheckItemTransaction.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});			
+			executor.submit(() -> {
+				CheckDHIS2StockWastagesProcessed.insertUpdateTables(warehouseid,localConn,serverConn);
+		    	completeThreadCount++;
+		    	System.out.println("threadcount="+CheckData.completeThreadCount);
+			});
 			
-			new Thread(){	//thread 1
-			    @Override
-				public void run() {
-			    	CheckSources.insertUpdateTables();
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			
-			new Thread()
-			{	//thread 2
-			    @Override
-				public void run() {
-			    	CheckUsers.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			 
-			// contain step 2 (server to local db data sync process) only
-			new Thread()
-			{	//thread 3
-			    @Override
-				public void run() {
-			    	CheckUserRoleMapp.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			
-			new Thread()
-			{	//thread 4
-			    @Override
-				public void run() {
-			    	 CheckUserWarehouseAssignment.insertUpdateTables(warehouseid);
-			    	 completeThreadCount++;
-			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();                                       			
-			new Thread()
-			{	//thread 5
-			    @Override
-				public void run() {
-			    	CheckTypes.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start(); 			
-			new Thread()
-			{	//thread 6
-			    @Override
-				public void run() {
-			    	CheckCategories.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start(); 			
-			new Thread()
-			{	//thread 7
-			    @Override
-				public void run() {
-			    	 CheckInventoryWarehouse.insertUpdateTables(warehouseid); 
-			    	 completeThreadCount++;
-			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();		
-			new Thread()
-			{	//thread 8
-			    @Override
-				public void run() {
-			    	 CheckItemMaster.insertUpdateTables(warehouseid); 
-			    	 completeThreadCount++;
-			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			
-			new Thread()
-			{	//thread 9
-			    @Override
-				public void run() {
-			    	CheckCustomers.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();
-			new Thread()
-			{	//thread 10
-			    @Override
-				public void run() {
-			    	 CheckCustomerProductConsumption.insertUpdateTables(warehouseid); 
-			    	 completeThreadCount++;
-			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start(); 				
-			new Thread()
-			{	//thread 11
-			    @Override
-				public void run() {
-			    	CheckSyringeAssociation.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start(); 			
-			new Thread()
-			{	//thread 12
-			    @Override
-				public void run() {
-			    	 CheckCustomerMothlyProductDetail.insertUpdateTables(warehouseid);
-			    	 completeThreadCount++;
-			    	 System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			
-			new Thread()
-			{	//thread 13
-			    @Override
-				public void run() {
-			    	CheckItemOnhandQuantities.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start(); 		
-			new Thread()
-			{	//thread 14
-			    @Override
-				public void run() {
-			    	CheckOrderHeader.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			
-			new Thread()
-			{	//thread 15
-			    @Override
-				public void run() {
-			    	CheckOrderLine.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();			
-			new Thread()
-			{	//thread 16
-			    @Override
-				public void run() {
-			    	CheckItemTransaction.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();
-			new Thread()
-			{	//thread 17
-			    @Override
-				public void run() {
-			    	CheckDHIS2StockWastagesProcessed.insertUpdateTables(warehouseid);
-			    	completeThreadCount++;
-			    	System.out.println("threadcount="+CheckData.completeThreadCount);
-			    }
-			}.start();
 			while(true){
 				System.out.print("");
 				if(CheckData.completeThreadCount==18){
+					dbm.closeConnection();
+					executor.shutdown();
+					//for close connection when table synced except custmoer monthly product detail
 					System.out.println("in if****************************"+CheckData.completeThreadCount);
 					threadCycleComplete = true;
 					break;
@@ -208,7 +148,7 @@ public class CheckData implements Runnable {
 			}
 		}
 	}
-
+	
 	public static void startSyncThread() throws InterruptedException {
 		Thread t = new Thread(new CheckData());
 		t.start();

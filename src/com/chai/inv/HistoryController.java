@@ -1,11 +1,11 @@
 package com.chai.inv;
 
-import com.chai.inv.model.HistoryBean;
-import com.chai.inv.service.CommonService;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
+
+import com.chai.inv.model.HistoryBean;
+import com.chai.inv.service.CommonService;
 
 public class HistoryController {
 

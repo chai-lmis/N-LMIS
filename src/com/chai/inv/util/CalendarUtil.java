@@ -13,7 +13,9 @@ import java.util.logging.Level;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
+import javafx.util.Callback;
 import javafx.util.StringConverter;
 
 import com.chai.inv.MainApp;
@@ -261,5 +263,53 @@ public class CalendarUtil {
 	          }
 	      }
 	  });
+ }
+ /**
+  * this method return date after now disable 
+  * @param datePicker
+  */
+ public void setDisableDateAfterNow(DatePicker datePicker){
+	 final Callback<DatePicker, DateCell> dayCellFactory = 
+	            new Callback<DatePicker, DateCell>() {
+	                @Override
+	                public DateCell call(final DatePicker datePicker) {
+	                    return new DateCell() {
+	                        @Override
+	                        public void updateItem(LocalDate item, boolean empty) {
+	                        	super.updateItem(item, empty);
+	                           if(item.compareTo(LocalDate.now())>0){
+	                        	      setDisable(true);
+	                                    setStyle("-fx-background-color: #f8f8f8;");    
+	                           }
+	                       
+	                    }
+	                };
+	            }
+	        };
+	        datePicker.setDayCellFactory(dayCellFactory);
+ }
+ /**
+  * this method return date before now disable 
+  * @param datePicker
+  */
+ public void setDisableDateBeforeNow(DatePicker datePicker){
+	 final Callback<DatePicker, DateCell> dayCellFactory = 
+	            new Callback<DatePicker, DateCell>() {
+	                @Override
+	                public DateCell call(final DatePicker datePicker) {
+	                    return new DateCell() {
+	                        @Override
+	                        public void updateItem(LocalDate item, boolean empty) {
+	                        	super.updateItem(item, empty);
+	                           if(item.compareTo(LocalDate.now())<0){
+	                        	      setDisable(true);
+	                                    setStyle("-fx-background-color: #f8f8f8;");    
+	                           }
+	                       
+	                    }
+	                };
+	            }
+	        };
+	        datePicker.setDayCellFactory(dayCellFactory);
  }
 }

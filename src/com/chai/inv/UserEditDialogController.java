@@ -3,11 +3,6 @@ package com.chai.inv;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -19,6 +14,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
 import com.chai.inv.service.CommonService;
 import com.chai.inv.service.CreateLogin;
 import com.chai.inv.service.FacilityService;

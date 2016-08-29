@@ -3,8 +3,6 @@ package com.chai.inv;
 
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +15,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.LabelValueBean;
@@ -115,6 +115,7 @@ public class LGAEmerStkIssReportController {
 	}
 	public void setFormDefaults() {
 		//new SelectKeyComboBoxListener(x_MONTH_DRPDN);
+		new CalendarUtil().setDisableDateAfterNow(x_DATE);
 		ObservableList<LabelValueBean> lgaList=FXCollections.observableArrayList();
 		lgaList=new FacilityService().getDropdownList("LGA_STORES",MainApp.getUSER_WAREHOUSE_ID());
 		lgaList.add(0,new LabelValueBean("All",null));

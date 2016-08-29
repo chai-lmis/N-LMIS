@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
 import com.chai.inv.logger.MyLogger;
 
 public class CheckUsers {
@@ -17,17 +16,11 @@ public class CheckUsers {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* Users Sync Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println("................. Step1 Started - ADM USERS.................");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...... Checking whether any data available on LOCAL DB to sync on SERVER......");
@@ -219,8 +212,8 @@ public class CheckUsers {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Step1 Ended Successfully .................");
 
@@ -229,9 +222,6 @@ public class CheckUsers {
 		 */
 		System.out.println("................. ADM USERS - Step2 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...ADM USERS - STEP2 Checking whether any data available on SERVER to sync on LOCAL DB....");
@@ -434,8 +424,8 @@ public class CheckUsers {
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 //			dbm.rollback();
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Step2 Ended Successfully .................");
 	}

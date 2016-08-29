@@ -2,8 +2,6 @@
 package com.chai.inv;
 import java.time.LocalDate;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,8 +15,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import com.chai.inv.model.TransactionBean;
+import org.controlsfx.dialog.Dialogs;
+
 import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.TransactionBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.service.CustomerService;
 import com.chai.inv.service.ItemService;
@@ -117,6 +117,7 @@ public class LGAAdjustmentReportController {
 		CalendarUtil.setDateFormat(x_DATE);
 	}
 	public void setFormDefaults() {
+		new CalendarUtil().setDisableDateAfterNow(x_DATE);
 		x_YEAER_DRPDN.setVisible(false);
 		x_YEAR_LBL.setVisible(false);
 		x_MONTH_DRPDN.setVisible(false);

@@ -3,15 +3,6 @@ package com.chai.inv;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.controlsfx.control.PopOver;
-import org.controlsfx.control.PopOver.ArrowLocation;
-
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.model.UserWarehouseLabelValue;
-import com.chai.inv.service.ItemService;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.HPos;
@@ -20,6 +11,15 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+
+import org.controlsfx.control.PopOver;
+import org.controlsfx.control.PopOver.ArrowLocation;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.model.UserWarehouseLabelValue;
+import com.chai.inv.service.ItemService;
 
 public class HomePageController {
 	String movePageDirection = "farward";

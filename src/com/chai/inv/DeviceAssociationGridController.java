@@ -2,14 +2,6 @@ package com.chai.inv;
 
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.DeviceAssoiationGridBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.ItemService;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,6 +12,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.DeviceAssoiationGridBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.ItemService;
 
 public class DeviceAssociationGridController {
 	public LabelValueBean role;

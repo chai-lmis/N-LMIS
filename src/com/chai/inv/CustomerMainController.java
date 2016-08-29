@@ -6,18 +6,6 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.CustomerBean;
-import com.chai.inv.model.HistoryBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.CustomerService;
-import com.chai.inv.service.FacilityService;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -35,6 +23,17 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.CustomerBean;
+import com.chai.inv.model.HistoryBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.CustomerService;
+import com.chai.inv.service.FacilityService;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class CustomerMainController {
 	public static boolean showButtons = false;
@@ -896,56 +895,73 @@ public class CustomerMainController {
 
 	@FXML
 	public boolean handleAutoGenerateSalesOrder() throws SQLException {
-		System.out
-				.println("In handleAutoGenerateSalesOrder : CustomerMainController ");
+		System.out.println("In handleAutoGenerateSalesOrder : CustomerMainController ");
 		boolean flag = false;
-		CustomerBean selectedCustomerBean = customerTable.getSelectionModel()
-				.getSelectedItem();
+		CustomerBean selectedCustomerBean = customerTable.getSelectionModel().getSelectedItem();
 		if (selectedCustomerBean != null) {
-			// call to choose radioboxes
-			if (chooseProductAllocationType()) {
-				if (handleCustomersAutoProcess()) {
-					if (customerService.checkForRecordAvailablility(
-							userBean.getX_USER_WAREHOUSE_ID(),
-							selectedCustomerBean.getX_CUSTOMER_ID())) {
-						// Stock ORder Confirmation dialog display here
-						if (callStockConfirmationDialog()) {
-							if (customerService.callAutoGenerateSalesOrderPrc(
-											userBean.getX_USER_WAREHOUSE_ID(),
-											selectedCustomerBean.getX_CUSTOMER_ID(),
-											ChooseProductAllocationController.selectedRadioText)) {
-								Dialogs.create()
-									   .owner(primaryStage)
-									   .title("Information")
-									   .masthead("Orders Created successfully!")
-									   .showInformation();
-								flag = true;
+			// check to see if target-population is empty or not. 
+			if(selectedCustomerBean.getX_TARGET_POPULATION()!=null){
+				if(selectedCustomerBean.getX_TARGET_POPULATION().length()!=0){
+					// call to choose radioboxes
+					if (chooseProductAllocationType()) {
+						if (handleCustomersAutoProcess()) {
+							if (customerService.checkForRecordAvailablility(
+									userBean.getX_USER_WAREHOUSE_ID(),
+									selectedCustomerBean.getX_CUSTOMER_ID())) {
+								// Stock ORder Confirmation dialog display here
+								if (callStockConfirmationDialog()) {
+									if (customerService.callAutoGenerateSalesOrderPrc(
+													userBean.getX_USER_WAREHOUSE_ID(),
+													selectedCustomerBean.getX_CUSTOMER_ID(),
+													ChooseProductAllocationController.selectedRadioText)) {
+										Dialogs.create()
+											   .owner(primaryStage)
+											   .title("Information")
+											   .masthead("Orders Created successfully!")
+											   .showInformation();
+										flag = true;
+									} else {
+										Dialogs.create().owner(primaryStage)
+												.title("Warning")
+												.masthead("Cannot create Orders! ")
+												.message("Something went wrong!")
+												.showWarning();
+									}
+								} else {
+									// delete calulated min./max. for selected LGA and then set CheckCustomerMothlyProductDetail.doSync=true;
+									// in the customerService.deleteCalculatedMinMaxAllocDetails() method
+									if (customerService.deleteCalculatedMinMaxAllocDetails(
+													userBean.getX_USER_WAREHOUSE_ID(),
+													selectedCustomerBean.getX_CUSTOMER_ID(),
+													ChooseProductAllocationController.selectedRadioText)) {
+										System.out.println("Customer's monthly Min.Max. Details deleted.");
+									}
+								}
 							} else {
-								Dialogs.create().owner(primaryStage)
+								Dialogs.create()
+										.owner(primaryStage)
 										.title("Warning")
-										.masthead("Cannot create Orders! ")
-										.message("Something went wrong!")
-										.showWarning();
-							}
-						} else {
-							// delete calulated min./max. for selected LGA and then set CheckCustomerMothlyProductDetail.doSync=true;
-							// in the customerService.deleteCalculatedMinMaxAllocDetails() method
-							if (customerService.deleteCalculatedMinMaxAllocDetails(
-											userBean.getX_USER_WAREHOUSE_ID(),
-											selectedCustomerBean.getX_CUSTOMER_ID(),
-											ChooseProductAllocationController.selectedRadioText)) {
-								System.out.println("Customer's monthly Min.Max. Details deleted.");
+										.masthead("Order(s) creation for all the items is already done!")
+										.message("No order generated for specified facility.")
+										.showInformation();
 							}
 						}
-					} else {
-						Dialogs.create()
-								.owner(primaryStage)
-								.title("Warning")
-								.masthead("Order(s) creation for all the items is already done!")
-								.message("No order generated for specified facility.")
-								.showInformation();
 					}
+				}else{
+					Dialogs.create()
+					.owner(primaryStage)
+					.title("Waring")
+					.masthead("Targer Population is not present.")
+					.message("Targer Population is not entered while creating the Health Facility.")
+					.showWarning();
 				}
+			}else{
+				Dialogs.create()
+				.owner(primaryStage)
+				.title("Warning")
+				.masthead("Targer Population is not present.")
+				.message("Targer Population is not entered while creating the Health Facility.")
+				.showWarning();
 			}
 		} else {
 			Dialogs.create().owner(primaryStage).title("Warning")

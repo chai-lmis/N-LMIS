@@ -15,14 +15,6 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.ButtonBar.ButtonType;
-import org.controlsfx.control.action.AbstractAction;
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
-import org.json.JSONException;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,6 +37,14 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+
+import org.controlsfx.control.ButtonBar;
+import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.action.AbstractAction;
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
+import org.json.JSONException;
 
 import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.SyncProcess.CheckData;
@@ -73,7 +73,7 @@ public class RootLayoutController {
 	public static BorderPane mainBorderPane;
 	private LabelValueBean warehouseLvb;
 	private UserWarehouseLabelValue userWarehouseLabelValue;
-	private VersionInfoBean versionInfoBean;
+	//private VersionInfoBean versionInfoBean;
 	@FXML
 	private Label x_ROOT_COMMON_LABEL;
 	@FXML
@@ -183,7 +183,7 @@ public class RootLayoutController {
 	}
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-		mainApp.setLogoutFlag(false);
+		//mainApp.setLogoutFlag(false);
 	}
 	public void setUserBean(UserBean userBean) {
 		this.userBean = userBean;
@@ -287,12 +287,12 @@ public class RootLayoutController {
 	}
 
 	@FXML
-	public void handleChangeFacilityButtonAction() throws SQLException {
+	public void handleChangeFacilityButtonAction() throws SQLException,Exception {
 		handleSelectWarehouse();
 	}
 
 	@FXML
-	public void handleSelectWarehouse() throws SQLException {
+	public void handleSelectWarehouse() throws SQLException,Exception {
 		// on click x_CHANGE_FACILITY_MENUITEM, this be will called.
 		userBean.setX_USER_WAREHOUSE_ID(LoginController
 				.getADMIN_USER_WAREHOUSE_ID_BEAN().getValue());
@@ -579,7 +579,10 @@ public class RootLayoutController {
 				.actions(Dialog.Actions.YES, Dialog.Actions.NO).showConfirm();
 		if (response == Dialog.Actions.YES) {
 			SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
-			mainApp.setLogoutFlag(true);
+			//mainApp.setLogoutFlag(true);
+			MainApp.logoutFlag=false;
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("####.Logout Action.. About to Call mainApp.start(primaryStage)..");
 			mainApp.start(primaryStage);
 			logoutFlag = true;
 			CheckData.threadFlag = false;
@@ -848,11 +851,12 @@ public class RootLayoutController {
 		MainApp.LOGGER.info("property file loaded");
 		//step-1
 		//work done 1
-		versionInfoBean=new CheckForUpdates().checkVersions(p.getProperty("versioninfoprovider"),mainApp);		
+		VersionInfoBean versionInfoBean=new CheckForUpdates().checkVersions(p.getProperty("versioninfoprovider"),mainApp);		
 		switch(MainApp.getUserRole().getLabel().toUpperCase()){
 		case "CCO" :
 			if (CheckForUpdates.isInternetReachable()) {
-				// TODO : starting point of progress bar
+				if(versionInfoBean!=null){
+				//  starting point of progress bar
 				progressBarScreen=new Stage();
 				progressBarScreen.initOwner(getPrimaryStage());
 				progressBarScreen.initModality(Modality.WINDOW_MODAL);
@@ -865,7 +869,7 @@ public class RootLayoutController {
 					}
 				});			
 				
-				if(versionInfoBean!=null){
+				
 					System.out.println("version information fetched : work done = "+(++RootLayoutController.workdone));
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("version information fetched : work done = "+(RootLayoutController.workdone));
@@ -880,58 +884,70 @@ public class RootLayoutController {
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("App and DB version compared : work done = "+(RootLayoutController.workdone));
 					if(dbVersionStatus || appVersionStatus){
-						new UpdateProgressBar().startProgressBar(progressBarScreen);
-						new Thread(){
-							@Override
-							public void run(){
-								try{
-									//step-3
-									//work done 3
-									setPathDirectory(dbVersionStatus,appVersionStatus,p);		
-									if (dbVersionStatus && appVersionStatus) {
-										//step-4 | TOTAL_WORK = 18
-										//work done 4
-										// update both file
-										UpdateProgressBar.TOTAL_WORK=CheckForUpdates.APP_DB_UPDATE_TOTAL_WORK;
-										System.out.println("versionInfoBean.getDB_VERSION() ="+versionInfoBean.getDB_VERSION());
-										System.out.println("versionInfoBean.getAPPLICATION_VERSION()= "+versionInfoBean.getAPPLICATION_VERSION());
-										new CheckForUpdates().updateDatabase(false,exeDownloadPath, downloadURL +"&dbDownload="+ "dbImportScript", mysqlpath,mainApp,versionInfoBean.getDB_VERSION(),progressBarScreen);
-										new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL +"&dbDownload="+ "exe",mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);
-									} else if (dbVersionStatus) {
-//										step-4 | TOTAL_WORK = 10
-										//work done 4
-										UpdateProgressBar.TOTAL_WORK=CheckForUpdates.DB_UPDATE_TOTAL_WORK;
-										new CheckForUpdates().updateDatabase(true,exeDownloadPath, downloadURL, mysqlpath,mainApp,versionInfoBean.getDB_VERSION(),progressBarScreen);
-//										if(updateDbOnly){
-											// below start method will redirect to login screen
-											mainApp.setLogoutFlag(true);
-											//logoutFlag = true;
-//											primaryStage.hide();
-											Platform.runLater(new Runnable() {
-												@Override
-												public void run() {
-													mainApp.start(mainApp.getPrimaryStage());
-													DatabaseOperation.getDbo().closeConnection();
-												}
-											});
-//										}
-									} else if (appVersionStatus) {
-//											step-4 | TOTAL_WORK = 8 
-										//work done 4
-										CheckData.threadFlag=false;
-										UpdateProgressBar.TOTAL_WORK=CheckForUpdates.APPLICATION_UPDATE_TOTAL_WORK;
-										new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL,mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);
-									} else{
-										System.out.println("No file is updated");
+						Action response = Dialogs.create().owner(getPrimaryStage())
+								.title("Update is Awailable")
+								.masthead("Do you want to Update Application?")
+								.message("Click Yes to Update Application.")
+								.actions(Dialog.Actions.YES, Dialog.Actions.NO).showConfirm();
+						if(response==Dialog.Actions.YES){
+							new UpdateProgressBar().startProgressBar(progressBarScreen);
+							new Thread(){
+								@Override
+								public void run(){
+									try{
+										//step-3
+										//work done 3
+										setPathDirectory(dbVersionStatus,appVersionStatus,p);		
+										if (dbVersionStatus && appVersionStatus) {
+											//step-4 | TOTAL_WORK = 18
+											//work done 4
+											// update both file
+											UpdateProgressBar.TOTAL_WORK=CheckForUpdates.APP_DB_UPDATE_TOTAL_WORK;
+											System.out.println("versionInfoBean.getDB_VERSION() ="+versionInfoBean.getDB_VERSION());
+											System.out.println("versionInfoBean.getAPPLICATION_VERSION()= "+versionInfoBean.getAPPLICATION_VERSION());
+											new CheckForUpdates().updateDatabase(false,exeDownloadPath, downloadURL +"&dbDownload="+ "dbImportScript", mysqlpath,mainApp,versionInfoBean.getDB_VERSION(),progressBarScreen);
+											new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL +"&dbDownload="+ "exe",mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);
+										} else if (dbVersionStatus) {
+//											step-4 | TOTAL_WORK = 10
+											//work done 4
+											UpdateProgressBar.TOTAL_WORK=CheckForUpdates.DB_UPDATE_TOTAL_WORK;
+											new CheckForUpdates().updateDatabase(true,exeDownloadPath, downloadURL, mysqlpath,mainApp,versionInfoBean.getDB_VERSION(),progressBarScreen);
+//											if(updateDbOnly){
+												// below start method will redirect to login screen
+												//mainApp.setLogoutFlag(true);
+											MainApp.logoutFlag=false;
+												//logoutFlag = true;
+//												primaryStage.hide();
+												Platform.runLater(new Runnable() {
+													@Override
+													public void run() {
+														mainApp.start(mainApp.getPrimaryStage());
+														DatabaseOperation.getDbo().closeConnection();
+													}
+												});
+//											}
+										} else if (appVersionStatus) {
+//												step-4 | TOTAL_WORK = 8 
+											//work done 4
+											CheckData.threadFlag=false;
+											UpdateProgressBar.TOTAL_WORK=CheckForUpdates.APPLICATION_UPDATE_TOTAL_WORK;
+											new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL,mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);
+										} else{
+											System.out.println("No file is updated");
+										}
+									}catch(Exception e){
+										System.out.println("Update progress worker thread : "+e.getMessage());
+										MainApp.LOGGER.setLevel(Level.SEVERE);
+										MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+										e.printStackTrace();
 									}
-								}catch(Exception e){
-									System.out.println("Update progress worker thread : "+e.getMessage());
-									MainApp.LOGGER.setLevel(Level.SEVERE);
-									MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-									e.printStackTrace();
 								}
-							}
-						}.start();
+							}.start();
+						}else{
+							MainApp.LOGGER.setLevel(Level.INFO);
+							MainApp.LOGGER.info("updtate Processed Canceled");
+						}
+						
 						
 					}else{
 						dlg.showInformation();
@@ -967,5 +983,10 @@ public class RootLayoutController {
 				}			
 			break;
 		}
+		
+	}
+	
+	public void doUpdate(){
+	
 	}
 }

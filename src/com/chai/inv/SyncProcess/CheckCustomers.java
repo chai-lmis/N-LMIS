@@ -1,14 +1,13 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckCustomers {
 	static ResultSet localRs = null;
@@ -17,18 +16,12 @@ public class CheckCustomers {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 
 		System.out.println("******************* CUSTOMERS Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println(".................CUSTOMERS - Step1 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...CUSTOMERS - Step1 Checking whether any data available on LOCAL DB to sync on SERVER.... ");
@@ -144,11 +137,16 @@ public class CheckCustomers {
 						commonPStmt.setString(38,serverRs.getString("CUSTOMER_ID"));
 						commonPStmt.setString(39,serverRs.getString("DB_ID"));
 						commonPStmt.setString(40,serverRs.getString("CUSTOMER_ID"));
-						commonPStmt.setString(41,serverRs.getString("DEFAULT_STORE_ID"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("CUSTOMERS - Step1 Record updated successfully on SERVER........");
-						CheckData.updateCheckFromClient = true;
+						commonPStmt.setString(41,serverRs.getString("DEFAULT_STORE_ID"));					
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("CUSTOMERS - STEP1 Record updated successfully on SERVER...");									
+						}catch(Exception ee){
+							System.out.println("CUSTOMERS - Step1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP1 - Update Failed for CUSTOMERS - "+localRs.getString("CUSTOMER_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					} else {
 						System.out.println("...Record not available, Need to insert.....");
 						sqlQuery = "INSERT INTO customers"
@@ -201,9 +199,15 @@ public class CheckCustomers {
 						commonPStmt.setString(37,localRs.getString("TOTAL_POPULATION"));
 						commonPStmt.setString(38,localRs.getString("YEARLY_PREGNANT_WOMEN_TP"));
 						commonPStmt.setString(39,localRs.getString("MONTHLY_PREGNANT_WOMEN_TP"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("CUSTOMERS - Step1 Record inserted successfully on SERVER.");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("CUSTOMERS - Step1 Record inserted successfully on SERVER");									
+						}catch(Exception ee){
+							System.out.println("CUSTOMERS - Step1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP1 - INSERT Failed for CUSTOMERS - "+localRs.getString("CUSTOMER_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("CUSTOMERS - Step1 SYNC FLAG is ready to update on LOCAL DB");
@@ -226,8 +230,8 @@ public class CheckCustomers {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................CUSTOMERS - Step1 Ended Successfully .................");
 
@@ -236,9 +240,6 @@ public class CheckCustomers {
 		 */
 		System.out.println(".................CUSTOMERS - Step2 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".................CUSTOMERS - Step2 Checking whether any data available on SERVER to sync on LOCAL DB.................");
@@ -353,10 +354,15 @@ public class CheckCustomers {
 						commonPStmt.setString(38,serverRs.getString("DB_ID"));
 						commonPStmt.setString(39,localRs.getString("CUSTOMER_ID"));
 						commonPStmt.setString(40,localRs.getString("DEFAULT_STORE_ID"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("CUSTOMERS - Step2 Record updated successfully on LOCAL DB.");
-						CheckData.updateCheckFromServer = true;
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("CUSTOMERS - Step2 Record updated successfully on LOCAL DB");									
+						}catch(Exception ee){
+							System.out.println("CUSTOMERS - Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP2 - UPDATE Failed for CUSTOMERS - "+serverRs.getString("CUSTOMER_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					} else {
 						if(serverRs.getString("CUSTOMER_ID")==null){
 							System.out.println("CUSTOMERS - Step2 Record not available on LOCAL DB, Need to insert..... case: CUSTOMER_ID is null");
@@ -424,9 +430,15 @@ public class CheckCustomers {
 						if(serverRs.getString("CUSTOMER_ID")!=null){
 							commonPStmt.setString(40,serverRs.getString("CUSTOMER_ID"));
 						}
-						System.out.println("commonPStmt :: "+commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("CUSTOMERS - Step2 Record inserted successfully on LOCAL DB.");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("CUSTOMERS - Step2 Record inserted successfully on LOCAL DB.");									
+						}catch(Exception ee){
+							System.out.println("CUSTOMERS - Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP2 - INSERT Failed for CUSTOMERS - "+serverRs.getString("CUSTOMER_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("CUSTOMERS - Step2 SYNC FLAG is ready to update on LOCAL DB.");
@@ -449,8 +461,8 @@ public class CheckCustomers {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Step2 Ended Successfully .................");
 	}

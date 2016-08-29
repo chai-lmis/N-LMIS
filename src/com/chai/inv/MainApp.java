@@ -9,6 +9,30 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
 
+import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
+
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.dialog.Dialogs;
 
@@ -22,31 +46,11 @@ import com.chai.inv.model.UserBean;
 import com.chai.inv.model.UserWarehouseLabelValue;
 import com.chai.inv.service.TransactionRegisterService;
 import com.chai.inv.service.UserService;
+import com.chai.inv.uploadLgaInsertDbScript.GetLgaInsertDblScript;
 import com.chai.inv.util.FileUtil;
-
-import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.ObservableList;
-import javafx.concurrent.Task;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListView;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.stage.WindowEvent;
+import com.chai.inv.util.GetPath;
+import com.chai.inv.util.GetProperties;
+import com.chai.inv.util.ZipFileUtil;
 
 public class MainApp extends Application {
 	
@@ -58,7 +62,7 @@ public class MainApp extends Application {
 	public static UserBean userBean;
 	public static String userId;
 	private static String USER_WAREHOUSE_ID;
-	private boolean logoutFlag = true;
+	public static boolean logoutFlag = true;
 	private UserWarehouseLabelValue userWarehouseLabelValue;
 	public static LabelValueBean warehouseLvb = new LabelValueBean();
 	public static LabelValueBean selectedLGA = new LabelValueBean();
@@ -145,12 +149,12 @@ public class MainApp extends Application {
 		MainApp.selectedLGA = selectedLGA;
 	}
 
-	public boolean getLogoutFlag() {
+	/*public boolean getLogoutFlag() {
 		return logoutFlag;
 	}
 	public void setLogoutFlag(boolean logoutFlag) {
 		this.logoutFlag = logoutFlag;
-	}
+	}*/
 
 	public void setUserBean(UserBean userBean) {
 		MainApp.userBean = userBean;
@@ -230,6 +234,8 @@ public class MainApp extends Application {
 				loginController.setActiveUserButtonOff();
 			}
 			primaryStage.show();
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("1. Primary Stage Show");
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
 				public void handle(WindowEvent we) {
@@ -268,14 +274,6 @@ public class MainApp extends Application {
 						} else {
 							MainApp.LOGGER.setLevel(Level.INFO);
 							MainApp.LOGGER.info("Else block : condition false");
-//							response = Dialogs
-//									.create()
-//									.owner(getPrimaryStage())
-//									.title("Confirm Application Exit")
-//									.masthead("You have not logged out from the application")
-//									.message("Do you want to logout and close the Application?")
-//									.actions(Dialog.Actions.YES, Dialog.Actions.NO)
-//									.showConfirm();
 							Alert alert = new Alert(AlertType.CONFIRMATION, 
 									"You have not logged out from the application"
 									+ "\nDo you want to logout and close the Application?",
@@ -366,6 +364,8 @@ public class MainApp extends Application {
 			// notificationPane.setGraphic(vBox);
 			// notificationPane.setShowFromTop(true);
 			primaryStage.hide();
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("2. Primary Stage hide");
 			FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/RootLayout.fxml"));
 			BorderPane borderLayout = (BorderPane) loader.load();
 			// notificationPane.setContent(borderLayout);
@@ -376,6 +376,7 @@ public class MainApp extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.setResizable(true);
 			primaryStage.centerOnScreen();
+//			primaryStage.show();
 			RootLayoutController rootLayoutController = loader.getController();
 			rootLayoutController.setMainApp(this);
 			MainApp.setUserRole(role);
@@ -399,7 +400,30 @@ public class MainApp extends Application {
 			} else {
 //				Boolean showSyncProgessScreen = false;
 				Boolean showSyncProgessScreen = true;
-//				if (showSyncProgessScreen=new UserService().isShowSyncProgressScreen()) {
+				
+				if (new UserService().isShowSyncProgressScreen()) {
+					//download insert db script
+					MainApp.LOGGER.setLevel(Level.INFO);
+					MainApp.LOGGER.info("first time login import insert db script process start");
+					if(GetLgaInsertDblScript.downloadDBInsertScriptFile(GetProperties.property("downloadDBInsertScriptSqlFileFromServerUrl")
+							, GetPath.get("temp")+"/insertDbScript")){
+						MainApp.LOGGER.info("insert Script Db Download");
+						if(ZipFileUtil.unzip(GetPath.get("temp")+"/insertDbScript/"+MainApp.getUSER_WAREHOUSE_ID()+".zip"
+								, GetPath.get("temp")+"/insertDbScript/")){
+							MainApp.LOGGER.info("unzip insert Script Db succesfully");
+							if(GetLgaInsertDblScript.importLgaInsertScriptSqlFile()){
+								MainApp.LOGGER.info("imported insert Script Db succesfully\n"
+										+ " import insert db process completed");
+							}else{
+								MainApp.LOGGER.info("imported insert Script Db failed");
+							}
+						}else{
+							MainApp.LOGGER.info("unzip insert Script Db failed");
+						}
+					}else{
+						MainApp.LOGGER.info("insert Script Db Download failed");
+					}
+				}
 				if (showSyncProgessScreen) {
 					System.out.println("*new UserService().isShowSyncProgressScreen() is trueee*");
 					new TransactionRegisterService().disableItemTransactionTriggers(true);
@@ -430,11 +454,16 @@ public class MainApp extends Application {
 			rootLayoutController.getX_USER_WAREHOUSE_NAME().setVisible(true);
 			primaryStage.setMaximized(true);
 			primaryStage.show();
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("7. Primary Stage Show");
+			rootLayoutController.checkForUpdates();
 			// NotificationService.startNotificatonThread();
 		} catch (Exception e) {
 			System.out.println("Error Occured While Rootlayout Loading.. "+ e.getMessage());
 			MainApp.LOGGER2.setLevel(Level.SEVERE);
 			MainApp.LOGGER2.severe(MyLogger.getStackTrace(e));
+			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 
@@ -486,13 +515,20 @@ public class MainApp extends Application {
 		Scene sceneLoading = new Scene(pane);
 		syncProgressStage.setScene(sceneLoading);
 		primaryStage.hide();
-		syncProgressStage.initOwner(primaryStage);
-		syncProgressStage.initModality(Modality.WINDOW_MODAL);
-		syncProgressStage.initStyle(StageStyle.TRANSPARENT);
-		syncProgressStage.setOpacity(0.7);
-		syncProgressStage.centerOnScreen();
+		if(MainApp.logoutFlag){
+			System.out.println("logout Flag************************"+MainApp.logoutFlag);
+			syncProgressStage.initOwner(primaryStage);	
+			syncProgressStage.initStyle(StageStyle.TRANSPARENT);
+			syncProgressStage.initModality(Modality.WINDOW_MODAL);
+			syncProgressStage.setOpacity(0.7);
+			syncProgressStage.centerOnScreen();
+		}
 		primaryStage.show();
+		MainApp.LOGGER.setLevel(Level.INFO);
+		MainApp.LOGGER.info("5. Primary Stage SHOW");
 		syncProgressStage.show();
+		MainApp.LOGGER.setLevel(Level.INFO);
+		MainApp.LOGGER.info("6. SyncProgressStage SHOW");
 		syncProgressStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 			@Override
 			public void handle(WindowEvent event) {

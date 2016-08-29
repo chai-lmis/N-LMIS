@@ -2,18 +2,18 @@ package com.chai.inv;
 
 import java.util.ArrayList;
 
-import com.chai.inv.model.CustProdMonthlyDetailBean;
-import com.chai.inv.model.CustomerBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.service.CustomerService;
-import com.chai.inv.service.ItemService;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import com.chai.inv.model.CustProdMonthlyDetailBean;
+import com.chai.inv.model.CustomerBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.service.CustomerService;
+import com.chai.inv.service.ItemService;
 
 public class OutReachAllocationController {
 

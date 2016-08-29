@@ -1,14 +1,13 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckCustomerProductConsumption {
 	static ResultSet localRs = null;
@@ -17,16 +16,11 @@ public class CheckCustomerProductConsumption {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("*******************Step2 - Check Customer Product Consumptions Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
+			
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".................Customer Product Consumptions - STEP2 - Checking whether any data available on SERVER to sync on LOCAL DB.................");
@@ -44,7 +38,7 @@ public class CheckCustomerProductConsumption {
 							+ " ORDER_CREATED_FLAG, ALLOCATION_TYPE "
 							+ " FROM CUSTOMER_PRODUCT_CONSUMPTION "
 							+ " WHERE CONSUMPTION_ID = "+ serverRs.getString("CONSUMPTION_ID")
-							+ "  AND CUSTOMER_ID = "+ serverRs.getString("CUSTOMER_ID")
+//							+ "  AND CUSTOMER_ID = "+ serverRs.getString("CUSTOMER_ID")
 							+ " AND WAREHOUSE_ID = "+serverRs.getString("WAREHOUSE_ID");
 					System.out.println("Customer Product Consumptions - STEP2 - Query to check whether the data need to be insert on LOCAL DB :: "+ sqlQuery);
 					localPStmt = localConn.prepareStatement(sqlQuery);
@@ -64,11 +58,15 @@ public class CheckCustomerProductConsumption {
 						commonPStmt.setString(6, "Y");
 						commonPStmt.setString(7,serverRs.getString("WAREHOUSE_ID"));
 						commonPStmt.setString(8,serverRs.getString("ORDER_CREATED_FLAG"));
-						commonPStmt.setString(9,serverRs.getString("ALLOCATION_TYPE"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("Customer Product Consumptions - STEP2 - Record inserted successfully on LOCAL DB.");
-						
+						commonPStmt.setString(9,serverRs.getString("ALLOCATION_TYPE"));						
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("Customer Product Consumptions - STEP2 - Record inserted successfully on LOCAL DB.");
+						}catch(Exception ee){
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("Customer Product Consumptions - STEP2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}						
 						if (syncFlagUpdate > 0) {
 							System.out.println("Customer Product Consumptions - STEP2 - SYNC FLAG is ready to update on SERVER.");
 							sqlQuery = "UPDATE CUSTOMER_PRODUCT_CONSUMPTION SET "
@@ -93,15 +91,13 @@ public class CheckCustomerProductConsumption {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................Customer Product Consumptions - STEP2 - Ended Successfully .................");
 		System.out.println(".................Customer Product Consumptions - STEP1 - Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
+			
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".................Customer Product Consumptions - STEP1 - Checking whether any data available on LOCAL DB to sync on SERVER................. ");
@@ -141,9 +137,14 @@ public class CheckCustomerProductConsumption {
 						commonPStmt.setString(7,localRs.getString("WAREHOUSE_ID"));
 						commonPStmt.setString(8,localRs.getString("ORDER_CREATED_FLAG"));
 						commonPStmt.setString(9,localRs.getString("ALLOCATION_TYPE"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("Customer Product Consumptions - STEP1 - Record inserted successfully...");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("Customer Product Consumptions - STEP1 - Record inserted successfully...");
+						}catch(Exception ee){
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("Exception Customer Product Consumptions - STEP1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 						if(syncFlagUpdate > 0){
 							System.out.println("Customer Product Consumptions - STEP1 - SYNC FLAG is ready to update on LOCAL DB.");
 							sqlQuery = "UPDATE CUSTOMER_PRODUCT_CONSUMPTION SET SYNC_FLAG='Y' "
@@ -167,8 +168,8 @@ public class CheckCustomerProductConsumption {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................Customer Product Consumptions - STEP1 - Ended Successfully .................");
 	}

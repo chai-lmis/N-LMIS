@@ -3,10 +3,6 @@ package com.chai.inv.update;
 
 import java.util.logging.Level;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.RootLayoutController;
-import com.chai.inv.logger.MyLogger;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -28,6 +24,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.RootLayoutController;
+import com.chai.inv.logger.MyLogger;
 
 public class UpdateProgressBar {
 	public static double TOTAL_WORK = 17;

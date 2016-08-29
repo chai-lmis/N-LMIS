@@ -1,13 +1,6 @@
 package com.chai.inv;
 import java.util.ArrayList;
 
-import org.controlsfx.dialog.Dialogs;
-
-import com.chai.inv.model.AddOrderLineFormBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.ReceiveLotSubinvPopUpBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.OrderFormService;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -23,6 +16,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
+
+import com.chai.inv.model.AddOrderLineFormBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.ReceiveLotSubinvPopUpBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.OrderFormService;
 //
 public class ReceiveLotSubInvPopUpController {
 	int textFieldIndex = 0, sum = 0, RECEIVED_QTY = 0;

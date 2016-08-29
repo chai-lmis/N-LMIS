@@ -23,7 +23,7 @@ public class DatabaseConnectionManagement {
 			p.load(in);
 			Class.forName(p.getProperty("drivername"));
 			serverConn = DriverManager.getConnection(p.getProperty("connectionStringServer"),
-						p.getProperty("username"), p.getProperty("password"));
+						p.getProperty("username"),p.getProperty("password"));
 			System.out.println("Connected to SERVER DB.........");
 			localConn = DriverManager.getConnection(p.getProperty("connectionStringLocal"),
 						p.getProperty("username"), p.getProperty("password"));
@@ -41,6 +41,7 @@ public class DatabaseConnectionManagement {
 				if (serverConn != null) {
 					serverConn.close();
 				}
+				
 			} catch (SQLException | IOException ex) {
 				System.out.println("Exception occured while closing connection:"+ ex.getMessage());
 				MainApp.LOGGER.setLevel(Level.SEVERE);
@@ -48,6 +49,7 @@ public class DatabaseConnectionManagement {
 			}
 		}
 	}
+	
 	public void setAutoCommit() {
 		try {
 			localConn.setAutoCommit(false);

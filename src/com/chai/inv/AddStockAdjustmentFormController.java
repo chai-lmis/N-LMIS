@@ -4,20 +4,18 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import org.controlsfx.control.action.Action;
-import org.controlsfx.dialog.Dialog;
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
@@ -25,6 +23,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+import org.controlsfx.control.action.Action;
+import org.controlsfx.dialog.Dialog;
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.model.LGAStockReceiptBean;
 import com.chai.inv.model.LabelValueBean;
@@ -405,14 +407,24 @@ public class AddStockAdjustmentFormController {
 		}
 		
 		if(insertFlag){
+			Alert alert = new Alert(AlertType.INFORMATION);
 			Action response=Dialogs.create().owner(adjustmentStage).title("Confirm")
 			.message("Confirm Stock Adjustments")
 			.actions(Dialog.Actions.OK, Dialog.Actions.CANCEL)
 			.showConfirm();
 			if(response==Dialog.Actions.OK){
-				new OrderFormService().insertOrderItemsTransactions(transactionListCopy);
+				if (new OrderFormService().insertOrderItemsTransactions(transactionListCopy)) {
+					alert.setTitle("Information");
+					alert.setHeaderText(null);
+					alert.setContentText("Stock adjustment submitted Successfully!");
+				} else {
+					alert.setAlertType(AlertType.ERROR);
+					alert.setTitle("Information");
+					alert.setHeaderText("Failed");
+					alert.setContentText("Operation failed Try Again!");
+				}
+				alert.showAndWait();
 				adjustmentStage.close();
-				System.out.println(insertFlag);
 			}
 		}
 	}

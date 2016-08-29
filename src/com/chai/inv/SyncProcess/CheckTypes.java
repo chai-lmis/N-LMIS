@@ -1,14 +1,13 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckTypes {
 	static ResultSet localRs = null;
@@ -17,16 +16,10 @@ public class CheckTypes {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* STEP2 only - Check TYPES Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...STEP2 - TYPES - Checking whether any data available on SERVER to sync on LOCAL DB...");
@@ -118,8 +111,8 @@ public class CheckTypes {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Step2 Ended Successfully .................");
 	}

@@ -1,8 +1,8 @@
 package com.chai.inv.model;
 
-import com.chai.inv.MainApp;
-
 import javafx.scene.control.Label;
+
+import com.chai.inv.MainApp;
 
 public class UserWarehouseLabelValue {
 	private String userWarehouseID;

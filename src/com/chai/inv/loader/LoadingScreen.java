@@ -3,8 +3,6 @@ package com.chai.inv.loader;
 import java.util.Date;
 import java.util.logging.Level;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.logger.MyLogger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
@@ -14,6 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class LoadingScreen {
 	public static Task<Boolean> loaderScreenCloseWorker;

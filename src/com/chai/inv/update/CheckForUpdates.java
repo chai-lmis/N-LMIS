@@ -29,9 +29,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import org.controlsfx.dialog.Dialogs;
@@ -361,7 +361,7 @@ public class CheckForUpdates {
 			if(rs.next()) {
 				Mysqlpath = rs.getString(1);
 			}
-			System.out.println("Mysql basedir= "+Mysqlpath);
+			//System.out.println("Mysql basedir= "+Mysqlpath);
 			ActualMysqlpath = Mysqlpath.concat("bin\\mysql");
 			System.err.println("Mysql path is :" + ActualMysqlpath);
 		} catch (Exception ee) {

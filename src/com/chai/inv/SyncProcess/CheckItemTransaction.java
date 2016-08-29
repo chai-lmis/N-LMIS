@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
 import com.chai.inv.logger.MyLogger;
 
 public class CheckItemTransaction {
@@ -17,16 +16,10 @@ public class CheckItemTransaction {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* Check ITEM TRANSACTION Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println(".................ITEM TRANSACTION - STEP1 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".......ITEM TRANSACTION - STEP1 Checking whether any data available on LOCAL DB to sync on SERVER... ");
@@ -125,9 +118,15 @@ public class CheckItemTransaction {
 						commonPStmt.setString(29,localRs.getString("ONHAND_QUANTITY_AFTER_TRX"));
 						commonPStmt.setString(30,localRs.getString("VVM_STAGE"));
 						commonPStmt.setString(31,serverRs.getString("TRANSACTION_ID"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ITEM TRANSACTION - STEP1 Record updated successfully on SERVER...");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ITEM TRANSACTION - STEP1 Record updated successfully on SERVER...");									
+						}catch(Exception ee){
+							System.out.println("ITEM TRANSACTION - Step1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP1 - Update Failed for ITEM TRANSACTION - "+localRs.getString("TRANSACTION_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					} else {
 						System.out.println("...ITEM TRANSACTION - STEP1 Record not available on SERVER, Need to insert...");
 						sqlQuery = "INSERT INTO ITEM_TRANSACTIONS"
@@ -174,9 +173,15 @@ public class CheckItemTransaction {
 						commonPStmt.setString(30, localRs.getString("ONHAND_QUANTITY_AFTER_TRX"));
 						commonPStmt.setString(31, localRs.getString("VVM_STAGE"));
 						commonPStmt.setInt(32, warehouseId);
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ITEM TRANSACTION - STEP1 Record inserted successfully on SERVER...");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ITEM TRANSACTION - STEP1 Record inserted successfully on SERVER...");									
+						}catch(Exception ee){
+							System.out.println("ITEM TRANSACTION - Step1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP1 - INSERT Failed for ITEM TRANSACTION - "+localRs.getString("TRANSACTION_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("ITEM TRANSACTION - STEP1 SYNC FLAG is ready to update on LOCAL DB.");
@@ -197,8 +202,8 @@ public class CheckItemTransaction {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................ITEM TRANSACTION - STEP1 Ended Successfully .................");
 
@@ -207,9 +212,6 @@ public class CheckItemTransaction {
 		 */
 		System.out.println(".................ITEM TRANSACTION - STEP2 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".................ITEM TRANSACTION - STEP2 Checking whether any data available on SERVER to sync on LOCAL DB.................");
@@ -310,6 +312,15 @@ public class CheckItemTransaction {
 						System.out.println("commonPStmt :: " + commonPStmt.toString());
 						syncFlagUpdate=commonPStmt.executeUpdate();
 						System.out.println("ITEM TRANSACTION - STEP2 Record updated successfully on LOCAL DB...");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ITEM TRANSACTION - STEP2 Record updated successfully on LOCAL DB...");									
+						}catch(Exception ee){
+							System.out.println("ITEM TRANSACTION - Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP2 - UPDATE Failed for ITEM TRANSACTION - "+serverRs.getString("TRANSACTION_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					} else {
 						System.out.println("ITEM TRANSACTION - STEP2 Record not available on LOCAL DB, Need to insert...");						
 						sqlQuery = "INSERT INTO ITEM_TRANSACTIONS"
@@ -354,9 +365,15 @@ public class CheckItemTransaction {
 						commonPStmt.setString(29, serverRs.getString("ONHAND_QUANTITY_BEFOR_TRX"));
 						commonPStmt.setString(30, serverRs.getString("ONHAND_QUANTITY_AFTER_TRX"));
 						commonPStmt.setString(31, serverRs.getString("VVM_STAGE"));
-						System.out.println("commonPStmt :: " + commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ITEM TRANSACTION - STEP2 Record inserted successfully on LOCAL DB...");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ITEM TRANSACTION - STEP2 Record inserted successfully on LOCAL DB...");									
+						}catch(Exception ee){
+							System.out.println("ITEM TRANSACTION - Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP2 - INSERT Failed for ITEM TRANSACTION - "+serverRs.getString("TRANSACTION_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("ITEM TRANSACTION - STEP2 SYNC FLAG is ready to update on SERVER.");
@@ -377,8 +394,8 @@ public class CheckItemTransaction {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................ITEM TRANSACTION - STEP2 Ended Successfully .................");
 	}

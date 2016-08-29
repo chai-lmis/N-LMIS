@@ -7,23 +7,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-
-import com.chai.inv.loader.FirstPreloader;
-import com.chai.inv.logger.MyLogger;
-import com.chai.inv.model.CustProdMonthlyDetailBean;
-import com.chai.inv.model.LabelValueBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.DashboardService;
-import com.chai.inv.service.FacilityService;
-import com.chai.inv.service.ItemService;
-import com.chai.inv.util.CalendarUtil;
-import com.chai.inv.util.SelectKeyComboBoxListener;
-
 import javafx.application.Preloader.StateChangeNotification;
 import javafx.application.Preloader.StateChangeNotification.Type;
 import javafx.collections.FXCollections;
@@ -49,6 +32,23 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+
+import com.chai.inv.loader.FirstPreloader;
+import com.chai.inv.logger.MyLogger;
+import com.chai.inv.model.CustProdMonthlyDetailBean;
+import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.DashboardService;
+import com.chai.inv.service.FacilityService;
+import com.chai.inv.service.ItemService;
+import com.chai.inv.util.CalendarUtil;
+import com.chai.inv.util.SelectKeyComboBoxListener;
 
 public class LGASummarySheetController {
 	private Stage loadingScreenStage=null;

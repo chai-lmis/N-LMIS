@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,6 +17,8 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.CategoryBean;

@@ -921,9 +921,9 @@ public class UserService {
 
 	public boolean isShowSyncProgressScreen() throws SQLException {
 		boolean flag = false;
-		if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
-			System.out.println("In UserService.validateUser() -  else-if block :  ");
-			dao = new DatabaseOperation();
+		if (dao == null || dao.getConnection() == null
+				|| dao.getConnection().isClosed()) {
+			dao = DatabaseOperation.getDbo();
 		}
 		pstmt = dao.getPreparedStatement("SELECT LOGIN_COUNT FROM SHOW_SYNC_PROGRESS_SCREEN_FLAG");
 		rs = pstmt.executeQuery();
@@ -934,15 +934,15 @@ public class UserService {
 		} else {
 			System.out.println("getLoginCount() -> resultSet.next() is false. zero records fetched");
 		}
-		dao.closeConnection();
+		//dao.closeConnection();
 		return flag;
 	}
 
 	public void setLoginCount() {
 		try {
-			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
-				System.out.println("In UserService.validateUser() -  else-if block :  ");
-				dao = new DatabaseOperation();
+			if (dao == null || dao.getConnection() == null
+					|| dao.getConnection().isClosed()) {
+				dao = DatabaseOperation.getDbo();
 			}
 			pstmt = dao.getPreparedStatement("SELECT LOGIN_COUNT FROM SHOW_SYNC_PROGRESS_SCREEN_FLAG");
 			rs = pstmt.executeQuery();
@@ -953,7 +953,7 @@ public class UserService {
 				pstmt = dao.getPreparedStatement("INSERT INTO SHOW_SYNC_PROGRESS_SCREEN_FLAG (LOGIN_COUNT) VALUES(1)");
 			}
 			int updateCount = pstmt.executeUpdate();
-			dao.closeConnection();
+			//dao.closeConnection();
 		} catch (SQLException | NullPointerException e) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));

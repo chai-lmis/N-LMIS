@@ -1,14 +1,13 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckOrderLine {
 
@@ -18,17 +17,11 @@ public class CheckOrderLine {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* Check Order Line Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println(".................ORDER LINE - STEP1 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...ORDER LINE - STEP1 Checking whether any data available on LOCAL DB to sync on SERVER...");
@@ -117,10 +110,15 @@ public class CheckOrderLine {
 						commonPStmt.setString(24,serverRs.getString("ORDER_LINE_ID"));
 						commonPStmt.setString(25,serverRs.getString("ORDER_HEADER_ID"));
 						commonPStmt.setString(26,serverRs.getString("DB_ID"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ORDER LINE - STEP1 Record updated successfully on SERVER...");
-						CheckData.updateCheckFromClient = true;
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ORDER LINE - STEP1 Record updated successfully on SERVER...");									
+						}catch(Exception ee){
+							System.out.println("ORDER LINE - Step1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP1 - Update Failed for Order LINE - "+localRs.getString("ORDER_LINE_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					} else {
 						System.out.println("...ORDER LINE - STEP1 Record not available on SERVER, Need to insert...");
 						sqlQuery = "INSERT INTO ORDER_LINES(ORDER_LINE_ID, ORDER_HEADER_ID, ITEM_ID, QUANTITY, UOM, "
@@ -156,9 +154,15 @@ public class CheckOrderLine {
 						commonPStmt.setString(24,"N");
 						commonPStmt.setString(25,localRs.getString("CUST_PRODUCT_DETAIL_ID"));
 						commonPStmt.setString(26,localRs.getString("CONSUMPTION_ID"));
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ORDER LINE - STEP1 Record inserted successfully on SERVER...");
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ORDER LINE - STEP1 Record inserted successfully on SERVER...");									
+						}catch(Exception ee){
+							System.out.println("ORDER LINE - Step1 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP1 - INSERT Failed for Order LINE - "+localRs.getString("ORDER_LINE_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("ORDER LINE - STEP1 SYNC FLAG is ready to update on LOCAL DB.");
@@ -182,8 +186,8 @@ public class CheckOrderLine {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................ORDER LINE - STEP1 Ended Successfully .................");
 
@@ -192,9 +196,6 @@ public class CheckOrderLine {
 		 */
 		System.out.println(".................ORDER LINE - STEP2 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println(".................ORDER LINE - STEP2 Checking whether any data available on SERVER to sync LOCAL DB.................");
@@ -262,7 +263,7 @@ public class CheckOrderLine {
 						commonPStmt.setString(2,serverRs.getString("QUANTITY"));
 						commonPStmt.setString(3,serverRs.getString("UOM"));
 						commonPStmt.setString(4,serverRs.getString("CREATED_DATE"));
-						commonPStmt.setString(5,serverRs.getString("LINE_STATUS_ID"));
+						commonPStmt.setString(5,(serverRs.getString("LINE_STATUS_ID").equals(localRs.getString("LINE_STATUS_ID"))?serverRs.getString("LINE_STATUS_ID"):localRs.getString("LINE_STATUS_ID")));
 						commonPStmt.setString(6,serverRs.getString("SHIP_DATE"));
 						commonPStmt.setString(7,serverRs.getString("SHIP_QUANTITY"));
 						commonPStmt.setString(8,serverRs.getString("CANCEL_DATE"));
@@ -279,16 +280,21 @@ public class CheckOrderLine {
 						commonPStmt.setString(19,serverRs.getString("REFERENCE_LINE_ID"));
 						commonPStmt.setString(20,serverRs.getString("ORDER_FROM_ID"));
 						commonPStmt.setString(21,serverRs.getString("ORDER_TO_ID"));
-						commonPStmt.setString(22,"Y");
+						commonPStmt.setString(22,(serverRs.getString("LINE_STATUS_ID").equals(localRs.getString("LINE_STATUS_ID"))?"Y":"N"));
 						commonPStmt.setString(23,serverRs.getString("CUST_PRODUCT_DETAIL_ID"));
 						commonPStmt.setString(24,serverRs.getString("CONSUMPTION_ID"));
 						commonPStmt.setString(25,serverRs.getString("DB_ID"));
 						commonPStmt.setString(26,serverRs.getString("ORDER_LINE_ID"));
-						commonPStmt.setString(27,serverRs.getString("ORDER_HEADER_ID"));						
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ORDER LINE - STEP2 Record updated successfully on LOCAL DB....");
-//						CheckData.updateCheckFromServer = true;
+						commonPStmt.setString(27,serverRs.getString("ORDER_HEADER_ID"));
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ORDER LINE - STEP2 Record updated successfully on LOCAL DB....");									
+						}catch(Exception ee){
+							System.out.println("ORDER LINE - Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP2 - UPDATE Failed for Order LINE - "+serverRs.getString("ORDER_LINE_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					} else {
 						System.out.println("ORDER LINE - STEP2 Record not available on LOCAL DB, Need to insert.....");
 						sqlQuery = "INSERT INTO ORDER_LINES(ORDER_LINE_ID, ORDER_HEADER_ID, ITEM_ID, QUANTITY, UOM, "
@@ -324,11 +330,16 @@ public class CheckOrderLine {
 						commonPStmt.setString(24,"Y");
 						commonPStmt.setString(25,serverRs.getString("CUST_PRODUCT_DETAIL_ID"));
 						commonPStmt.setString(26,serverRs.getString("CONSUMPTION_ID"));
-						commonPStmt.setString(27,serverRs.getString("DB_ID"));
-						
-						System.out.println("commonPStmt :: "+ commonPStmt.toString());
-						syncFlagUpdate=commonPStmt.executeUpdate();
-						System.out.println("ORDER LINE - STEP2 Record inserted successfully on LOCAL DB...");
+						commonPStmt.setString(27,serverRs.getString("DB_ID"));						
+						try{
+							syncFlagUpdate=commonPStmt.executeUpdate();
+							System.out.println("ORDER LINE - STEP2 Record inserted successfully on LOCAL DB....");									
+						}catch(Exception ee){
+							System.out.println("ORDER LINE - Step2 - commonPStmt :: "+ commonPStmt.toString());
+							MainApp.LOGGER.setLevel(Level.SEVERE);
+							MainApp.LOGGER.severe("STEP2 - INSERT Failed for Order LINE - "+serverRs.getString("ORDER_LINE_ID"));									
+							MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
+						}
 					}
 					if(syncFlagUpdate > 0){
 						System.out.println("ORDER LINE - STEP2 SYNC FLAG is ready to update on LOCAL DB!");
@@ -352,8 +363,8 @@ public class CheckOrderLine {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................ORDER LINE - STEP2 Ended Successfully .................");
 	}

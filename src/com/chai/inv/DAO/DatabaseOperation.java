@@ -22,6 +22,8 @@ import com.chai.inv.RootLayoutController;
 import com.chai.inv.UserMainController;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.LabelValueBean;
+import com.chai.inv.uploadLgaInsertDbScript.GetLgaInsertDblScript;
+import com.chai.inv.util.ZipFileUtil;
 
 public class DatabaseOperation {
 
@@ -406,45 +408,45 @@ public class DatabaseOperation {
 							+ user_id + " AND WAREHOUSE_ID=" + warehouse_id);
 		}
 		// CheckTypes - TABLE : TYPES
-		queryList.add("UPDATE TYPES SET SYNC_FLAG='N' WHERE WAREHOUSE_ID = "
-				+ warehouse_id + " OR SOURCE_TYPE <> 'CUSTOMER TYPE'");
+//		queryList.add("UPDATE TYPES SET SYNC_FLAG='N' WHERE WAREHOUSE_ID = "
+//				+ warehouse_id + " OR SOURCE_TYPE <> 'CUSTOMER TYPE'");
 
 		// CheckCategories - TABLE : CATEGORIES
 		// NO NEED TO UPDATE CATEORIES
 
 		// CheckInventoryWarehouse - TABLE : INVENTORY_WAREHOUSES
-		queryList.add("UPDATE INVENTORY_WAREHOUSES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE INVENTORY_WAREHOUSES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+//						+ warehouse_id);
 		// CheckItemMaster - TABLE : ITEM_MASTERS
-		queryList.add("UPDATE ITEM_MASTERS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE ITEM_MASTERS SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+//						+ warehouse_id);
 		// CheckCustomers - TABLE : CUSTOMERS
-		queryList.add("UPDATE CUSTOMERS SET SYNC_FLAG = 'N' WHERE DEFAULT_STORE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE CUSTOMERS SET SYNC_FLAG = 'N' WHERE DEFAULT_STORE_ID = "
+//						+ warehouse_id);
 		// CheckCustomerProductConsumption - TABLE :
 		// CUSTOMER_PRODUCT_CONSUMPTION
-		queryList.add("UPDATE CUSTOMER_PRODUCT_CONSUMPTION SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE CUSTOMER_PRODUCT_CONSUMPTION SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+//						+ warehouse_id);
 		// CheckSyringeAssociation - TABLE : SYRINGE_ASSOCIATION
-		queryList.add("UPDATE SYRINGE_ASSOCIATION SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE SYRINGE_ASSOCIATION SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+//						+ warehouse_id);
 		// CheckCustomerMothlyProductDetail - TABLE :
 		// CUSTOMERS_MONTHLY_PRODUCT_DETAIL
-		queryList.add("UPDATE CUSTOMERS_MONTHLY_PRODUCT_DETAIL SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE CUSTOMERS_MONTHLY_PRODUCT_DETAIL SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+//						+ warehouse_id);
 		// CheckItemOnhandQuantities - TABLE : ITEM_ONHAND_QUANTITIES
-		queryList.add("UPDATE ITEM_ONHAND_QUANTITIES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
-						+ warehouse_id);
+//		queryList.add("UPDATE ITEM_ONHAND_QUANTITIES SET SYNC_FLAG = 'N' WHERE WAREHOUSE_ID = "
+//						+ warehouse_id);
 		// CheckOrderHeader - TABLE : ORDER_HEADERS
-		queryList.add("UPDATE ORDER_HEADERS SET SYNC_FLAG = 'N' "
-						+ " WHERE ORDER_FROM_ID = "+ warehouse_id
-						+ " AND ORDER_TYPE_ID = F_GET_TYPE('Orders','SALES ORDER')");
+//		queryList.add("UPDATE ORDER_HEADERS SET SYNC_FLAG = 'N' "
+//						+ " WHERE ORDER_FROM_ID = "+ warehouse_id
+//						+ " AND ORDER_TYPE_ID = F_GET_TYPE('Orders','SALES ORDER')");
 		// CheckOrderLine - TABLE : ORDER_LINES
-		queryList.add("UPDATE ORDER_LINES SET SYNC_FLAG = 'N' WHERE ORDER_FROM_ID = "+ warehouse_id
-						+ "  OR ORDER_TO_ID = "+ warehouse_id);
+//		queryList.add("UPDATE ORDER_LINES SET SYNC_FLAG = 'N' WHERE ORDER_FROM_ID = "+ warehouse_id
+//						+ "  OR ORDER_TO_ID = "+ warehouse_id);
 		// CheckItemTransaction - TABLE : ITEM_TRANSACTIONS
-		queryList.add("UPDATE ITEM_TRANSACTIONS SET SYNC_FLAG = 'N' "
-						+ " WHERE WAREHOUSE_ID = "+ warehouse_id);
+//		queryList.add("UPDATE ITEM_TRANSACTIONS SET SYNC_FLAG = 'N' "
+//						+ " WHERE WAREHOUSE_ID = "+ warehouse_id);
 		// TODO : call method to update all the flags at central server in all
 		// the used tables of
 		// the logged in LGA(sync_flag set 'N' against warehouse_id column in
@@ -478,7 +480,26 @@ public class DatabaseOperation {
 			
 			DatabaseOperation.CONNECT_TO_SERVER = false;
 			dbo = DatabaseOperation.getDbo();
-			if(remove){
+			MainApp.LOGGER.info("create and upload inset db scritp process start");
+			boolean sqlZipFileCreated = false;
+			if(GetLgaInsertDblScript.getLgaInsertScriptSqlFile()){
+				MainApp.LOGGER.info("sql file created Sussesfully");
+				if(ZipFileUtil.creatZipFile()){
+					MainApp.LOGGER.info("zip file created Sussesfully");
+					if(GetLgaInsertDblScript.sendDbScriptZipToServer()){
+						sqlZipFileCreated = true;
+						MainApp.LOGGER.info("file Uploaded To Server Sussesfully");
+						MainApp.LOGGER.info("create and upload inset db scritp process completed");
+					}else{
+						MainApp.LOGGER.info("file Uploaded To Server failed");
+					}
+				}else{
+					MainApp.LOGGER.info("zip file created failed");
+				}
+			}else{
+				MainApp.LOGGER.info("sql file created failed");
+			}
+			if(remove && sqlZipFileCreated){
 				pstmt = dbo.getPreparedStatement("DROP DATABASE IF EXISTS VERTICAL");
 				int localDBDropCount = pstmt.executeUpdate();
 				System.out.println("localDBDropCount="+localDBDropCount);
@@ -491,12 +512,11 @@ public class DatabaseOperation {
 			}
 		} catch (Exception ex) {
 			flag = false;
-			System.out.println("Exception occur in executing the updates on New CHAI-N-LMIS SERVER: \n"+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Exception occur in executing the updates on New CHAI-N-LMIS SERVER: \n"+ ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
 		} finally {
 			if (remove) {
-				System.out.println("Remove Database method : Finally block : last executed Query: \n"+ pstmt.toString());
 				MainApp.LOGGER.setLevel(Level.SEVERE);
 				MainApp.LOGGER.severe("Remove Database method : Finally block : last executed Query: \n"+ pstmt.toString());
 			}

@@ -1,7 +1,5 @@
 package com.chai.inv.util;
 
-import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
-
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -11,6 +9,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+
+import com.sun.javafx.scene.control.skin.ComboBoxListViewSkin;
 
 public class SmartSearchComboBox<T> implements EventHandler<KeyEvent> {
 

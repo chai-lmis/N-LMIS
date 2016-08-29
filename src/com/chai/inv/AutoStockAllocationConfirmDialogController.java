@@ -2,12 +2,6 @@ package com.chai.inv;
 
 import java.sql.SQLException;
 
-import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
-import com.chai.inv.model.CustProdMonthlyDetailBean;
-import com.chai.inv.model.CustomerBean;
-import com.chai.inv.model.UserBean;
-import com.chai.inv.service.CustomerService;
-
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -17,6 +11,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+
+import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
+import com.chai.inv.model.CustProdMonthlyDetailBean;
+import com.chai.inv.model.CustomerBean;
+import com.chai.inv.model.UserBean;
+import com.chai.inv.service.CustomerService;
 
 public class AutoStockAllocationConfirmDialogController {
 	

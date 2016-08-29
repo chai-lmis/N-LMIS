@@ -1,11 +1,11 @@
 package com.chai.inv.util;
 
+import javafx.collections.ObservableList;
+import javafx.stage.Stage;
+
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
-
-import javafx.collections.ObservableList;
-import javafx.stage.Stage;
 
 import com.chai.inv.OrderFormController;
 import com.chai.inv.SalesOrderFormController;

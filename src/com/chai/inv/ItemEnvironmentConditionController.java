@@ -2,6 +2,13 @@ package com.chai.inv;
 
 import java.util.logging.Level;
 
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
 import org.controlsfx.dialog.Dialogs;
 
 import com.chai.inv.logger.MyLogger;
@@ -9,13 +16,6 @@ import com.chai.inv.model.ItemBean;
 import com.chai.inv.model.ItemEnvironmentConditionBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.service.ItemService;
-
-import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 public class ItemEnvironmentConditionController {
 	@FXML

@@ -1,14 +1,13 @@
 package com.chai.inv.SyncProcess;
 
-import com.chai.inv.MainApp;
-import com.chai.inv.DBConnection.DatabaseConnectionManagement;
-import com.chai.inv.logger.MyLogger;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
+
+import com.chai.inv.MainApp;
+import com.chai.inv.logger.MyLogger;
 
 public class CheckInventoryWarehouse {
 
@@ -18,17 +17,11 @@ public class CheckInventoryWarehouse {
 	static PreparedStatement serverPStmt = null;
 	static PreparedStatement commonPStmt = null;
 	static String sqlQuery = "";
-	static Connection localConn = null;
-	static Connection serverConn = null;
 
-	public static void insertUpdateTables(int warehouseId) {
+	public static void insertUpdateTables(int warehouseId, Connection localConn, Connection serverConn) {
 		System.out.println("******************* Check INVENTORY WAREHOUSES Started *********************");
-		DatabaseConnectionManagement dbm = null;
 		System.out.println(".................INVENTORY WAREHOUSES - Step1 Started INVENTORY WAREHOUSES................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...INVENTORY WAREHOUSES - Step1 Checking whether any data available on LOCAL DB to sync on SERVER... ");
@@ -99,8 +92,8 @@ public class CheckInventoryWarehouse {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println(".................INVENTORY WAREHOUSES - Step1 Ended Successfully .................");
 		/**
@@ -108,9 +101,6 @@ public class CheckInventoryWarehouse {
 		 */
 		System.out.println(".................INVENTORY WAREHOUSES - Step2 Started................. ");
 		try {
-			dbm = new DatabaseConnectionManagement();
-			localConn = dbm.localConn;
-			serverConn = dbm.serverConn;
 			if (localConn != null && serverConn != null) {
 //				dbm.setAutoCommit();
 				System.out.println("...INVENTORY WAREHOUSES - Step2 Checking whether any data available on SERVER to sync on LOCAL DB...");
@@ -274,8 +264,8 @@ public class CheckInventoryWarehouse {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dbm.closeConnection();
-			closeObjects();
+//			dbm.closeConnection();
+//			closeObjects();
 		}
 		System.out.println("................. Ended Successfully .................");
 	}
