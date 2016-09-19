@@ -59,9 +59,14 @@
                 </Menu>
                   <Menu mnemonicParsing="false" text="Update">
                      <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
                         <MenuItem mnemonicParsing="false" onAction="#checkForUpdates" text="Check for Updates" />
                      </items>
+                  </Menu>
+                  <Menu mnemonicParsing="false" text="About">
+                    <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleAbout" text=" N-LMIS App" />
+                        <MenuItem mnemonicParsing="false" onAction="#handleLicense" text="License" />
+                    </items>
                   </Menu>
               </menus>
             </MenuBar>

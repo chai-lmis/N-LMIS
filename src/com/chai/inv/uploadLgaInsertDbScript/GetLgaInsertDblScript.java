@@ -27,7 +27,7 @@ public class GetLgaInsertDblScript {
 	private static String directorypath = "";
 
 	/**
-	 * this method get sql inset statements script of database
+	 * this method get sql insert statements script of database
 	 * 
 	 * @return
 	 */
@@ -36,7 +36,7 @@ public class GetLgaInsertDblScript {
 		try {
 			String mySqlPath = new CheckForUpdates().getBinDirectoryPath();
 			mySqlPath = mySqlPath.replaceFirst("mysql", "");
-			System.out.println("sql Pathhhhhhh  " + mySqlPath);
+			System.out.println("sql Path: " + mySqlPath);
 			directorypath = GetPath.get("temp");
 			Process process = Runtime.getRuntime().exec(
 					"cmd /c echo " + directorypath + "\\insertDbScript\\");
@@ -69,11 +69,11 @@ public class GetLgaInsertDblScript {
 					+ " --compress --complete-insert vertical"
 					+ " ITEM_MASTERS CUSTOMERS CUSTOMER_PRODUCT_CONSUMPTION SYRINGE_ASSOCIATION"
 					+ " CUSTOMERS_MONTHLY_PRODUCT_DETAIL ITEM_ONHAND_QUANTITIES"
-					+ " ORDER_LINES ORDER_HEADERS ITEM_TRANSACTIONS  DHIS2_STOCK_WASTAGES_PROCESSED >"
+					+ " ORDER_LINES ORDER_HEADERS ITEM_TRANSACTIONS MANUAL_HF_STOCK_ENTRY DHIS2_STOCK_WASTAGES_PROCESSED >"
 					+ directorypath + "/insertDbScript/"
 					+ MainApp.getUSER_WAREHOUSE_ID() + ".sql";
 
-			MainApp.LOGGER.info("commdnd For get insert backup" + comm);
+			MainApp.LOGGER.info("command For get insert backup: " + comm);
 			ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c" + comm)
 					.directory(new File(mySqlPath));
 			Process processGenerateSql = builder.start();
@@ -99,32 +99,25 @@ public class GetLgaInsertDblScript {
 		try {
 			String SqlScriptFilePath = "";
 			directorypath = GetPath.get("temp");
-			Process process = Runtime.getRuntime().exec(
-					"cmd /c echo " + directorypath + "\\insertDbScript\\");
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
+			Process process = Runtime.getRuntime().exec("cmd /c echo " + directorypath + "\\insertDbScript\\");
+			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			while ((SqlScriptFilePath = input.readLine()) != null) {
 				break;
 			}
 			final int BUFFER_SIZE = 4096;
-			String fromFile = SqlScriptFilePath
-					+ MainApp.getUSER_WAREHOUSE_ID() + ".zip";
+			String fromFile = SqlScriptFilePath+MainApp.getUSER_WAREHOUSE_ID()+".zip";
 			// System.out.println("sql Zip Filepath : " + SqlScriptFilePath);
 			File uploadFile = new File(fromFile);
-			URL url = new URL(
-					GetProperties
-							.property("sendDBInsertScriptSqlFileToServerUrl"));
+			URL url = new URL(GetProperties.property("sendDBInsertScriptSqlFileToServerUrl"));
 			// System.out.println("URL Connection : "+url.toString());
-			HttpURLConnection httpConn = (HttpURLConnection) url
-					.openConnection();
+			HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
 			// System.out.println("HTTP-URL Connection : "+httpConn.toString());
 			httpConn.setUseCaches(false);
 			httpConn.setDoOutput(true);
 			httpConn.setRequestMethod("GET");
 			// sets file name as a HTTP header
 			httpConn.addRequestProperty("logFile", uploadFile.getName());
-			httpConn.addRequestProperty("WarehouseId",
-					MainApp.getUSER_WAREHOUSE_ID());
+			httpConn.addRequestProperty("WarehouseId",MainApp.getUSER_WAREHOUSE_ID());
 			// httpConn.addRequestProperty("userName",MyLogger.userName);
 			// opens output stream of the HTTP connection for writing data
 			OutputStream outputStream = httpConn.getOutputStream();
@@ -159,8 +152,7 @@ public class GetLgaInsertDblScript {
 			} else {
 				MainApp.LOGGER.setLevel(Level.SEVERE);
 				MainApp.LOGGER.info("Data was written.");
-				System.out.println("Server returned non-OK code: "
-						+ responseCode);
+				System.out.println("Server returned non-OK code: "+ responseCode);
 			}
 
 		} catch (Exception e) {

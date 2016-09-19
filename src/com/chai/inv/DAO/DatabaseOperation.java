@@ -387,7 +387,7 @@ public class DatabaseOperation {
 	public static boolean removeLocalDatabase(boolean remove) {
 		System.out.println("DatabaseOperation.removeLocalDatabase() method...");
 		MainApp.LOGGER.setLevel(Level.INFO);
-		MainApp.LOGGER.info("DatabaseOperation.removeLocalDatabase() method called...");
+		MainApp.LOGGER.info("DatabaseOperation.removeLocalDatabase("+remove+") method called...");
 		boolean flag = false;
 		//step-4.1.1
 		//workdone 4
@@ -480,15 +480,15 @@ public class DatabaseOperation {
 			
 			DatabaseOperation.CONNECT_TO_SERVER = false;
 			dbo = DatabaseOperation.getDbo();
-			MainApp.LOGGER.info("create and upload inset db scritp process start");
+			MainApp.LOGGER.info("create and upload insert-db-script process start");
 			boolean sqlZipFileCreated = false;
 			if(GetLgaInsertDblScript.getLgaInsertScriptSqlFile()){
-				MainApp.LOGGER.info("sql file created Sussesfully");
+				MainApp.LOGGER.info("sql file created Successfully");
 				if(ZipFileUtil.creatZipFile()){
-					MainApp.LOGGER.info("zip file created Sussesfully");
+					MainApp.LOGGER.info("zip file created Successfully");
 					if(GetLgaInsertDblScript.sendDbScriptZipToServer()){
 						sqlZipFileCreated = true;
-						MainApp.LOGGER.info("file Uploaded To Server Sussesfully");
+						MainApp.LOGGER.info("file Uploaded To Server Successfully");
 						MainApp.LOGGER.info("create and upload inset db scritp process completed");
 					}else{
 						MainApp.LOGGER.info("file Uploaded To Server failed");

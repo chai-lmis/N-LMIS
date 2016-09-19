@@ -142,7 +142,7 @@ public class CheckForUpdates {
 		while(true){
 			System.out.print("");
 			//0. update records as sync flag=Y on server
-			if(CheckData.completeThreadCount==17){						
+			if(CheckData.completeThreadCount==18){						
 				//1. stop sync thread: set syncThreadFlag=false
 				CheckData.threadFlag=false;
 				MainApp.LOGGER.setLevel(Level.INFO);
@@ -553,9 +553,8 @@ public class CheckForUpdates {
 			for(String query:backupInsertQueries)
 				DatabaseOperation.getDbo().getPreparedStatement(query).executeUpdate();
 		} catch (SQLException e) {
-			System.out.println("error occured while running backup insertqueries "+e.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error occured while running backup insertqueries "+e.getMessage());
+			MainApp.LOGGER.severe("error occured while running backup insertqueries: "+e.getMessage());
 		}	
 	}
 	

@@ -405,24 +405,39 @@ public class MainApp extends Application {
 					//download insert db script
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("first time login import insert db script process start");
-					if(GetLgaInsertDblScript.downloadDBInsertScriptFile(GetProperties.property("downloadDBInsertScriptSqlFileFromServerUrl")
-							, GetPath.get("temp")+"/insertDbScript")){
-						MainApp.LOGGER.info("insert Script Db Download");
-						if(ZipFileUtil.unzip(GetPath.get("temp")+"/insertDbScript/"+MainApp.getUSER_WAREHOUSE_ID()+".zip"
-								, GetPath.get("temp")+"/insertDbScript/")){
-							MainApp.LOGGER.info("unzip insert Script Db succesfully");
-							if(GetLgaInsertDblScript.importLgaInsertScriptSqlFile()){
+					 File f = new File(GetPath.get("temp")+"/insertDbScript/"+MainApp.getUSER_WAREHOUSE_ID()+".sql");
+					 	if(f.exists()){
+					 		 MainApp.LOGGER.info(MainApp.getUSER_WAREHOUSE_ID()+".sql exist in temp/insertDbScript");
+					 		if(GetLgaInsertDblScript.importLgaInsertScriptSqlFile()){
 								MainApp.LOGGER.info("imported insert Script Db succesfully\n"
 										+ " import insert db process completed");
 							}else{
 								MainApp.LOGGER.info("imported insert Script Db failed");
 							}
-						}else{
-							MainApp.LOGGER.info("unzip insert Script Db failed");
-						}
-					}else{
-						MainApp.LOGGER.info("insert Script Db Download failed");
-					}
+					 		 
+					  }else{
+						  MainApp.LOGGER.info(MainApp.getUSER_WAREHOUSE_ID()+".sql not  exist in temp/insertDbScript");
+						  if(GetLgaInsertDblScript.downloadDBInsertScriptFile(GetProperties.property("downloadDBInsertScriptSqlFileFromServerUrl")
+									, GetPath.get("temp")+"/insertDbScript")){
+								MainApp.LOGGER.info("insert Script Db Download");
+								if(ZipFileUtil.unzip(GetPath.get("temp")+"/insertDbScript/"+MainApp.getUSER_WAREHOUSE_ID()+".zip"
+										, GetPath.get("temp")+"/insertDbScript/")){
+									MainApp.LOGGER.info("unzip insert Script Db succesfully");
+									if(GetLgaInsertDblScript.importLgaInsertScriptSqlFile()){
+										MainApp.LOGGER.info("imported insert Script Db succesfully\n"
+												+ " import insert db process completed");
+									}else{
+										MainApp.LOGGER.info("imported insert Script Db failed");
+									}
+								}else{
+									MainApp.LOGGER.info("unzip insert Script Db failed");
+								}
+							}else{
+								MainApp.LOGGER.info("insert Script Db Download failed");
+							}
+					  }
+					
+					
 				}
 				if (showSyncProgessScreen) {
 					System.out.println("*new UserService().isShowSyncProgressScreen() is trueee*");

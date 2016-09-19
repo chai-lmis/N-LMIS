@@ -511,7 +511,7 @@ public class CustomerFormController {
 			if (x_TARGET_POPULATION.getText() == null
 					|| x_TARGET_POPULATION.getText().length() == 0){
 				errorMessage += "Target Population is not entered.\n";				
-			}else if(!x_TARGET_POPULATION.getText().matches("\\d")){
+			}else if(!x_TARGET_POPULATION.getText().matches("\\d+")){
 				errorMessage += "Target Population must be numeric.\n";
 			}
 			if (x_DEFAULT_ORDERING_STORE.getValue() == null

@@ -39,7 +39,9 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 import org.controlsfx.control.ButtonBar;
+import org.controlsfx.control.PopOver;
 import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.PopOver.ArrowLocation;
 import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
@@ -612,7 +614,36 @@ public class RootLayoutController {
 			e.printStackTrace();
 		}
 	}
-
+	
+	@FXML
+	public void handleLicense(){
+		MainApp.LOGGER.severe(Exception.class.getName()+ " is clicked");
+		System.out.println(Exception.class.getName()+ "handleLicense()");
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/License.fxml"));
+		try {
+			BorderPane license = (BorderPane) loader.load();
+			license.setUserData(loader);
+			LicenseController controller = loader.getController();
+			PopOver popup=new PopOver();
+			controller.setPopupObject(popup);
+			popup.setPrefSize(200, 200);
+			popup.setCornerRadius(25);
+			popup.setArrowSize(0);
+			popup.setContentNode(license);
+			popup.setHideOnEscape(true);
+			popup.setDetachable(false);
+			popup.setPrefSize(300, 300);
+			popup.setAutoHide(true);
+			popup.setStyle("-fx-background-color: red");
+			popup.show(primaryStage);
+		} catch (IOException ex) {
+			
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error occured while loadinglicense popup.. "
+			+MyLogger.getStackTrace(ex));
+			ex.printStackTrace();
+		}
+	}
 	@FXML
 	public boolean handleExitMenuAction() {
 		SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);

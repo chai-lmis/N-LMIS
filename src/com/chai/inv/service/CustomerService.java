@@ -569,18 +569,27 @@ public class CustomerService {
 			dao = DatabaseOperation.getDbo();
 		}
 		pstmt = dao.getPreparedStatement(" SELECT cust_product_detail_id, "
-				+ "        item_id, " + "        ITEM_NUMBER,  "
-				+ "        ITEM_DESCRIPTION,  " + "        ITEM_TYPE_ID,  "
-				+ "        TYPE_CODE,  " + "        customer_id, "
-				+ "        allocation,  " + "        min_stock_qty,  "
+				+ "        item_id, " 
+				+ "        ITEM_NUMBER,  "
+				+ "        ITEM_DESCRIPTION,  " 
+				+ "        ITEM_TYPE_ID,  "
+				+ "        TYPE_CODE,  " 
+				+ "        customer_id, "
+				+ "        allocation,  " 
+				+ "        min_stock_qty,  "
 				+ "        max_stock_qty,  "
-				+ "        SHIPFROM_WAREHOUSE_ID,  " + "        WEEK, "
+				+ "        SHIPFROM_WAREHOUSE_ID,  " 
+				+ "        WEEK, "
 				+ "        CONCAT(MONTH,'-',YEAR) AS PERIOD, "
-				+ "        STOCK_BALANCE, " + "		   PERIOD_FROM_DATE, "
-				+ "		   PERIOD_TO_DATE, " + "		   ALLOCATION_TYPE "
+				+ "        STOCK_BALANCE, " 
+				+ "		   PERIOD_FROM_DATE, "
+				+ "		   PERIOD_TO_DATE, " 
+				+ "		   ALLOCATION_TYPE "
 				+ "   FROM cust_monthly_prod_detail_vw "
 				+ "  WHERE CUSTOMER_ID = " + value[0]
-				+ " AND CURRENT_DATA_FLAG='A' " 
+				+ "    AND CURRENT_DATA_FLAG='A' "
+				+ "    AND WEEKOFYEAR(ALLOCATION_DATE) = WEEKOFYEAR(NOW())"
+				+ "    AND YEAR(ALLOCATION_DATE) = YEAR(NOW()) "
 				+ "    AND ALLOCATION_TYPE = '"+ value[1] + "' ");
 		try {
 			rs = pstmt.executeQuery();
