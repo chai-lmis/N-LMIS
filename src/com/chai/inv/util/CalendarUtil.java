@@ -192,7 +192,7 @@ public class CalendarUtil {
 		System.out.println("selected year:"+year);
 		ObservableList<String> weeks=FXCollections.observableArrayList();
 		if(year!=LocalDate.now().getYear()){
-			for(int i=1;i<53;i++ ){
+			for(int i=52;i>0;i--){
 				if(i<10){
 					weeks.add("0"+Integer.toString(i));
 				}else{
@@ -201,7 +201,9 @@ public class CalendarUtil {
 				System.out.println(i);
 			}
 		}else{
-			for(int i=1;i<Calendar.getInstance().get(Calendar.WEEK_OF_YEAR);i++ ){
+			System.out.println("Calendar.WEEK_OF_YEAR:"+Calendar.WEEK_OF_YEAR);
+			System.out.println("i="+Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));			
+			for(int i=(Calendar.getInstance().get(Calendar.WEEK_OF_YEAR));i>0;i-- ){
 				if(i<10){
 					weeks.add("0"+Integer.toString(i));
 				}else{

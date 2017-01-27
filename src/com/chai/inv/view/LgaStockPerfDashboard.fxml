@@ -95,16 +95,26 @@
                   </Label>
                   <Label alignment="CENTER_RIGHT" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: green;">
                      <HBox.margin>
-                        <Insets top="5.0" />
+                        <Insets left="2.0" top="5.0" />
                      </HBox.margin>
                   </Label>
                   <Label prefHeight="26.0" text=" Antigen sufficient" fx:id="x_GREEN_LBL" />
                   <Label alignment="CENTER_RIGHT" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #ffc000;">
                      <HBox.margin>
-                        <Insets top="5.0" />
+                        <Insets left="2.0" top="5.0" />
                      </HBox.margin>
                   </Label>
                   <Label prefHeight="26.0" text=" Antigen need to be re-ordered" fx:id="x_YELLOW_LBL" />
+                  <Label alignment="CENTER_RIGHT" layoutX="309.0" layoutY="15.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #8e84fb;">
+                     <HBox.margin>
+                        <Insets left="2.0" top="5.0" />
+                     </HBox.margin>
+                  </Label>
+                  <Label layoutX="324.0" layoutY="10.0" prefHeight="26.0" text="Over Stock" fx:id="x_YELLOW_LBL1">
+                     <HBox.margin>
+                        <Insets left="2.0" />
+                     </HBox.margin>
+                  </Label>
                   <Label contentDisplay="RIGHT" layoutX="253.0" layoutY="10.0" prefHeight="18.0" prefWidth="147.0" text="Trend is the same">
                      <HBox.margin>
                         <Insets left="10.0" top="3.0" />

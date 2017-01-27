@@ -53,7 +53,6 @@ public class AddOrderLineController {
 	@FXML private DatePicker x_LINE_CANCEL_DATE;
 	@FXML private TextArea x_LINE_CANCEL_REASON;
 	
-	private OrderFormController orderFormController;
 	private boolean edit_line_item = false;
 	private StringBuffer ss = new StringBuffer("first");
 	private SalesOrderFormController salesOrderFormController;
@@ -219,23 +218,8 @@ public class AddOrderLineController {
 			boolean activeReceiveLineStatus) {
 		orderFormService = new OrderFormService();
 		this.activeReceiveLineStatus = activeReceiveLineStatus;
-//		x_LINE_ITEM.setItems(orderFormService.getDropdownList("item"));
-//		x_LINE_ITEM.getItems().addAll(new LabelValueBean("----(select none)----", null));
-//		new SelectKeyComboBoxListener(x_LINE_ITEM);
 		x_LINE_UOM.setItems(orderFormService.getDropdownList("uom"));
 		x_LINE_UOM.setDisable(true);
-//		if (calledFrom.equals("POOrderStatus")) {
-//			x_LINE_STATUS.setItems(order_status_list);
-//			new SelectKeyComboBoxListener(x_LINE_STATUS);
-//			x_LINE_SHIP_QTY.setVisible(false);
-//			x_LINE_SHIP_QTY_LABEL.setVisible(false);
-//		}
-		
-		if (orderFormController != null) {
-			System.out.println("ok button disable: "+ orderFormController.getOK_BTN_DISABLE());
-			x_OK_BTN.setDisable(orderFormController.getOK_BTN_DISABLE());
-			x_LINE_STATUS.setDisable(orderFormController.isOrder_cancel_already());
-		}
 		x_LINE_STATUS.setDisable(true);
 		x_LINE_CANCEL_DATE.setDisable(true);
 		x_LINE_CANCEL_REASON.setDisable(true);
@@ -448,14 +432,8 @@ public class AddOrderLineController {
 				if (salesOrderFormController != null) {
 					salesOrderFormController.setList(list);
 					System.out.println(" Line Grid list is set to salesOrderFormController ");
-				} else if (orderFormController != null
-						&& aolb.getX_LINE_RECEIVED_DATE() != null
-						&& aolb.getX_LINE_RECEIVED_DATE().length() != 0) {
-					orderFormController.getX_RECEIVED_QTY_COL().setVisible(true);
-					orderFormController.getX_RECEIVED_DATE_COL().setVisible(true);
-					orderFormController.setList(list);
-					System.out.println(" Line Grid list is set to orderFormController ");
-				} else {
+				} 
+				else {
 					System.out.println("orderFormController or salesOrderFormController is null");
 				}
 			} else {
@@ -466,7 +444,6 @@ public class AddOrderLineController {
 				} else {
 					addOrderLineFormBean.setX_OPERATION_ON_BEAN("INSERT");
 				}
-				orderFormController.refreshOrderItemLineTable(addOrderLineFormBean);
 			}
 			if (x_LINE_STATUS.getValue().getLabel().toUpperCase().equals("SHIPPED")) {
 				salesOrderFormController.getX_SHIPPED_QTY_COL().setVisible(true);
@@ -488,45 +465,8 @@ public class AddOrderLineController {
 		this.actionBtnString = actionBtnString;
 	}
 
-	public void setOrderFormController(OrderFormController orderFormController) {
-		this.orderFormController = orderFormController;
-	}
-
 	public void setOrderMain(SalesOrderFormController salesOrderFormController) {
 		this.salesOrderFormController = salesOrderFormController;
-	}
-
-	public void openReceiveLotQtyForm() {
-		System.out.println("Hey We are in Receive-Lot-SubInv-PopUp Action Handler");
-		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/Receive-Lot-Subinv-PopUp.fxml"));
-		try {
-			// Load the fxml file and create a new stage for the popup
-			BorderPane receiveLotSubinvPopUp = (BorderPane) loader.load();
-			Stage dialogStage = new Stage();
-			dialogStage.setTitle("Select Quantity from available Lots for item : "+ x_LINE_ITEM.getValue().getLabel());
-			dialogStage.initModality(Modality.WINDOW_MODAL);
-			dialogStage.initOwner(getDialogStage());
-			Scene scene = new Scene(receiveLotSubinvPopUp);
-			dialogStage.setScene(scene);
-			ReceiveLotSubInvPopUpController controller = loader.getController();
-			controller.setAddOrderLineController(this);
-			controller.setDialogStage(dialogStage);
-			controller.setUserBean(userBean);
-			// controller.setLineItemID(x_LINE_ITEM.getValue().getValue(),x_LINE_ITEM.getValue().getExtra1());
-			System.out.println("@@@@@@@@@@@addOrderLineFormBean.getX_ORDER_HEADER_ID(): "+ addOrderLineFormBean.getX_ORDER_HEADER_ID());
-			System.out.println("##########x_LINE_ITEM.getValue().getValue()"+ x_LINE_ITEM.getValue().getValue());
-			System.out.println("addOrderLineFormBean.getX_LINE_SHIP_QTY() value while passing to recive lot form: "+ addOrderLineFormBean.getX_LINE_SHIP_QTY());
-			controller.setFormDefaults(orderFormService.getReceiveItemLotPopUp(addOrderLineFormBean.getX_ORDER_HEADER_ID(), x_LINE_ITEM
-							.getValue().getValue()), addOrderLineFormBean,orderFormController.getX_SELECTED_STORE_NAME());
-			// x_LINE_SHIP_QTY.getText(),salesOrderFormController.getX_SELECT_DRP_DWN());
-			System.out.println("x_LINE_ITEM.getValue().getValue() = "+ x_LINE_ITEM.getValue().getValue());
-			dialogStage.showAndWait();
-		} catch (Exception ex) {
-			System.out.println("Error occured: Receive-Lot-Subinv-PopUp.fxml load exception: "+ ex.getMessage());
-			ex.printStackTrace();
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
-		}
 	}
 
 	public void setReferenceOrderId(String x_REFERENCE_ORDER_HEADER_ID) {

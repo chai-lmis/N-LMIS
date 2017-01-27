@@ -38,6 +38,7 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 
 import com.chai.inv.loader.FirstPreloader;
 import com.chai.inv.logger.MyLogger;
@@ -139,7 +140,7 @@ public class HfStkPerfDashboardController {
 					Productlbl.setEditable(false);
 					Productlbl.setText(lbvb.getLabel());
 					Productlbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,11));
-					System.out.println("productName:="+lbvb.getLabel());
+//					System.out.println("productName:="+lbvb.getLabel());
 					x_GRID_PANE.addColumn(productIndex+1, Productlbl);
 					GridPane.setHalignment(Productlbl, HPos.CENTER);
 					productIndex++;
@@ -165,14 +166,14 @@ public class HfStkPerfDashboardController {
 						lgalbl.setStyle("-fx-border-color:black");
 						lgalbl.setPrefHeight(8);
 						GridPane.setHgrow(lgalbl, Priority.ALWAYS);
-						System.out.println("LgaName:="+LgaName);
+						//System.out.println("LgaName:="+LgaName);
 //					GridPane.setMargin(hflbl, new Insets(0, 10, 0, 10));
 						x_GRID_PANE.addRow(lgaNameIndex+1,lgalbl);
 						maxWidth = (lgalbl.getMaxWidth()>maxWidth?lgalbl.getMaxWidth():maxWidth);
 						GridPane.setHalignment(lgalbl, HPos.LEFT);				
 						lgaNameIndex++;
 					}
-					System.out.println("list of Lga"+lgaNameList.size());
+					//System.out.println("list of Lga"+lgaNameList.size());
 					stateNameLbl.setText(lgaDashboardList.get(0).getX_STATE_NAME());
 					stateNameLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
 //				GridPane.setMargin(lgaLbl, new Insets(0, 0, 0, 10));
@@ -185,7 +186,7 @@ public class HfStkPerfDashboardController {
 				    ColumnConstraints constraint = x_GRID_PANE.getColumnConstraints().get(0);
 				    constraint.setFillWidth(true);
 				    //for add data
-				    System.out.println("dataset");
+				    //System.out.println("dataset");
 				    int i=1;
 				    String color="";
 				    for (String lgaName : lgaNameList) {
@@ -225,6 +226,7 @@ public class HfStkPerfDashboardController {
 					//for hf list and count hf no
 					SortedSet<String> hfNameList=new TreeSet<>();
 					for (int i = 0; i < lgaDashboardList.size(); i++) {
+						System.out.println("hfNameList["+i+"]"+lgaDashboardList.get(i).getX_CUSTOMER()+", Product Stock Balance: "+lgaDashboardList.get(i).getX_STOCK_BALANCE());
 						hfNameList.add(lgaDashboardList.get(i).getX_CUSTOMER());
 					}
 					columnSize=hfNameList.size();
@@ -238,15 +240,15 @@ public class HfStkPerfDashboardController {
 						hflbl.setStyle("-fx-border-color:black");
 						hflbl.setPrefHeight(8);
 						GridPane.setHgrow(hflbl, Priority.ALWAYS);
-						System.out.println("hfName:="+hfName);
+						//System.out.println("hfName:="+hfName);
 //					GridPane.setMargin(hflbl, new Insets(0, 10, 0, 10));
 						x_GRID_PANE.addRow(hfNameIndex+1,hflbl);
 						maxWidth = (hflbl.getMaxWidth()>maxWidth?hflbl.getMaxWidth():maxWidth);
-						System.out.println("maxWidth of HF Fields: "+maxWidth);
+						//System.out.println("maxWidth of HF Fields: "+maxWidth);
 						GridPane.setHalignment(hflbl, HPos.LEFT);				
 						hfNameIndex++;
 					}
-					System.out.println("list of hf"+hfNameList.size());
+					//System.out.println("list of hf"+hfNameList.size());
 					lgaLbl.setText(lgaDashboardList.get(0).getX_LGA_NAME());
 					lgaLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
 //				GridPane.setMargin(lgaLbl, new Insets(0, 0, 0, 10));
@@ -255,12 +257,12 @@ public class HfStkPerfDashboardController {
 					lgaLbl.setEditable(false);
 				    x_GRID_PANE.add(lgaLbl,0, 0);
 				    maxWidth = (lgaLbl.getMaxWidth()>maxWidth?lgaLbl.getMaxWidth():maxWidth);
-					System.out.println("maxWidth of LGA Field: "+maxWidth);
+					//System.out.println("maxWidth of LGA Field: "+maxWidth);
 				    GridPane.setHalignment(lgaLbl, HPos.LEFT);
 				    ColumnConstraints constraint = x_GRID_PANE.getColumnConstraints().get(0);
 				    constraint.setFillWidth(true);
 				    //for add data
-				    System.out.println("dataset");
+				   // System.out.println("dataset");
 				    int i=1;
 				    String color="";
 				    for (String hfName : hfNameList) {
@@ -276,12 +278,14 @@ public class HfStkPerfDashboardController {
 							for (int j2 = 0; j2 < lgaDashboardList.size(); j2++) {
 								if(hfName.equals(lgaDashboardList.get(j2).getX_CUSTOMER())
 										&& vaccineList.get(j).getLabel().equals(lgaDashboardList.get(j2).getX_PRODUCT())){
+									System.out.println("condition1:"+hfName+"="+lgaDashboardList.get(j2).getX_CUSTOMER()+", condition2:"+vaccineList.get(j).getLabel()+"="+lgaDashboardList.get(j2).getX_PRODUCT()+", Product Stock Balance: "+lgaDashboardList.get(j2).getX_STOCK_BALANCE());
 									TextField stkBal=new TextField();
 									color=lgaDashboardList.get(j2).getX_LEGEND_COLOR();
 									stkBal.setStyle("-fx-background-color:"+color+";-fx-border-color:black;");
 									stkBal.setPrefSize(10, 10);
 									stkBal.setAlignment(Pos.CENTER);
 									stkBal.setEditable(false);
+									
 									stkBal.setText(lgaDashboardList.get(j2).getX_STOCK_BALANCE());
 									x_GRID_PANE.getChildren().remove(blank);
 									x_GRID_PANE.add(stkBal, j+1, i);
@@ -297,7 +301,7 @@ public class HfStkPerfDashboardController {
 				}
 				
 			}else{
-				System.out.println("lgaDashboardList.size()==0");
+				//System.out.println("lgaDashboardList.size()==0");
 				x_GRID_PANE.getChildren().clear();
 			}
 		} catch (Exception e) {
@@ -346,11 +350,13 @@ public class HfStkPerfDashboardController {
 										 paint=((Label) node).getBackground().getFills().get(0).getFill();
 									}
 									switch(paint.toString()){
-									case "0xff0000ff" : color=10;
+									case "0xff0000ff" : color=HSSFColor.RED.index;
 									break;
-									case "0x00b050ff" : color = 17;
+									case "0x00b050ff" : color = HSSFColor.GREEN.index;
 									break;
-									case "0xffc000ff" : color = 13;
+									case "0xffc000ff" : color = HSSFColor.YELLOW.index;
+									break;
+									case "0x8e84fbff" : color=HSSFColor.BLUE.index;
 									break;
 									}
 									cellStyle.setFillForegroundColor((short)color);

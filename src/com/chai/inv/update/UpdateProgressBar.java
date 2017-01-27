@@ -30,7 +30,7 @@ import com.chai.inv.RootLayoutController;
 import com.chai.inv.logger.MyLogger;
 
 public class UpdateProgressBar {
-	public static double TOTAL_WORK = 17;
+	public static double TOTAL_WORK = 19;
 	Text percentageLbl = new Text();
 	Task<Boolean> copyWorker;
 	final ProgressBar progressBar = new ProgressBar(4);

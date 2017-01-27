@@ -14,7 +14,6 @@ import java.net.URLConnection;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 import java.util.logging.Level;
 
 import com.chai.inv.MainApp;
@@ -34,31 +33,26 @@ public class GetLgaInsertDblScript {
 	public static boolean getLgaInsertScriptSqlFile() {
 		boolean insertDbScript = false;
 		try {
+//			String folderName = "insertDbScript_for_training";
+			String folderName = "insertDbScript";
 			String mySqlPath = new CheckForUpdates().getBinDirectoryPath();
 			mySqlPath = mySqlPath.replaceFirst("mysql", "");
 			System.out.println("sql Path: " + mySqlPath);
 			directorypath = GetPath.get("temp");
-			Process process = Runtime.getRuntime().exec(
-					"cmd /c echo " + directorypath + "\\insertDbScript\\");
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
+			Process process = Runtime.getRuntime().exec("cmd /c echo " + directorypath + "\\"+folderName+"\\");
+			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String sqlFilepath;
 			while ((sqlFilepath = input.readLine()) != null) {
 				MainApp.LOGGER.setLevel(Level.INFO);
-				MainApp.LOGGER.info("sqlFile store path For Write : "
-						+ sqlFilepath);
+				MainApp.LOGGER.info("sqlFile store path For Write : "+ sqlFilepath);
 				break;
 			}
-			Path path = FileSystems.getDefault()
-					.getPath(sqlFilepath.toString());
+			Path path = FileSystems.getDefault().getPath(sqlFilepath.toString());
 			if (Files.exists(path)) {
 				MainApp.LOGGER.info("path exits " + path.toString());
 			} else {
-
-				Runtime.getRuntime().exec(
-						"cmd /c mkdir " + directorypath + "\\insertDbScript");
-				MainApp.LOGGER.info("insert db script path created : "
-						+ path.toString());
+				Runtime.getRuntime().exec("cmd /c mkdir " + directorypath + "\\"+folderName);
+				MainApp.LOGGER.info("insert db script path created : "+ path.toString());
 			}
 			String comm = "mysqldump -u"
 					+ GetProperties.property("username")
@@ -70,7 +64,7 @@ public class GetLgaInsertDblScript {
 					+ " ITEM_MASTERS CUSTOMERS CUSTOMER_PRODUCT_CONSUMPTION SYRINGE_ASSOCIATION"
 					+ " CUSTOMERS_MONTHLY_PRODUCT_DETAIL ITEM_ONHAND_QUANTITIES"
 					+ " ORDER_LINES ORDER_HEADERS ITEM_TRANSACTIONS MANUAL_HF_STOCK_ENTRY DHIS2_STOCK_WASTAGES_PROCESSED >"
-					+ directorypath + "/insertDbScript/"
+					+ directorypath + "/"+folderName+"/"
 					+ MainApp.getUSER_WAREHOUSE_ID() + ".sql";
 
 			MainApp.LOGGER.info("command For get insert backup: " + comm);
@@ -97,9 +91,11 @@ public class GetLgaInsertDblScript {
 	public static boolean sendDbScriptZipToServer() {
 		boolean sendSqlfileTOServerFlag;
 		try {
+//			String folderName = "insertDbScript_for_training";
+			String folderName = "insertDbScript";
 			String SqlScriptFilePath = "";
 			directorypath = GetPath.get("temp");
-			Process process = Runtime.getRuntime().exec("cmd /c echo " + directorypath + "\\insertDbScript\\");
+			Process process = Runtime.getRuntime().exec("cmd /c echo " + directorypath + "\\"+folderName+"\\");
 			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			while ((SqlScriptFilePath = input.readLine()) != null) {
 				break;
@@ -217,8 +213,7 @@ public class GetLgaInsertDblScript {
 			// conn.getHeaderField("filename")
 			// +"\n File Size : "+serverFileSize
 			// +"\nsavePath+filename = "+savePath+filename);
-			FileOutputStream outputStream = new FileOutputStream(
-					path.toString() + "/" + filename);
+			FileOutputStream outputStream = new FileOutputStream(path.toString() + "/" + filename);
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int bytesRead = -1;
 			while ((bytesRead = inputStream.read(buffer)) != -1) {
@@ -245,34 +240,31 @@ public class GetLgaInsertDblScript {
 	 */
 	public static boolean importLgaInsertScriptSqlFile() {
 		boolean insertDbScript = false;
+//		String folderName = "insertDbScript_for_training";
+		String folderName = "insertDbScript";
 		try {
 			directorypath = GetPath.get("temp");
 			String mySqlPath = new CheckForUpdates().getBinDirectoryPath();
 			mySqlPath = mySqlPath.replaceFirst("mysql", "");
-			System.out.println("sql Pathhhhhhh  " + mySqlPath);
-			Process process = Runtime.getRuntime().exec(
-					"cmd /c echo " + directorypath + "\\insertDbScript\\");
-			BufferedReader input = new BufferedReader(new InputStreamReader(
-					process.getInputStream()));
+			System.out.println("sql Path: " + mySqlPath);
+			Process process = Runtime.getRuntime().exec("cmd /c echo " + directorypath + "\\"+folderName+"\\");
+			BufferedReader input = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String sqlImportFilepath;
 			while ((sqlImportFilepath = input.readLine()) != null) {
-				System.out.println("sqlFile store path For Write : "
-						+ sqlImportFilepath);
+				System.out.println("sqlFile store path For Write : "+ sqlImportFilepath);
 				break;
 			}
-
 			String comm = "mysql -u" + GetProperties.property("username")
 					+ " -p" + GetProperties.property("password")
-					+ "  vertical <" + directorypath + "/insertDbScript/"
+					+ "  vertical <" + directorypath + "/"+folderName+"/"
 					+ MainApp.getUSER_WAREHOUSE_ID() + ".sql";
-			System.out.println("commdnd" + comm);
+			System.out.println("command" + comm);
 			ProcessBuilder builder = new ProcessBuilder("cmd.exe", "/c" + comm)
 					.directory(new File(mySqlPath));
 			Process processGenerateSql = builder.start();
 			if (processGenerateSql.waitFor() == 0) {
 				insertDbScript = true;
 			}
-
 			System.out.println("db script imported Suceesufully");
 		} catch (IOException | InterruptedException e) {
 			insertDbScript = false;

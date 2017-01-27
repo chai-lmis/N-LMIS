@@ -2,6 +2,7 @@ package com.chai.inv;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ import javafx.stage.WindowEvent;
 
 import org.controlsfx.control.NotificationPane;
 import org.controlsfx.dialog.Dialogs;
+import org.json.JSONException;
 
 import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.SyncProcess.CheckData;
@@ -399,29 +401,29 @@ public class MainApp extends Application {
 				CheckData.threadFlag = false;
 			} else {
 //				Boolean showSyncProgessScreen = false;
-				Boolean showSyncProgessScreen = true;
-				
+				Boolean showSyncProgessScreen = true;				
 				if (new UserService().isShowSyncProgressScreen()) {
 					//download insert db script
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("first time login import insert db script process start");
-					 File f = new File(GetPath.get("temp")+"/insertDbScript/"+MainApp.getUSER_WAREHOUSE_ID()+".sql");
+//					String folderName = "insertDbScript_for_training";
+					String folderName = "insertDbScript";
+					 File f = new File(GetPath.get("temp")+"/"+folderName+"/"+MainApp.getUSER_WAREHOUSE_ID()+".sql");
 					 	if(f.exists()){
-					 		 MainApp.LOGGER.info(MainApp.getUSER_WAREHOUSE_ID()+".sql exist in temp/insertDbScript");
+					 		 MainApp.LOGGER.info(MainApp.getUSER_WAREHOUSE_ID()+".sql exist in temp/"+folderName);
 					 		if(GetLgaInsertDblScript.importLgaInsertScriptSqlFile()){
 								MainApp.LOGGER.info("imported insert Script Db succesfully\n"
 										+ " import insert db process completed");
 							}else{
 								MainApp.LOGGER.info("imported insert Script Db failed");
-							}
-					 		 
+							}					 		 
 					  }else{
-						  MainApp.LOGGER.info(MainApp.getUSER_WAREHOUSE_ID()+".sql not  exist in temp/insertDbScript");
+						  MainApp.LOGGER.info(MainApp.getUSER_WAREHOUSE_ID()+".sql not  exist in temp/"+folderName);
 						  if(GetLgaInsertDblScript.downloadDBInsertScriptFile(GetProperties.property("downloadDBInsertScriptSqlFileFromServerUrl")
-									, GetPath.get("temp")+"/insertDbScript")){
+									, GetPath.get("temp")+"/"+folderName)){
 								MainApp.LOGGER.info("insert Script Db Download");
-								if(ZipFileUtil.unzip(GetPath.get("temp")+"/insertDbScript/"+MainApp.getUSER_WAREHOUSE_ID()+".zip"
-										, GetPath.get("temp")+"/insertDbScript/")){
+								if(ZipFileUtil.unzip(GetPath.get("temp")+"/"+folderName+"/"+MainApp.getUSER_WAREHOUSE_ID()+".zip"
+										, GetPath.get("temp")+"/"+folderName+"/")){
 									MainApp.LOGGER.info("unzip insert Script Db succesfully");
 									if(GetLgaInsertDblScript.importLgaInsertScriptSqlFile()){
 										MainApp.LOGGER.info("imported insert Script Db succesfully\n"
@@ -436,23 +438,21 @@ public class MainApp extends Application {
 								MainApp.LOGGER.info("insert Script Db Download failed");
 							}
 					  }
-					
-					
 				}
 				if (showSyncProgessScreen) {
 					System.out.println("*new UserService().isShowSyncProgressScreen() is trueee*");
 					new TransactionRegisterService().disableItemTransactionTriggers(true);
 				}
-				CheckData.threadFlag = true;
-				try{
-					//calling synchronizing thread
-					CheckData.startSyncThread();
-					if(showSyncProgessScreen){
-						showSynchronizeProgress();
-					}
-				} catch(InterruptedException ex) {
-					System.out.println("Exception Occurred in MainApp .. Sync Thread Block:: "+ex.getMessage());
-				}
+//				CheckData.threadFlag = true;
+//				try{
+////					//calling synchronizing thread
+//					CheckData.startSyncThread();
+//					if(showSyncProgessScreen){
+//						showSynchronizeProgress();						
+//					}
+//				} catch(InterruptedException ex) {
+//					System.out.println("Exception Occurred in MainApp .. Sync Thread Block:: "+ex.getMessage());
+//				}
 			}
 			rootLayoutController.setUserBean(userBean);
 			rootLayoutController.setMainBorderPane(borderLayout);
@@ -470,8 +470,8 @@ public class MainApp extends Application {
 			primaryStage.setMaximized(true);
 			primaryStage.show();
 			MainApp.LOGGER.setLevel(Level.INFO);
-			MainApp.LOGGER.info("7. Primary Stage Show");
-			rootLayoutController.checkForUpdates();
+			MainApp.LOGGER.info("7. Primary Stage Show");	
+			
 			// NotificationService.startNotificatonThread();
 		} catch (Exception e) {
 			System.out.println("Error Occured While Rootlayout Loading.. "+ e.getMessage());
@@ -560,6 +560,13 @@ public class MainApp extends Application {
 							System.out.println("Synchronizing Transparent Screen Closed!");
 							MainApp.getSyncProgressStage().close();
 							new TransactionRegisterService().disableItemTransactionTriggers(false);
+							try {
+								new RootLayoutController().checkForUpdates();
+							} catch (IOException | JSONException
+									| URISyntaxException | InterruptedException
+									| SQLException e) {
+								MainApp.LOGGER2.severe(MyLogger.getStackTrace(e));
+							}
 						} else {
 							System.out.println("Synchronizing Transparent Screen NOT Closed!");
 						}
@@ -571,6 +578,8 @@ public class MainApp extends Application {
 	public static void main(String[] args) {
 		excepMsgBfrLogin+="1. main method is called\n";
 		try {
+			System.out.println(System.getProperties());
+			System.setProperty("glass.accessible.force", "false");//it is for touch screen laptop to prevent hang
 		      MyLogger.setup2();
 		      MainApp.LOGGER.setLevel(Level.SEVERE);
 			  MainApp.LOGGER.severe(GLOBAL_EXCEPTION_STRING);
@@ -578,7 +587,6 @@ public class MainApp extends Application {
 		      e.printStackTrace();
 		      throw new RuntimeException("Problems with creating the log files");
 		}
-		launch(args);
-		
+		launch(args);		
 	}
 }

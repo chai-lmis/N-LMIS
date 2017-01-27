@@ -72,8 +72,7 @@ public class TypeService {
 		System.out.println(pstmt.toString());
 	}
 		return type; 
-	}
-	
+	}	
 	
 	public ObservableList<TypeBean> getTypeList() {
 		ObservableList<TypeBean> typeData = FXCollections.observableArrayList();

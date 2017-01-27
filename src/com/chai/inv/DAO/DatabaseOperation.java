@@ -44,14 +44,14 @@ public class DatabaseOperation {
 			p.load(in);
 			Class.forName(p.getProperty("drivername"));
 			if (CONNECT_TO_SERVER) {
-				System.out.println("******************server******************************************COnnection Ip======"+p.getProperty("connectionStringServer"));
+				System.out.println("*********server**********COnnection Ip: "+p.getProperty("connectionStringServer"));
 				con = DriverManager.getConnection(
 						p.getProperty("connectionStringServer"),
 						p.getProperty("username"), p.getProperty("password"));
 				System.out.println("Connected to SERVER DB.........");
 				connectionWithServer = true;
 			} else {
-				System.out.println("******************local******************************************COnnection Ip======"+p.getProperty("connectionStringLocal"));
+				System.out.println("********local************COnnection Ip: "+p.getProperty("connectionStringLocal"));
 				
 				dbCredential.setLabel(p.getProperty("username"));
 				dbCredential.setValue(p.getProperty("password"));
@@ -68,13 +68,6 @@ public class DatabaseOperation {
 			UserMainController.message = "Network connection goes down or disconnected!";
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(exMySql));
 			connectionWithServer = false;
-//			Dialogs.create()
-//					.owner(new MainApp().getPrimaryStage())
-//					.title("Internet Connection Failure")
-//					.masthead("Internet Connection Lost!")
-//					.message(
-//							"Connection might be down or not connected, please check internet connection.")
-//					.showError();
 			exMySql.printStackTrace();
 		} catch (Exception e) {
 			System.out.println("Error occured while loading database file:\n"
@@ -385,7 +378,6 @@ public class DatabaseOperation {
 	}
 
 	public static boolean removeLocalDatabase(boolean remove) {
-		System.out.println("DatabaseOperation.removeLocalDatabase() method...");
 		MainApp.LOGGER.setLevel(Level.INFO);
 		MainApp.LOGGER.info("DatabaseOperation.removeLocalDatabase("+remove+") method called...");
 		boolean flag = false;
@@ -455,7 +447,7 @@ public class DatabaseOperation {
 		try {
 			DatabaseOperation.CONNECT_TO_SERVER = true;
 			dbo = new DatabaseOperation();
-			System.out.println("Connection made to server database : work done : "+(++RootLayoutController.workdone));
+			++RootLayoutController.workdone; //4 DB update only
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Connection made to server database : work done : "+(RootLayoutController.workdone));
 			//step-4.1.2
@@ -465,8 +457,6 @@ public class DatabaseOperation {
 				pstmt = dbo.getPreparedStatement(query);
 				int updateCount = pstmt.executeUpdate();
 				if (updateCount == 0) {
-					System.out.println("countQueryNumber = " + countQueryNumber);
-					System.out.println("Zero Records updated by query: "+ pstmt.toString());
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("Zero Records updated by query: "+ pstmt.toString());
 				}
@@ -474,7 +464,7 @@ public class DatabaseOperation {
 			}
 			dbo.closeConnection();
 			dbo = null;
-			System.out.println("Local records updated on server database : work done :  "+(++RootLayoutController.workdone));
+			++RootLayoutController.workdone; // 5
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Local records updated on server database : work done : "+(RootLayoutController.workdone));
 			
@@ -504,7 +494,6 @@ public class DatabaseOperation {
 				int localDBDropCount = pstmt.executeUpdate();
 				System.out.println("localDBDropCount="+localDBDropCount);
 				if (localDBDropCount > 0) {
-					System.out.println("******************Local Database Dropped******************");
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("**Local Database Dropped**");					
 					flag = true;

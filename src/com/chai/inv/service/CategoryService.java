@@ -35,6 +35,7 @@ public class CategoryService {
 
 	public ObservableList<CategoryBean> getCategoryList() {
 		ObservableList<CategoryBean> categoryData = FXCollections.observableArrayList();
+		
 		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				System.out.println("In CatogaryService.validateUser() ");

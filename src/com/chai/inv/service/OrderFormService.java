@@ -15,7 +15,6 @@ import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.AddOrderLineFormBean;
 import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.OrderFormBean;
-import com.chai.inv.model.ReceiveLotSubinvPopUpBean;
 import com.chai.inv.model.TransactionBean;
 import com.chai.inv.util.CalendarUtil;
 
@@ -105,13 +104,7 @@ public class OrderFormService {
 			  + " WHERE STATUS = 'A' " // STATUS_ID NOT IN (2,3) AND
 					+ " ORDER BY STATUS_NAME ";
 			break;
-//		case "POOrderStatus":
-//			x_QUERY = "SELECT STATUS_ID, "
-//					+ "		  STATUS_NAME "
-//					+ "  FROM PD_ORDER_STATUS "
-//					+ " WHERE STATUS_ID NOT IN (10,11,13) "
-//					+ " ORDER BY STATUS_NAME ";
-//			break;
+
 		case "item":
 			x_QUERY = "SELECT ITEM_ID, " + "		  ITEM_NUMBER,"
 					+ "		  ITEM_DESCRIPTION," + "		  TRANSACTION_BASE_UOM "
@@ -179,160 +172,6 @@ public class OrderFormService {
 			System.out.println("order form : get default ordering store query: "+ pstmt.toString());
 		}
 		return lvb;
-	}
-
-	public String getAutoGenerateOrderNumber(boolean salesOrder) {
-		String id = "0";
-		try {
-			if (dao == null || dao.getConnection().isClosed()) {
-				dao = DatabaseOperation.getDbo();
-			}
-			if (salesOrder) {
-				pstmt = dao.getPreparedStatement("SELECT (MAX(ORDER_HEADER_NUMBER)+1) AS ORDER_NUMBER "
-								+ " FROM ORDER_HEADERS "
-								+ " WHERE ORDER_TYPE_ID = F_GET_TYPE('ORDERS', 'SALES ORDER')");
-			} else {
-				pstmt = dao.getPreparedStatement("SELECT (MAX(ORDER_HEADER_NUMBER)+1) AS ORDER_NUMBER "
-								+ " FROM ORDER_HEADERS "
-								+ " WHERE ORDER_TYPE_ID = F_GET_TYPE('ORDERS', 'PURCHASE ORDER')");
-			}
-
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				id = rs.getString(1);
-			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
-		}
-		return id;
-	}
-
-	public String getLastInsertedID() throws SQLException {
-		String id = "0";
-		if (dao == null || dao.getConnection().isClosed()) {
-			dao = DatabaseOperation.getDbo();
-		}
-		pstmt = dao.getPreparedStatement("SELECT LAST_INSERT_ID()");
-		try {
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				id = rs.getString(1);
-			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
-		}
-		return id;
-	}
-
-	public boolean saveOrderHeaders(OrderFormBean orderFormBean,
-			String actionBtnString) {
-		try {
-			if (dao == null || dao.getConnection().isClosed()) {
-				dao = DatabaseOperation.getDbo();
-			}
-			String REC_INSERT_UPDATE_BY_VALUE = null;
-			if (orderFormBean.getX_ORDER_TYPE_ID().equals("2")) {
-				REC_INSERT_UPDATE_BY_VALUE = "APPLICATION_NEW_UPDATE_ORDER_FULFIL";
-			} else if (orderFormBean.getX_ORDER_TYPE_ID().equals("1")) {
-				REC_INSERT_UPDATE_BY_VALUE = ""; // left empty for now
-			}
-			if (actionBtnString.equals("add")) {
-				pstmt = dao.getPreparedStatement("INSERT INTO ORDER_HEADERS "
-								+ " (ORDER_HEADER_NUMBER, " // 1
-								+ " ORDER_DATE, " // 2
-								+ " ORDER_TO_ID, " // 3
-								+ " ORDER_TO_SOURCE, " // 4
-								+ " ORDER_FROM_ID, " // 5
-								+ " ORDER_FROM_SOURCE, "// 6
-								+ " EXPECTED_DATE, " // 7
-								+ " ORDER_STATUS_ID, " // 8
-								// + " ORDER_STATUS, " // 9
-								+ " COMMENT, " // 9
-								+ " CANCEL_DATE, " // 10
-								+ " CANCEL_REASON, " // 11
-								+ " STATUS, " // default 'A'
-								+ " CREATED_BY, " // 12
-								+ " UPDATED_BY, " // 13
-								+ " CREATED_ON, " // now()
-								+ " UPDATED_ON, " // now()
-								// + " SHIP_DATE, "
-								+ " START_DATE, " // now
-								+ " ORDER_TYPE_ID," // 14
-								+ " ORDER_HEADER_ID," // 15
-								+ " SYNC_FLAG,"
-								+ " REC_INSERT_UPDATE_BY)"
-								+ " VALUES(?,?,?,?,?,?,?,?,?,?,?,'A',?,?,NOW(),NOW(),NOW(),?,?,'N','APPLICATION_NEW_INSERT_STOCK_ORDER')");
-				// + " ORDER_HEADER_ID " auto-increment
-			} else {
-				System.out.println("In Else: update query:......");
-				pstmt = dao.getPreparedStatement("UPDATE ORDER_HEADERS SET "
-						+ " ORDER_HEADER_NUMBER=?, " // 1
-						+ " ORDER_DATE=?, " // 2
-						+ " ORDER_TO_ID=?, " // 3
-						+ " ORDER_TO_SOURCE=?, " // 4
-						+ " ORDER_FROM_ID=?, " // 5
-						+ " ORDER_FROM_SOURCE=?, "// 6
-						+ " EXPECTED_DATE=?, " // 7
-						+ " ORDER_STATUS_ID=?, " // 8
-						// + " ORDER_STATUS=?, " //9
-						+ " COMMENT=?, " // 9
-						+ " CANCEL_DATE=?, " // 10
-						+ " CANCEL_REASON=?, " // 11
-						+ " STATUS='A', " // default 'A'
-						+ " CREATED_BY=?, " // 12
-						+ " UPDATED_BY=?, " // 13
-						// + " CREATED_ON=, " // now()
-						+ " UPDATED_ON=NOW(), " // now()
-						// + " SHIP_DATE, "
-						+ " START_DATE=NOW(), " //
-						+ " SYNC_FLAG='N'," + " REC_INSERT_UPDATE_BY='"
-						+ REC_INSERT_UPDATE_BY_VALUE + "'"
-						+ " WHERE ORDER_TYPE_ID=? AND ORDER_HEADER_ID=?"); // 14 //15
-			}
-			pstmt.setString(1, orderFormBean.getX_ORDER_HEADER_NUMBER());
-			if (orderFormBean.getX_ORDER_DATE() == null) {
-				pstmt.setString(2, null);
-			} else {
-				pstmt.setString(2, orderFormBean.getX_ORDER_DATE()+" "+ CalendarUtil.getCurrentTime());
-			}
-			pstmt.setString(3, orderFormBean.getX_ORDER_TO_ID());
-			pstmt.setString(4, orderFormBean.getX_ORDER_TO_SOURCE());
-			pstmt.setString(5, orderFormBean.getX_ORDER_FROM_ID());
-			pstmt.setString(6, orderFormBean.getX_ORDER_FROM_SOURCE());
-			if (orderFormBean.getX_EXPECTED_DATE() == null) {
-				pstmt.setString(7, null);
-			} else {
-				pstmt.setString(7, orderFormBean.getX_EXPECTED_DATE()+" "+ CalendarUtil.getCurrentTime());
-			}
-			pstmt.setString(8, orderFormBean.getX_ORDER_STATUS_ID());
-			// pstmt.setString(9,orderFormBean.getX_ORDER_STATUS());
-			pstmt.setString(9, orderFormBean.getX_COMMENT());
-			if (orderFormBean.getX_CANCEL_DATE() == null) {
-				pstmt.setString(10, null);
-			} else {
-				pstmt.setString(10, orderFormBean.getX_CANCEL_DATE()+" "+ CalendarUtil.getCurrentTime());
-			}
-			pstmt.setString(11, orderFormBean.getX_CANCEL_REASON());
-			pstmt.setString(12, orderFormBean.getX_CREATED_BY());
-			pstmt.setString(13, orderFormBean.getX_UPDATED_BY());
-			pstmt.setString(14, orderFormBean.getX_ORDER_TYPE_ID());
-			pstmt.setString(15, orderFormBean.getX_ORDER_HEADER_ID());
-			int rowCount = pstmt.executeUpdate();
-		} catch (Exception ex) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while saving Order Headers, error\n"
-			+MyLogger.getStackTrace(ex));
-			System.out.println("Error occured while saving Order Headers, error: "+ ex.getMessage());
-			ex.printStackTrace();
-			return false;
-		} finally {
-			System.out.println("PO insert/update query : " + pstmt.toString());
-		}
-		return true;
 	}
 
 	public boolean saveSalesOrderHeaders(OrderFormBean orderFormBean) {
@@ -406,131 +245,9 @@ public class OrderFormService {
 		return true;
 	}
 
-	public boolean saveOrderLineItems(ObservableList<AddOrderLineFormBean> list, String actionBtnString,
-			String orderHeaderID, String order_to_id, String order_from_id) {
-		boolean flag = false;
-		System.out.println("orderHeaderID passed to saveOrderLineItems() : "+ orderHeaderID);
-		System.out.println("orderLineCount--> " + orderLineCount);
-		for (int i = 0; i < list.size(); i++) {
-			AddOrderLineFormBean addOrderLineFormBean = list.get(i);
-			try {
-				if (dao == null || dao.getConnection().isClosed()) {
-					dao = DatabaseOperation.getDbo();
-					// System.out.println("dao was null in orderFormService, now initialized");
-				}
-				if (actionBtnString.equals("add")) {
-					System.out.println("add: actionBtnString : "
-							+ actionBtnString);
-					if (orderLineCount > 0) {
-						System.out.println("mainListSize = " + orderLineCount);
-						System.out.println("i = " + i);
-						System.out.println("maxOrderLineId = " + maxOrderLineId);
-						System.out.println("orderHeaderID+(mainListSize+i+1) = "+ (maxOrderLineId + i + 1));
-						addOrderLineFormBean.setX_ORDER_LINE_ID(Long.toString(maxOrderLineId + i + 1));
-					} else if (orderLineCount == 0) {
-						addOrderLineFormBean.setX_ORDER_LINE_ID(orderHeaderID+ (i + 1));
-						System.out.println("In else  of mainListSize = "+ orderLineCount);
-					}
-					pstmt = dao.getPreparedStatement("INSERT INTO ORDER_LINES "
-									+ " (ITEM_ID, " // 1
-									+ " QUANTITY, " // 2
-									+ " UOM, " // 3
-									+ " LINE_STATUS_ID, " // 4
-									+ " SHIP_QUANTITY, " // 5
-									// + " SHIP_DATE, " // 6
-									+ " CANCEL_DATE, " // 6
-									+ " CANCEL_REASON, " // 7
-									+ " STATUS, " // default 'A'
-									+ " ORDER_HEADER_ID, " // 8
-									+ " CREATED_BY, " // 9
-									+ " UPDATED_BY, " // 10
-									+ " CREATED_ON, "
-									+ " LAST_UPDATED_ON, "
-									+ " START_DATE,"
-									+ " CREATED_DATE,"
-									+ " ORDER_LINE_ID," // 11
-									+ " SYNC_FLAG,"
-									+ " ORDER_TO_ID,"
-									+ " ORDER_FROM_ID) " //
-									+ " VALUES(?,?,?,?,?,?,?,'A',?,?,?,NOW(),NOW(),NOW(),NOW(),?,'N',?,?)");
-					pstmt.setString(11,addOrderLineFormBean.getX_ORDER_LINE_ID());
-					pstmt.setString(12, order_to_id);
-					pstmt.setString(13, order_from_id);
-				} else {
-					System.out.println("edit: actionBtnString : "+ actionBtnString);
-					pstmt = dao.getPreparedStatement("UPDATE ORDER_LINES SET "
-							+ " ITEM_ID=?, " // 1
-							+ " QUANTITY=?, " // 2
-							+ " UOM=?, " // 3
-							+ " LINE_STATUS_ID=?, " // 4
-							+ " SHIP_QUANTITY=?, " // 5
-							// + " SHIP_DATE, " // 6
-							+ " CANCEL_DATE=?, " // 6
-							+ " CANCEL_REASON=?, " // 7
-							+ " STATUS='A', " // default 'A'
-							+ " ORDER_HEADER_ID=?, " // 8
-							+ " CREATED_BY=?, " // 9
-							+ " UPDATED_BY=?, " // 10
-							+ " CREATED_ON=NOW(), "
-							+ " LAST_UPDATED_ON=NOW(), "
-							+ " START_DATE=NOW(), " + " CREATED_DATE=NOW(), "
-							+ " RECEIVED_DATE=?, " // 11
-							+ " RECEIVED_QUANTITY=?, " // 12
-							+ " SYNC_FLAG='N', " //
-							+ " ORDER_TO_ID=?, " // 13
-							+ " ORDER_FROM_ID=? " // 14
-							+ " WHERE ORDER_LINE_ID=? AND ORDER_HEADER_ID=?"); // 15
-																				// 16
-					if (addOrderLineFormBean.getX_LINE_RECEIVED_DATE() == null) {
-						pstmt.setString(11, null);
-					} else {
-						pstmt.setString(11,addOrderLineFormBean.getX_LINE_RECEIVED_DATE()+" "+ CalendarUtil.getCurrentTime());
-					}
-					pstmt.setString(12,addOrderLineFormBean.getX_LINE_RECEIVED_QTY());
-					pstmt.setString(13,order_to_id);
-					pstmt.setString(14,order_from_id);
-					pstmt.setString(15,addOrderLineFormBean.getX_ORDER_LINE_ID());
-					System.out.println("addOrderLineFormBean.getX_ORDER_LINE_ID():"+ addOrderLineFormBean.getX_ORDER_LINE_ID());
-					pstmt.setString(16, orderHeaderID);
-					// pstmt.setString(12, addOrderLineFormBean.getX_ORDER_HEADER_ID());
-				}
-				pstmt.setString(1, addOrderLineFormBean.getX_LINE_ITEM_ID());
-				pstmt.setString(2, addOrderLineFormBean.getX_LINE_QUANTITY());
-				pstmt.setString(3, addOrderLineFormBean.getX_LINE_UOM());
-				pstmt.setString(4, addOrderLineFormBean.getX_LINE_STATUS_ID());
-				System.out.println("Line shp quantity: i=" + i + ", "+ addOrderLineFormBean.getX_LINE_SHIP_QTY());
-				pstmt.setString(5, addOrderLineFormBean.getX_LINE_SHIP_QTY());
-				if (addOrderLineFormBean.getX_LINE_CANCEL_DATE_2() == null) {
-					System.out.println("addOrderLineFormBean.getX_LINE_CANCEL_DATE_2() == null in orderformService");
-					pstmt.setString(6, null);
-				} else {
-					System.out.println("addOrderLineFormBean.getX_LINE_CANCEL_DATE_2() = "+ addOrderLineFormBean.getX_LINE_CANCEL_DATE_2());
-					pstmt.setString(6,addOrderLineFormBean.getX_LINE_CANCEL_DATE_2()+ " " + CalendarUtil.getCurrentTime());
-				}
-				pstmt.setString(7,addOrderLineFormBean.getX_LINE_CANCEL_REASON());
-				pstmt.setString(8,orderHeaderID);
-				pstmt.setString(9,addOrderLineFormBean.getX_CREATED_BY());
-				pstmt.setString(10,addOrderLineFormBean.getX_UPDATED_BY());
-				int rowCount = pstmt.executeUpdate();
-				flag = true;
-			} catch (SQLException | NullPointerException ex) {
-				System.out.println("Error occured while saving Order LIne Items, error: "
-			+ ex.getMessage());
-				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Error occured while saving Order LIne Items, error:\n"
-				+MyLogger.getStackTrace(ex));
-				ex.printStackTrace();
-				flag = false;
-			} finally {
-				System.out.println("PO LINE " + i + " : " + pstmt.toString());
-			}
-		}
-		return flag;
-	}
-
 	public boolean saveSalesOrderLineItems(
 			ObservableList<AddOrderLineFormBean> list,
-			String reference_order_id, boolean cancelCompleteOrder,
+			boolean cancelCompleteOrder,
 			String order_from_id, String order_to_id) throws SQLException {
 		String query = "UPDATE ORDER_LINES SET "
 				+ " ITEM_ID=?, " // 1
@@ -567,8 +284,7 @@ public class OrderFormService {
 				pstmt.setString(2, addOrderLineFormBean.getX_LINE_QUANTITY());
 				pstmt.setString(3, addOrderLineFormBean.getX_LINE_UOM());
 				pstmt.setString(4, addOrderLineFormBean.getX_LINE_STATUS_ID());
-				System.out.println("Line shp quantity: i=" + i + ", "
-						+ addOrderLineFormBean.getX_LINE_SHIP_QTY());
+				System.out.println("Line shp quantity: i=" + i + ", "+ addOrderLineFormBean.getX_LINE_SHIP_QTY());
 				pstmt.setString(5, addOrderLineFormBean.getX_LINE_SHIP_QTY());
 				if (addOrderLineFormBean.getX_LINE_SHIP_DATE_2() == null) {
 					System.out.println("addOrderLineFormBean.getX_LINE_SHIP_DATE_2() === "+ addOrderLineFormBean.getX_LINE_SHIP_DATE_2());
@@ -1319,282 +1035,7 @@ public class OrderFormService {
 		orderLineCount = orderLinesData.size();
 		return orderLinesData;
 	}
-
-	public ObservableList<TransactionBean> getShipItemLotPopUp(
-			String warehouseID, String itemID) {
-		ObservableList<TransactionBean> list = FXCollections
-				.observableArrayList();
-		String query = "SELECT ITEM_ID,"
-				+ "	TRANSACTION_BASE_UOM,"
-				+ " SUBINVENTORY_ID, "
-				+ " SUBINVENTORY_CODE, "
-				+ " BIN_LOCATION_ID, "
-				+ " BIN_LOCATION_CODE, "
-				+ " LOT_NUMBER, "
-				+ " ONHAND_QUANTITY, "
-				+ " SELF_LIFE,"
-				+ " DATE_FORMAT(MFG_OR_REC_DATE, '%d-%b-%Y') MFG_OR_REC_DATE, "
-				+ " DATE_FORMAT(EXPIRATION_DATE, '%d-%b-%Y') EXPIRATION_DATE "
-				+ " FROM ITEM_ONHAND_QUANTITIES_VW "
-				+ " WHERE ITEM_ID=? AND WAREHOUSE_ID=? AND (EXPIRATION_DATE > NOW() OR EXPIRATION_DATE is null) "
-				+ " ORDER BY ITEM_ONHAND_QUANTITIES_VW.EXPIRATION_DATE";
-		try {
-			if (dao == null || dao.getConnection() == null
-					|| dao.getConnection().isClosed()) {
-				dao = DatabaseOperation.getDbo();
-			}
-			pstmt = dao.getPreparedStatement(query);
-			pstmt.setString(1, itemID);
-			pstmt.setString(2, warehouseID);
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				TransactionBean lspb = new TransactionBean();
-				lspb.setX_ITEM_ID(rs.getString("ITEM_ID"));
-				lspb.setX_TRANSACTION_UOM(rs.getString("TRANSACTION_BASE_UOM"));
-				lspb.setX_FROM_SUBINVENTORY_ID(rs.getString("SUBINVENTORY_ID"));
-				lspb.setX_FROM_SUBINVENTORY_CODE(rs
-						.getString("SUBINVENTORY_CODE"));
-				lspb.setX_FROM_BIN_LOCATION_ID(rs.getString("BIN_LOCATION_ID"));
-				lspb.setX_FROM_BIN_LOCATION_CODE(rs
-						.getString("BIN_LOCATION_CODE"));
-				lspb.setX_ONHAND_QUANTITY(rs.getString("ONHAND_QUANTITY"));
-				lspb.setX_LOT_NUMBER(rs.getString("LOT_NUMBER"));
-				lspb.setX_SELF_LIFE(rs.getString("SELF_LIFE"));
-				lspb.setX_MFG_OR_REC_DATE(rs.getString("MFG_OR_REC_DATE"));
-				lspb.setX_EXPIRATION_DATE(rs.getString("EXPIRATION_DATE"));
-				list.add(lspb);
-			}
-		} catch (SQLException | NullPointerException ex) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error occur while getting Lot_subinv-Pop-up data, error\n"+
-			MyLogger.getStackTrace(ex));
-			System.out.println("error occur while getting Lot_subinv-Pop-up data, error: "+ ex.getMessage());
-		}finally{
-			System.out.println("OrderFormService.getShipItemLotPopUp() : "+pstmt.toString());
-		}
-		return list;
-	}
-
-	public ObservableList<ReceiveLotSubinvPopUpBean> getReceiveItemLotPopUp(
-			String order_header_Id, String itemid) {
-		ObservableList<ReceiveLotSubinvPopUpBean> list = FXCollections
-				.observableArrayList();
-		String query = "SELECT  LOT_NUMBER,ITEM_ID,SHIP_QUANTITY,SELF_LIFE,"
-				+ " DATE_FORMAT(MFG_OR_REC_DATE,'%d-%b-%Y') MFG_OR_REC_DATE, "
-				+ " DATE_FORMAT(EXPIRATION_DATE,'%d-%b-%Y') EXPIRATION_DATE "
-				+ "from CHILD_LINE_ITEMS "
-				+ "where ORDER_HEADER_ID=(SELECT REFERENCE_ORDER_ID FROM ORDER_HEADERS WHERE ORDER_HEADER_ID=?) "
-				+ "AND STATUS='A' " + "AND ITEM_ID=? "
-				+ "AND SHIP_TO_WAREHOUSE_ID=? ";
-		try {
-			if (dao == null || dao.getConnection().isClosed() || dao.getConnection() == null) {
-				dao = DatabaseOperation.getDbo();
-			}
-			pstmt = dao.getPreparedStatement(query);
-			pstmt.setString(1, order_header_Id);
-			pstmt.setString(2, itemid);
-			pstmt.setString(3, MainApp.getUSER_WAREHOUSE_ID());
-			rs = pstmt.executeQuery();
-			while (rs.next()) {
-				ReceiveLotSubinvPopUpBean receiveBean = new ReceiveLotSubinvPopUpBean();
-				receiveBean.setLOT_NUMBER(rs.getString("LOT_NUMBER"));
-				receiveBean.setITEM_ID(rs.getString("ITEM_ID"));
-				receiveBean.setSHIP_QUANTITY(rs.getString("SHIP_QUANTITY"));
-				receiveBean.setSELF_LIFE(rs.getString("SELF_LIFE"));
-				receiveBean.setMFG_OR_REC_DATE(rs.getString("MFG_OR_REC_DATE"));
-				receiveBean.setEXPIRATION_DATE(rs.getString("EXPIRATION_DATE"));
-				list.add(receiveBean);
-			}
-		} catch (SQLException | NullPointerException ex) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error occur while getting receive_item_lot_popup_data, ERROR\n"+
-			MyLogger.getStackTrace(ex));
-			System.out.println("error occur while getting receive_item_lot_popup_data, ERROR:"
-			+ ex.getMessage());
-		} finally {
-			System.out.println("In Finally--Item lot receive popup - ");
-			System.out.println("item lot receive - pop query - : \n"+ pstmt.toString());
-		}
-		return list;
-	}
-
-//	public boolean insertInChildLineItems(ObservableList<ReceiveLotSubinvPopUpBean> list) throws SQLException {
-//		System.out.println("In insertInChildLineItems method.. OrderFormService \nlist.size()="+ list.size());
-//		boolean flag = true;
-//		String query = "INSERT INTO CHILD_LINE_ITEMS "
-//				+ " (ITEM_ID, " // 1
-//				+ " QUANTITY, " // 2
-//				+ " UOM, " // 3
-//				+ " LINE_STATUS_ID, " // 4
-//				+ " SHIP_QUANTITY, " // 5
-//				+ " SHIP_DATE, " // 6
-//				+ " CANCEL_DATE, " // 7
-//				+ " CANCEL_REASON, " // 8
-//				+ " STATUS, " // default 'A'
-//				+ " ORDER_HEADER_ID, " // 9
-//				+ " ORDER_LINE_ID, " // 10
-//				+ " SUBINVENTORY_ID, "// 11
-//				+ " BIN_LOCATION_ID, "// 12
-//				+ " LOT_NUMBER, "// 13
-//				+ " RECEIVE_QUANTITY," // 14
-//				+ " SYNC_FLAG," + " SHIP_FROM_WAREHOUSE_ID,"
-//				+ " SHIP_TO_WAREHOUSE_ID," + "SELF_LIFE, "
-//				+ "MFG_OR_REC_DATE, " + "EXPIRATION_DATE," + "CHILD_LINE_ID)"
-//				+ " VALUES(?,?,?,?,?,?,?,?,'A',?,?,?,?,?,?,'N',?,?,?,?,?,?)";
-//		if (dao == null || dao.getConnection().isClosed() || dao.getConnection() == null) {
-//			dao = DatabaseOperation.getDbo();
-//		}
-//		pstmt = dao.getPreparedStatement(query);
-//		for (int i = 0; i < list.size(); i++) {
-//			ReceiveLotSubinvPopUpBean receiveLotSubinvPopUpBean = list.get(i);
-//			try {
-//				pstmt.setString(1, receiveLotSubinvPopUpBean.getITEM_ID());
-//				pstmt.setString(2, receiveLotSubinvPopUpBean.getQUANTITY());
-//				pstmt.setString(3, receiveLotSubinvPopUpBean.getUOM());
-//				pstmt.setString(4,receiveLotSubinvPopUpBean.getLINE_STATUS_ID());
-//				System.out.println("Line shp quantity: i=" +i+ ", ship_quantity----> "+ receiveLotSubinvPopUpBean.getSHIP_QUANTITY());
-//				pstmt.setString(5, receiveLotSubinvPopUpBean.getSHIP_QUANTITY());
-//				if (receiveLotSubinvPopUpBean.getSHIP_DATE() == null) {
-//					System.out.println("receiveLotSubinvPopUpBean.getSHIP_DATE() === "+ receiveLotSubinvPopUpBean.getSHIP_DATE());
-//					pstmt.setString(6, null);
-//				} else {
-//					System.out.println("receiveLotSubinvPopUpBean.getSHIP_DATE() in else === "+ receiveLotSubinvPopUpBean.getSHIP_DATE());
-//					pstmt.setString(6, receiveLotSubinvPopUpBean.getSHIP_DATE()+" "+ CalendarUtil.getCurrentTime());
-//				}
-//				if (receiveLotSubinvPopUpBean.getCANCEL_DATE() == null) {
-//					pstmt.setString(7, null);
-//				} else {
-//					pstmt.setString(7,receiveLotSubinvPopUpBean.getCANCEL_DATE()+" "+ CalendarUtil.getCurrentTime());
-//				}
-//				pstmt.setString(8, receiveLotSubinvPopUpBean.getCANCEL_REASON());
-//				pstmt.setString(9,receiveLotSubinvPopUpBean.getORDER_HEADER_ID());
-//				pstmt.setString(10,receiveLotSubinvPopUpBean.getORDER_LINE_ID());
-//				pstmt.setString(11,receiveLotSubinvPopUpBean.getSUBINVENTORY_ID());
-//				pstmt.setString(12,receiveLotSubinvPopUpBean.getBIN_LOCATION_ID());
-//				pstmt.setString(13,receiveLotSubinvPopUpBean.getLOT_NUMBER());
-//				pstmt.setString(14,receiveLotSubinvPopUpBean.getRECEIVE_QUANTITY());
-//				pstmt.setString(15, MainApp.getUSER_WAREHOUSE_ID());
-//				pstmt.setString(16,receiveLotSubinvPopUpBean.getSHIP_TO_WAREHOUSE_ID());
-//				pstmt.setString(17, receiveLotSubinvPopUpBean.getSELF_LIFE());
-//				if (receiveLotSubinvPopUpBean.getMFG_OR_REC_DATE() != null) {
-//					pstmt.setString(18,receiveLotSubinvPopUpBean.getMFG_OR_REC_DATE()+" "+ CalendarUtil.getCurrentTime());
-//				} else {
-//					pstmt.setString(18, null);
-//				}
-//				if (receiveLotSubinvPopUpBean.getEXPIRATION_DATE() != null) {
-//					pstmt.setString(19,receiveLotSubinvPopUpBean.getEXPIRATION_DATE()+" "+ CalendarUtil.getCurrentTime());
-//				} else {
-//					pstmt.setString(19, null);
-//				}
-//				System.out.println("1. child_line insert batch query's : i = "+ i);
-//				pstmt.setString(20,receiveLotSubinvPopUpBean.getORDER_LINE_ID()+Integer.toString(i + 1));
-//				pstmt.addBatch();
-//				System.out.println("child line items batch query: \n"+ pstmt.toString());
-//				pstmt.executeBatch();
-//			} catch (Exception ex) {
-//				System.out.println("Error occured while saving in CHILD LINE Items, error: "+ ex.getMessage());
-//				return false;
-//			} finally {
-//				System.out.println("finaly : child line items batch query: \n"+ pstmt.toString());
-//			}
-//			System.out.println("2. child_line insert batch query's : i = " + i);
-//		}
-//		return true;
-//	}
-
-//	public boolean insertItemLotNumbers(ObservableList<LotMasterBean> list)
-//			throws SQLException {
-//		boolean flag = true;
-//		System.out.println("In insertInChildLineItems method.. OrderFormService \nlist.size()="+ list.size());
-//		String insertQuery = " INSERT INTO ITEM_LOT_NUMBERS "
-//				+ "   (COMPANY_ID, WAREHOUSE_ID, ITEM_ID, LOT_NUMBER_DESCRIPTION, SUPPLIER_LOT_NUMBER, "
-//				+ "    SELF_LIFE, MFG_OR_REC_DATE, EXPIRATION_DATE, STATUS, START_DATE, "
-//				+ "    CREATED_BY, CREATED_ON, UPDATED_BY, LAST_UPDATED_ON, LOT_NUMBER, SYNC_FLAG) "
-//				+ "	 VALUES (?,?,?,?,?, " + // 1-5
-//				"    ?, ?, ?, ?, NOW(),?, " + // 6-10
-//				"    NOW(), ?, NOW(), ?,'N') "; // 11-12
-//		if (dao == null || dao.getConnection().isClosed()
-//				|| dao.getConnection() == null) {
-//			dao = DatabaseOperation.getDbo();
-//		}
-//		pstmt = dao.getPreparedStatement(insertQuery);
-//		for (int i = 0; i < list.size(); i++) {
-//			LotMasterBean lotMasterBean = list.get(i);
-//			try {
-//				pstmt.setString(1, "21000");
-//				pstmt.setString(2, lotMasterBean.getX_WAREHOUSE_ID());
-//				pstmt.setString(3, lotMasterBean.getX_ITEM_ID());
-//				pstmt.setString(4, lotMasterBean.getX_LOT_NUMBER_DESCRIPTION());
-//				pstmt.setString(5, lotMasterBean.getX_SUPPLIER_LOT_NUMBER());
-//				pstmt.setString(6, lotMasterBean.getX_SELF_LIFE());
-//				if (lotMasterBean.getX_MFG_OR_REC_DATE() != null)
-//					pstmt.setString(7, lotMasterBean.getX_MFG_OR_REC_DATE()
-//							+ " " + CalendarUtil.getCurrentTime());
-//				else
-//					pstmt.setString(7, null);
-//				if (lotMasterBean.getX_EXPIRATION_DATE() != null)
-//					pstmt.setString(8, lotMasterBean.getX_EXPIRATION_DATE()
-//							+ " " + CalendarUtil.getCurrentTime());
-//				else
-//					pstmt.setString(8, null);
-//				pstmt.setString(9, lotMasterBean.getX_STATUS());
-//				pstmt.setString(10, lotMasterBean.getX_CREATED_BY());
-//				pstmt.setString(11, lotMasterBean.getX_UPDATED_BY());
-//				pstmt.setString(12, lotMasterBean.getX_LOT_NUMBER());
-//				pstmt.addBatch();
-//				System.out.println("insert ItemLotNumbers batch query: \n"
-//						+ pstmt.toString());
-//				pstmt.executeBatch();
-//			} catch (Exception ex) {
-//				System.out
-//						.println("Error Occurs while inserting Received Lot numbers: "
-//								+ ex.getMessage());
-//				flag = false;
-//			} finally {
-//				System.out
-//						.println("finaly : insert ItemLotNumbers batch query: \n"
-//								+ pstmt.toString());
-//			}
-//		}
-//		return flag;
-//	}
-
-//	public boolean checkNotExistingLotNumber(String warehouse_id, String item_id, String lot_number, String exp_date, String mfg_date) {
-//		boolean flag = false;
-//		String query = "SELECT LOT_NUMBER FROM VIEW_ITEM_LOT_NUMBERS "
-//				+ " WHERE WAREHOUSE_ID=? AND ITEM_ID=? AND LOT_NUMBER=? ";
-//		try {
-//			if (dao == null || dao.getConnection().isClosed()
-//					|| dao.getConnection() == null) {
-//				dao = DatabaseOperation.getDbo();
-//			}
-//			pstmt = dao.getPreparedStatement(query);
-//			pstmt.setString(1, warehouse_id);
-//			pstmt.setString(2, item_id);
-//			pstmt.setString(3, lot_number);
-//			// pstmt.setString(4, mfg_date);
-//			// pstmt.setString(5,exp_date);
-//			rs = pstmt.executeQuery();
-//			if (rs.next()) {
-//				flag = false;
-//				System.out.println(rs.getString("LOT_NUMBER") + "Found");
-//			} else
-//				flag = true;
-//			while (rs.next()) {
-//				flag = false;
-//				System.out.println(rs.getString("LOT_NUMBER") + "Found");
-//			}
-//		} catch (Exception ex) {
-//			System.out.println("Error occur while checkNotExistingLotNumber: "
-//					+ ex.getMessage());
-//			flag = false;
-//		} finally {
-//			System.out.println("checkNotExistingLotNumber select Query: "
-//					+ pstmt.toString());
-//		}
-//		return flag;
-//	}
-
+	
 	public boolean updateOrderCreatedFlag(String x_CONSUMPTION_ID) {
 		System.out.println("OrderFormService.updateOrderCreatedFlag() method called");
 		boolean flag = false;
@@ -1678,5 +1119,59 @@ public class OrderFormService {
 		}
 		return flag;
 	}
-	
+
+	public ObservableList<TransactionBean> getShipItemLotPopUp(
+			String warehouseID, String itemID) {
+		ObservableList<TransactionBean> list = FXCollections
+				.observableArrayList();
+		String query = "SELECT ITEM_ID,"
+				+ "	TRANSACTION_BASE_UOM,"
+				+ " SUBINVENTORY_ID, "
+				+ " SUBINVENTORY_CODE, "
+				+ " BIN_LOCATION_ID, "
+				+ " BIN_LOCATION_CODE, "
+				+ " LOT_NUMBER, "
+				+ " ONHAND_QUANTITY, "
+				+ " SELF_LIFE,"
+				+ " DATE_FORMAT(MFG_OR_REC_DATE, '%d-%b-%Y') MFG_OR_REC_DATE, "
+				+ " DATE_FORMAT(EXPIRATION_DATE, '%d-%b-%Y') EXPIRATION_DATE "
+				+ " FROM ITEM_ONHAND_QUANTITIES_VW "
+				+ " WHERE ITEM_ID=? AND WAREHOUSE_ID=? AND (EXPIRATION_DATE > NOW() OR EXPIRATION_DATE is null) "
+				+ " ORDER BY ITEM_ONHAND_QUANTITIES_VW.EXPIRATION_DATE";
+		try {
+			if (dao == null || dao.getConnection() == null
+					|| dao.getConnection().isClosed()) {
+				dao = DatabaseOperation.getDbo();
+			}
+			pstmt = dao.getPreparedStatement(query);
+			pstmt.setString(1, itemID);
+			pstmt.setString(2, warehouseID);
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				TransactionBean lspb = new TransactionBean();
+				lspb.setX_ITEM_ID(rs.getString("ITEM_ID"));
+				lspb.setX_TRANSACTION_UOM(rs.getString("TRANSACTION_BASE_UOM"));
+				lspb.setX_FROM_SUBINVENTORY_ID(rs.getString("SUBINVENTORY_ID"));
+				lspb.setX_FROM_SUBINVENTORY_CODE(rs
+						.getString("SUBINVENTORY_CODE"));
+				lspb.setX_FROM_BIN_LOCATION_ID(rs.getString("BIN_LOCATION_ID"));
+				lspb.setX_FROM_BIN_LOCATION_CODE(rs
+						.getString("BIN_LOCATION_CODE"));
+				lspb.setX_ONHAND_QUANTITY(rs.getString("ONHAND_QUANTITY"));
+				lspb.setX_LOT_NUMBER(rs.getString("LOT_NUMBER"));
+				lspb.setX_SELF_LIFE(rs.getString("SELF_LIFE"));
+				lspb.setX_MFG_OR_REC_DATE(rs.getString("MFG_OR_REC_DATE"));
+				lspb.setX_EXPIRATION_DATE(rs.getString("EXPIRATION_DATE"));
+				list.add(lspb);
+			}
+		} catch (SQLException | NullPointerException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("error occur while getting Lot_subinv-Pop-up data, error\n"+
+			MyLogger.getStackTrace(ex));
+			System.out.println("error occur while getting Lot_subinv-Pop-up data, error: "+ ex.getMessage());
+		}finally{
+			System.out.println("OrderFormService.getShipItemLotPopUp() : "+pstmt.toString());
+		}
+		return list;
+	}	
 }

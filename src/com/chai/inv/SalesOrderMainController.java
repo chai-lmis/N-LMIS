@@ -40,8 +40,9 @@ public class SalesOrderMainController {
 	@FXML private TableColumn<OrderFormBean, String> orderToColumn;
 	@FXML private TableColumn<OrderFormBean, String> orderToNameColumn;
 	@FXML private TableColumn<OrderFormBean, String> expectedDateColumn;
-	@FXML private TableColumn<OrderFormBean, String> shipDateColumn;
-	@FXML private TableColumn<OrderFormBean, String> shippedDateOnReceiveColumn;
+	@FXML private TableColumn<OrderFormBean, String> shipDateColumn; //schedule shipped date
+//	@FXML private TableColumn<OrderFormBean, String> x_SHIPPED_QTY_COL;
+	@FXML private TableColumn<OrderFormBean, String> shippedDateOnReceiveColumn; //shipped date
 	@FXML private TableColumn<OrderFormBean, String> orderStatusColumn;
 	@FXML private TableColumn<OrderFormBean, String> commentColumn;
 	@FXML private TableColumn<OrderFormBean, String> cancelDateColumn;
@@ -136,6 +137,7 @@ public class SalesOrderMainController {
 		orderStatusColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_ORDER_STATUS"));
 		commentColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_COMMENT"));
 		shipDateColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_SHIP_DATE"));
+//		x_SHIPPED_QTY_COL.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_TOTAL_SHIPPED_QTY"));
 		shippedDateOnReceiveColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_SHIPPED_DATE_ON_RECEIVE"));
 		cancelDateColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_CANCEL_DATE"));
 		cancelReasonColumn.setCellValueFactory(new PropertyValueFactory<OrderFormBean, String>("x_CANCEL_REASON"));
@@ -200,8 +202,7 @@ public class SalesOrderMainController {
 				controller.setDialogStage(dialogStage);
 				controller.setUserBean(userBean);
 				controller.setOrderFormService(orderFormService, "edit");
-				controller.setFormDefaults(selectedOrderBean,
-						selectedLabelValueBean);
+				controller.setFormDefaults(selectedOrderBean,selectedLabelValueBean);
 				controller.setOrderMain(this);
 				// Show the dialog and wait until the user closes it
 				dialogStage.showAndWait();

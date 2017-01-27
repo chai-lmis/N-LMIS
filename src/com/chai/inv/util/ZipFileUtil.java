@@ -25,11 +25,13 @@ public class ZipFileUtil {
 	 */
 public static  boolean creatZipFile(){
 	 boolean operationFlag;
+//	 String folderName = "insertDbScript_for_training";
+		String folderName = "insertDbScript";
 	try {
 		directoryPath=GetPath.get("temp");
 		// input file 
 		Process process = Runtime.getRuntime().exec(
-				"cmd /c echo "+directoryPath+"\\insertDbScript\\");
+				"cmd /c echo "+directoryPath+"\\"+folderName+"\\");
 		BufferedReader input = new BufferedReader(new InputStreamReader(
 				process.getInputStream()));
 		String sqlFilepath;

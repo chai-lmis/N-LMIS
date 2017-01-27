@@ -257,8 +257,13 @@ public class CustomerFormController {
 				x_WARD.setItems(customerService.getDropdownList("WardList",
 						customerBean.getX_DEFAULT_STORE_ID()));
 				new SelectKeyComboBoxListener(x_WARD);
-				x_WARD.setValue(new LabelValueBean(customerBean.getX_WARD(),
-						customerBean.getX_WARD_ID()));
+				if(customerBean.getX_WARD()==null || customerBean.getX_WARD_ID()==null){
+					x_WARD.setValue(null);
+				}else{
+					x_WARD.setValue(new LabelValueBean(customerBean.getX_WARD(),
+							customerBean.getX_WARD_ID()));
+				}
+				
 			}
 
 			if (MainApp.getUserRole().getLabel().equals("NTO")
@@ -520,11 +525,14 @@ public class CustomerFormController {
 							.equals("----(select none)----")) {
 				errorMessage += "Select Default Ordering Store\n";
 			}
-			if (x_WARD.getValue() == null
-					|| x_WARD.getValue().toString().length() == 0
-					|| x_WARD.getValue().getLabel()
-							.equals("----(select none)----")) {
+			System.out.println("x_WARD.getValue() : "+x_WARD.getValue());
+			if (x_WARD.getValue()==null){
 				errorMessage += "Select Ward\n";
+			}else {
+				if(x_WARD.getValue().toString().length() == 0
+					|| x_WARD.getValue().getLabel().equals("----(select none)----")) {
+					errorMessage += "Select Ward\n";
+				}
 			}
 			if (x_START_DATE.getValue() == null
 					|| x_START_DATE.getValue().toString().length() == 0) {
@@ -536,13 +544,17 @@ public class CustomerFormController {
 						.validateEmailAddress(x_EMAIL_ADDRESS.getText());
 				errorMessage += (valid ? "" : "Enter a valid e-mail address\n");
 			}
-			if (x_DAY_PHONE_NUMBER.getText() != null
-					&& x_DAY_PHONE_NUMBER.getText().length() != 0) {
-				boolean valid = CommonService
-						.isPhoneNumberValid(x_DAY_PHONE_NUMBER.getText());
-				errorMessage += (valid ? ""
-						: "Enter phone number in the format specified in tooltip\n");
+			
+//				boolean valid = CommonService
+//						.isPhoneNumberValid(x_DAY_PHONE_NUMBER.getText());
+			if(x_DAY_PHONE_NUMBER.getText()!=null){
+				if(x_DAY_PHONE_NUMBER.getText().length()!=0){
+					if(!x_DAY_PHONE_NUMBER.getText().matches("\\d+")){
+						errorMessage += "Phone Number must be numeric.\n";
+					}
+				}
 			}
+			
 			if (errorMessage.length() == 0) {
 				boolean valid = true;
 				return valid;

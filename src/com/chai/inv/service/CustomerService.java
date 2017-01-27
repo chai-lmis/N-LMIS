@@ -862,7 +862,7 @@ public class CustomerService {
 				i++;
 			}
 			int[] batchExecuteCount = pstmt.executeBatch();
-		} catch (SQLException |NullPointerException ex) {
+		} catch (SQLException | NullPointerException ex) {
 			flag = false;
 			System.out.println("Exception occur while saving the Manual HF's Stock Entry :\n "
 			+ ex.getMessage());

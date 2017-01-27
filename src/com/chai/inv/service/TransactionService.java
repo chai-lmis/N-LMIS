@@ -48,35 +48,11 @@ public class TransactionService {
 					+ "						 	   WHERE USR.USER_ID = " + action[1] + ")"
 					+ " ORDER BY WAREHOUSE_NAME";
 			break;
-//		case "subinventory":
-//			x_QUERY = "SELECT SUBINVENTORY_ID, " + "		  SUBINVENTORY_CODE "
-//					+ "  FROM ITEM_SUBINVENTORIES " + " WHERE STATUS = 'A' "
-//					+ "   AND WAREHOUSE_ID = " + action[1]
-//					+ " ORDER BY SUBINVENTORY_CODE";
-//			break;
-//		case "locator":
-//			x_QUERY = "SELECT BIN_LOCATION_ID, " + "		  BIN_LOCATION_CODE "
-//					+ "  FROM SUBINVENTORY_BIN_LOCATIONS "
-//					+ " WHERE STATUS = 'A' " + "   AND SUBINVENTORY_ID = "
-//					+ action[1] + " ORDER BY BIN_LOCATION_CODE";
-//			break;
-//		case "lot":
-//			x_QUERY = "SELECT LOT_NUMBER, " + "		  LOT_NUMBER "
-//					+ "  FROM ITEM_LOT_NUMBERS " + " WHERE STATUS = 'A' "
-//					+ "   AND ITEM_ID = " + action[1]
-//					+ "   AND WAREHOUSE_ID = " + MainApp.getUSER_WAREHOUSE_ID()
-//					+ " ORDER BY LOT_NUMBER";
-//			break;
 		case "customer":
 			x_QUERY = "  SELECT CUSTOMER_ID, " + "         CUSTOMER_NAME "
 					+ "    FROM CUSTOMERS " + "   WHERE STATUS = 'A' "
 					+ "	  ORDER BY CUSTOMER_NAME ";
 			break;
-//		case "vendor":
-//			x_QUERY = " SELECT VENDOR_ID, " + "         VENDOR_NAME "
-//					+ "    FROM VENDORS " + "   WHERE STATUS = 'A' "
-//					+ "	  ORDER BY VENDOR_NAME ";
-//			break;
 		case "transaction_Types":
 			x_QUERY="select type_id, type_code "
 			+" from types " 

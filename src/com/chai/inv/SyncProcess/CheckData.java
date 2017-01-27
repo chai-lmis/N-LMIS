@@ -152,5 +152,6 @@ public class CheckData implements Runnable {
 	public static void startSyncThread() throws InterruptedException {
 		Thread t = new Thread(new CheckData());
 		t.start();
+	   
 	}
 }

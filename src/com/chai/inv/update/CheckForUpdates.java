@@ -48,9 +48,9 @@ import com.chai.inv.logger.SendLogToServer;
 import com.chai.inv.model.VersionInfoBean;
 
 public class CheckForUpdates {
-	public static final double APPLICATION_UPDATE_TOTAL_WORK = 7;
+	public static final double APPLICATION_UPDATE_TOTAL_WORK = 9;
 	public static final double DB_UPDATE_TOTAL_WORK = 10;
-	public static final double APP_DB_UPDATE_TOTAL_WORK = 17;
+	public static final double APP_DB_UPDATE_TOTAL_WORK = 19;
 	List<String> insertQueries=new ArrayList<String>();
 	private String jsonString = null;
 	private MainApp mainApp;
@@ -60,13 +60,12 @@ public class CheckForUpdates {
 	public Boolean downloadFileStatus(String filepath){
 		Boolean flag = false;
 		try {
-			System.out.println("file path in downloadFileStatus :"+filepath);
+			
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("file path in downloadFileStatus :"+filepath);
 			long downloadFileSize = 0;			
 			File file = new File(filepath);
 			if (!file.exists() || !file.isFile()) {
-				System.out.println("Update File do not exist!");
 				MainApp.LOGGER.setLevel(Level.INFO);
 				MainApp.LOGGER.info("Update File do not exist!");		         
 			}else{
@@ -97,7 +96,6 @@ public class CheckForUpdates {
 	public void downloadFile(String downloadurl, String savePath) {
 		final int BUFFER_SIZE = 4096;
 		String ftpUrl = String.format(downloadurl);
-		System.out.println("URL: " + ftpUrl);
 		MainApp.LOGGER.setLevel(Level.INFO);
 		MainApp.LOGGER.info("Download URL (ftpURL): " + ftpUrl);
 		try {
@@ -105,7 +103,7 @@ public class CheckForUpdates {
 			//workdone 7 - for db update only | workdone 5 - for app update only
 			URL url = new URL(ftpUrl);
 			URLConnection conn = url.openConnection();
-			System.out.println("Opened server download connection : work done : "+(++RootLayoutController.workdone));
+			++RootLayoutController.workdone; //5 - when app update| //7 when db update only
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Opened server download connection : work done : "+(RootLayoutController.workdone));
 			//step-4.3.2
@@ -127,7 +125,7 @@ public class CheckForUpdates {
 			}
 			outputStream.close();
 			inputStream.close();
-			System.out.println("Update file downloaded : work done : "+(++RootLayoutController.workdone));
+			++RootLayoutController.workdone; //6 - when app update only | //8 - when db update only
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Update file downloaded : work done : "+(RootLayoutController.workdone));
 		}catch (IOException ex) {
@@ -136,7 +134,6 @@ public class CheckForUpdates {
 		}
 	}
 	public void updateDatabase(boolean updateDbOnly,String exeDownloadPath,String downloadURL,String mysqlpath,MainApp mainApp,String dbVersion,Stage progressBarScreen ) throws IOException{
-		System.out.println("DBScript download file: "+ exeDownloadPath);
 		MainApp.LOGGER.setLevel(Level.INFO);
 		MainApp.LOGGER.info("DBScript download file: "+ exeDownloadPath);
 		while(true){
@@ -155,7 +152,7 @@ public class CheckForUpdates {
 				//step 4.2
 				//workdone 6
 				List<String> list = backupInsertQueries(mysqlpath);
-				System.out.println("Backup queries taken : "+(++RootLayoutController.workdone));
+				++RootLayoutController.workdone; //6
 				MainApp.LOGGER.setLevel(Level.INFO);
 				MainApp.LOGGER.info("Backup queries taken :  work done : "+(RootLayoutController.workdone));
 //				4. script downloadURL
@@ -167,7 +164,7 @@ public class CheckForUpdates {
 					//step 4.4
 					//workdone 9
 					importDBScript(exeDownloadPath,mysqlpath);
-					System.out.println("Database updated : work done : "+(++RootLayoutController.workdone));
+					++RootLayoutController.workdone; // 9
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("Database updated : work done : "+(RootLayoutController.workdone));
 	//				6. run insert queries of required tables
@@ -175,7 +172,7 @@ public class CheckForUpdates {
 					//workdone 10
 					runInsertQueries(list);		
 					versionTableUpdateOnLocal("DB",dbVersion);
-					System.out.println("Backup queries runs : "+(++RootLayoutController.workdone));
+					++RootLayoutController.workdone; // 10
 					MainApp.LOGGER.setLevel(Level.INFO);
 					MainApp.LOGGER.info("Backup queries runs & version numbers updated on local db : work done : "+(RootLayoutController.workdone));
 					break;
@@ -207,7 +204,7 @@ public class CheckForUpdates {
 			System.out.println("Current executing exe path "+currentExePath);
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Currently executing n-lmis.exe path "+currentExePath);
-			System.out.println("Path specified for application download : work done : "+(++RootLayoutController.workdone));
+			++RootLayoutController.workdone;//4.1 - when app update only / 
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Path specified for application download : work done: "+(RootLayoutController.workdone));			
 			//step 4.2
@@ -217,25 +214,24 @@ public class CheckForUpdates {
 			//workdone 6
 			 if(downloadFileStatus(exeDownloadPath+"\\"+filename)){
 				 unzipFile(exeDownloadPath+"\\update.jar",tempFolderPath);
-				 System.out.println("File unzipped : work done : "+(++RootLayoutController.workdone));
+				 ++RootLayoutController.workdone; //7
 				 MainApp.LOGGER.setLevel(Level.INFO);
 				 MainApp.LOGGER.info("Jar File unzipped : work done: "+(RootLayoutController.workdone));
 				//step 4.4
 				//workdone 7
 				 writeBatchFile(tempFolderPath,currentExePath);
-				 System.out.println("Copy command written in Batch file : work done : "+(++RootLayoutController.workdone));
+				 ++RootLayoutController.workdone; //8
 				 MainApp.LOGGER.setLevel(Level.INFO);
 				 MainApp.LOGGER.info("Copy command written in Batch file : work done: "+(RootLayoutController.workdone));
-				 System.out.println("after new CheckForUpdates().writeBatchFile");
 				//step 4.5
 				//workdone 8
 				 Process processReplace=Runtime.getRuntime().exec("cmd /c \""+tempFolderPath+"\\ADMIN_RIGHTS.bat\"");
-				 System.out.println("Batch file is executed : work done: "+(++RootLayoutController.workdone));
+				 ++RootLayoutController.workdone; //9
 				 MainApp.LOGGER.setLevel(Level.INFO);
 				 MainApp.LOGGER.info("Batch file is executed : work done: "+(RootLayoutController.workdone));
 				 versionTableUpdateOnLocal("APP",appVersion);
 				 SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
-				 System.exit(0);
+//				 System.exit(0);
 			 } else {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -250,7 +246,6 @@ public class CheckForUpdates {
 			 }
 		}
 	public void versionTableUpdateOnLocal(String... version){
-		System.out.println("CheckForUpdtes.versionTableUpdateOnLocal() mehtod called ");
 		String x_column = "";
 		String x_TABLENAME = " ADM_USERS ";
 		if(MainApp.getUserRole().getLabel().toUpperCase().equals("CCO")){
@@ -262,7 +257,6 @@ public class CheckForUpdates {
 		case "DB": x_column=", DB_VERSION="+version[1];
 			break;
 		}
-
 		String query="UPDATE "+x_TABLENAME
 				+ " SET SYNC_FLAG='N' "
 				+ ", UPDATED_BY="+MainApp.getUserId()
@@ -270,11 +264,9 @@ public class CheckForUpdates {
 				+ x_column;		
 		try{
 			if(DatabaseOperation.getDbo().getPreparedStatement(query).executeUpdate()>0){
-				System.out.println("version update query executed ");
 				MainApp.LOGGER.setLevel(Level.INFO);
 				MainApp.LOGGER.info("version update query executed");
 			}else{
-				System.out.println("version update query not executed");
 				MainApp.LOGGER.setLevel(Level.INFO);
 				MainApp.LOGGER.info("version update query not executed");
 			}
@@ -286,9 +278,6 @@ public class CheckForUpdates {
 		finally{
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("Updated "+version[0]+", version[1]="+version[1]+"\nversionTableUpdateOnLocal update query :"+query);
-			System.out.println("version[0]="+version[0]);
-			System.out.println("version[1]="+version[1]);
-			System.out.println("versionTableUpdateOnLocal update query :"+query);
 		}
 	}
 	
@@ -342,8 +331,8 @@ public class CheckForUpdates {
 			System.out.println("START_DATE : "+ versionInfoBean.getSTART_DATE());
 			System.out.println("UPDATED_BY : "+ versionInfoBean.getUPDATED_BY());
 		}catch(FileNotFoundException | ConnectException ex){
-			System.out.println("Server not responding or application is not deployed");
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Server not responding or application is not deployed");
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
 			Alert alert=new Alert(AlertType.INFORMATION,"Server not responding");
 			alert.initOwner(RootLayoutController.progressBarScreen);
@@ -511,18 +500,19 @@ public class CheckForUpdates {
 						+" -p"+DatabaseOperation.dbCredential.getValue()
 						+" --compact --no-create-info --skip-set-charset --skip-quote-names"
 						+" --skip-triggers --complete-insert --extended-insert vertical "+tableName[i];
-				System.out.println("command string : "+command);
 				MainApp.LOGGER.setLevel(Level.INFO);
 		        MainApp.LOGGER.info("command string : "+command);
 				Process backupInsertProcess=Runtime.getRuntime().exec(command);
-				BufferedReader br = new BufferedReader(new InputStreamReader(backupInsertProcess.getInputStream()));
-			    String insertQuery;
-			    while ((insertQuery = br.readLine()) != null) {	
-			        System.out.println(" bufferedbackupInsertProcess echo :"+insertQuery);
-			        MainApp.LOGGER.setLevel(Level.INFO);
-			        MainApp.LOGGER.info("Back-Up Query : "+insertQuery);
-			        insertQueries.add(insertQuery);
-			    }
+				if(backupInsertProcess.waitFor()==0){
+					BufferedReader br = new BufferedReader(new InputStreamReader(backupInsertProcess.getInputStream()));
+					String insertQuery;
+				    while ((insertQuery = br.readLine()) != null) {
+				        MainApp.LOGGER.setLevel(Level.INFO);
+				        MainApp.LOGGER.info("Back-Up Query : "+insertQuery);
+				        insertQueries.add(insertQuery);
+				    }
+				}
+				
 			}
 		} catch (SecurityException e) {
 //			SecurityException - If a security manager exists and its checkExec method doesn't allow creation of the subprocess

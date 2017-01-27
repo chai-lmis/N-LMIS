@@ -86,7 +86,7 @@ public class CheckOrderHeader {
 							serverRs = serverPStmt.executeQuery();
 							if (serverRs.next()) {
 								System.out.println("Order Header - Step1 - Record available, Need to update on SERVER, Order # :: "+ localRs.getString("ORDER_HEADER_NUMBER"));
-								if (CheckData.updateCheckFromClient) {
+//								if (CheckData.updateCheckFromClient) {
 									sqlQuery = "UPDATE ORDER_HEADERS SET "
 											+ " ORDER_HEADER_NUMBER=?, " // 1
 											+ " ORDER_DATE=?, " // 2
@@ -149,9 +149,9 @@ public class CheckOrderHeader {
 										MainApp.LOGGER.setLevel(Level.SEVERE);
 										MainApp.LOGGER.severe(MyLogger.getStackTrace(ee));
 									}
-								} else {
-									System.out.println("*******Order Line Not Updated Yet*********");
-								}
+//								} else {
+//									System.out.println("*******Order Line Not Updated Yet*********");
+//								}
 							} else {
 								System.out.println("...Record not available, Need to insert, Order # :: "+ localRs.getString("ORDER_HEADER_NUMBER"));
 								sqlQuery = "INSERT INTO ORDER_HEADERS(ORDER_HEADER_ID,ORDER_HEADER_NUMBER, ORDER_DATE, ORDER_STATUS_ID, "

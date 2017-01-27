@@ -84,7 +84,9 @@
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: green;" />
             <Label contentDisplay="CENTER" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="113.0" text=" Antigen sufficient" />
             <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #ffc000;" />
-            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="172.0" text="Antigen need to be re-ordered" />
+            <Label alignment="CENTER_RIGHT" layoutX="458.0" layoutY="14.0" prefHeight="26.0" prefWidth="172.0" text="Antigen need to be re-ordered  " />
+            <Label alignment="CENTER_RIGHT" layoutX="938.0" layoutY="15.0" prefHeight="10.0" prefWidth="15.0" style="-fx-background-color: #0000ff" />
+            <Label layoutX="957.0" layoutY="10.0" prefHeight="26.0" prefWidth="172.0" text="  Over Stock" />
          </items>
       </ToolBar>
    </top>

@@ -441,6 +441,7 @@ public class LgaStkPerfDashboardController {
 						percentageBarBox.getChildren().add(SUFFICIENT_STOCK_TOTAL_LGA_PER);
 					}
 					//
+//					Color.mediumpurple
 					ImageView arrowImageView=new ImageView();
 					Image arrowImage=new Image(MainApp.class
 							.getResource("/resources/icons/Arrow.png").toString());
@@ -662,7 +663,7 @@ public class LgaStkPerfDashboardController {
 						// every module.
 				rootLayoutController.getX_ROOT_COMMON_LABEL().setText("LGA Stock Performance Dashboard");
 				x_VIEW_SUMMURY.setVisible(false);
-				x_HBOX.getChildren().remove(6, 9);
+				x_HBOX.getChildren().remove(8, 11);
 				x_TOOLBAR.getItems().remove(0, 2);
 				bean.setX_LGA_ID(MainApp.getUSER_WAREHOUSE_ID());
 				break;

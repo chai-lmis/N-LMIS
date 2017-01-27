@@ -23,10 +23,8 @@ public class DashboardService {
 	 * this method is used for lga dashboard data
 	 * */
 	public ObservableList<CustProdMonthlyDetailBean> getLgaDashBoard(String year, String weekNumber){
-
 		String x_WHERE_CONDITION = " WHERE DATE_FORMAT(STOCK_RECEIVED_DATE,'%Y-%v') = '"+year+"-"+weekNumber+"' "
-				+ " AND LGA_ID=IFNULL("+MainApp.getUSER_WAREHOUSE_ID()+",LGA_ID)";
-						
+				+ " AND LGA_ID=IFNULL("+MainApp.getUSER_WAREHOUSE_ID()+",LGA_ID) ";						
 		ObservableList<CustProdMonthlyDetailBean > lgaDashboardlist=FXCollections.observableArrayList();
 		String x_QUERY="";
 		if((MainApp.getUserRole().getLabel().equals("SCCO")
@@ -55,7 +53,7 @@ public class DashboardService {
 					+"  LEGEND_FLAG, "
 					+ " LEGEND_COLOR "
 			   + " FROM hf_stock_performance_dashbord_v "+x_WHERE_CONDITION
-				+"union "
+				+" union "
 			   + " select '' STATE_ID, '' STATE_NAME,  default_store_id,"
 			   + " '' LGA_NAME,   CUSTOMER_ID,  CUSTOMER_NAME, '' ITEM_ID,  "
 			   + " '' ITEM_NUMBER, '' STOCK_RECEIVED_DATE,  0 STOCK_BALANCE, "
@@ -445,45 +443,11 @@ public class DashboardService {
 						+"              FROM LGA_STOCK_PERFORMANCE_DASHBOARD_V  "+x_WHERE_CONDITION+")"
 						+"  ORDER BY STATE_NAME,LGA_NAME";
 			
-		}else{
-//			  x_QUERY+=" union "
-//					   +"  SELECT "
-//					   +"  INV.WAREHOUSE_ID AS STATE_ID,"
-//					   +"  '' STATE_NAME,  "
-//					   +"  INV2.WAREHOUSE_ID AS LGA_ID,"
-//					   +"  INV2.WAREHOUSE_CODE AS LGA_NAME,"
-//					   +"  '' STOCK_RECEIVED_YEAR,''  STOCK_RECEIVED_WEEK,"
-//					   +"  0 LESS_3_ANTIGENS_TOTAL_HF_PER, '' LESS_3_ANTIGENS_TOTAL_HF_PER_FLAG, "
-//					   +"  100 GREATER_2_ANTIGENS_TOTAL_HF_PER, 'RED' GREATER_2_ANTIGENS_TOTAL_HF_PER_FLAG, "
-//					   +"  0 SUFFICIENT_STOCK_TOTAL_HF_PER,'' SUFFICIENT_STOCK_TOTAL_HF_PER_FLAG "
-//					   +"  FROM INVENTORY_WAREHOUSES INV "
-//					   +"  JOIN ACTIVE_WAREHOUSES_V INV2 "
-//					   +"  ON INV.WAREHOUSE_ID = INV2.DEFAULT_ORDERING_WAREHOUSE_ID "
-//					   +"  WHERE ";
-//					if(MainApp.getUserRole().getLabel().equals("SCCO")
-//							|| MainApp.getUserRole().getLabel().equals("SIO")
-//							|| MainApp.getUserRole().getLabel().equals("SIFP")){
-//						if(bean.getX_LGA_ID()==null){
-//							x_QUERY+=" INV.WAREHOUSE_ID=IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
-//						}else{
-//							x_QUERY+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
-//						}
-//						}else if(MainApp.getUserRole().getLabel().equals("NTO")){
-//							if(bean.getX_STATE_ID()!=null){
-//								x_QUERY+=" INV.WAREHOUSE_ID = IFNULL("+bean.getX_STATE_ID()+",inv.WAREHOUSE_ID)  ";
-//							}
-//						}else{
-//							x_QUERY+=" INV2.WAREHOUSE_ID=IFNULL("+bean.getX_LGA_ID()+",inv2.WAREHOUSE_ID)  ";
-//						}
-//					   
-//					x_QUERY+="  AND INV2.WAREHOUSE_ID NOT IN (SELECT LGA_ID  FROM LGA_STOCK_PERFORMANCE_DASHBOARD_V  ";
 		}
 		if(!(MainApp.getUserRole().getLabel().equals("NTO") 
 				&& bean.getX_STATE_ID()==null)){
 			if(bean.getX_WEEK()==null || bean.getX_YEAR()==null){
 				x_QUERY+=" WHERE 1=0 ";
-			}else{
-//				x_QUERY+=x_WHERE_CONDITION+")";
 			}
 		}
 		try {

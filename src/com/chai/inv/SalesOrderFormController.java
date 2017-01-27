@@ -69,72 +69,41 @@ public class SalesOrderFormController {
 	private LabelValueBean ORDER_STATUS_SHIPPED_LVB = new LabelValueBean();
 	private LabelValueBean ORDER_STATUS_CLOSED_LVB = new LabelValueBean();
 	
-	@FXML
-	private DatePicker x_SHIPPED_DATE_ON_RECEIVE;
-	@FXML
-	private Label x_ORDER_FROM_STORE_NAME;
-	@FXML
-	private TextField x_ORDER_NUMBER;
-	@FXML
-	private ComboBox<LabelValueBean> x_ORDER_TO;
-	@FXML
-	private ComboBox<LabelValueBean> x_STORE_TYPE;
-	@FXML
-	private ComboBox<LabelValueBean> x_SELECTED_STORE_NAME;
-	@FXML
-	private ComboBox<LabelValueBean> x_ORDER_STATUS;
-	@FXML
-	private DatePicker X_SHIP_DATE;
-	@FXML
-	private DatePicker x_ORDER_DATE;
-	@FXML
-	private TextArea x_COMMENT;
-	@FXML
-	private DatePicker x_CANCEL_DATE;
-	@FXML
-	private TextArea x_CANCEL_REASON;
-	@FXML
-	private TableView<AddOrderLineFormBean> x_ORDER_LINE_ITEMS_TABLE;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_COMMENT_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_NUMBER;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_ITEM;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_QUANTITY;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_UOM;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_STATUS_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_SHIPPED_QTY_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_SHIPPED_DATE_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_CANCEL_DATE_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_CANCEL_REASON_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_ORDER_LINE_ID_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_REFERENCE_LINE_ID_COL;
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_ORDER_HEADER_ID_COL;  
-	@FXML
-	private TableColumn<AddOrderLineFormBean, String> x_LINE_STATUS_ID_COL;
-	
+	@FXML private DatePicker x_SHIPPED_DATE_ON_RECEIVE;
+	@FXML private Label x_ORDER_FROM_STORE_NAME;
+	@FXML private TextField x_ORDER_NUMBER;
+	@FXML private ComboBox<LabelValueBean> x_ORDER_TO;
+	@FXML private ComboBox<LabelValueBean> x_STORE_TYPE;
+	@FXML private ComboBox<LabelValueBean> x_SELECTED_STORE_NAME;
+	@FXML private ComboBox<LabelValueBean> x_ORDER_STATUS;
+	@FXML private DatePicker X_SHIP_DATE;
+	@FXML private DatePicker x_ORDER_DATE;
+	@FXML private TextArea x_COMMENT;
+	@FXML private DatePicker x_CANCEL_DATE;
+	@FXML private TextArea x_CANCEL_REASON;
+	@FXML private TableView<AddOrderLineFormBean> x_ORDER_LINE_ITEMS_TABLE;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_COMMENT_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_NUMBER;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_ITEM;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_QUANTITY;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_UOM;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_STATUS_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_SHIPPED_QTY_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_SHIPPED_DATE_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_CANCEL_DATE_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_CANCEL_REASON_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_ORDER_LINE_ID_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_REFERENCE_LINE_ID_COL;
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_ORDER_HEADER_ID_COL;  
+	@FXML private TableColumn<AddOrderLineFormBean, String> x_LINE_STATUS_ID_COL;	
 	@FXML private TableColumn<AddOrderLineFormBean, String>  x_CONSUMPTION_ID_COL;
 	@FXML private TableColumn<AddOrderLineFormBean, String>  x_CUST_PRODUCT_DETAIL_ID_COL;
 	
-	@FXML
-	private Button x_ADD_LINE_ITEM_BTN;
-	@FXML
-	private Button x_DELETE_BTN;
-	@FXML
-	private Button x_PENDING_RECEIPT_BTN;
-	@FXML
-	private Button x_SAVE_BTN;
+	@FXML private Button x_ADD_LINE_ITEM_BTN;
+	@FXML private Button x_DELETE_BTN;
+	@FXML private Button x_PENDING_RECEIPT_BTN;
+	@FXML private Button x_SAVE_BTN;
+	
 	int selectedRowIndex;
 	boolean cancelCompleteOrder = false;
 
@@ -368,6 +337,8 @@ public class SalesOrderFormController {
 					&& orderFormBean.getX_SHIP_DATE().length() != 0) {
 				X_SHIP_DATE.setValue(CalendarUtil.fromString(orderFormBean
 						.getX_SHIP_DATE()));
+				x_SHIPPED_DATE_ON_RECEIVE.setValue(CalendarUtil.fromString(orderFormBean
+						.getX_SHIPPED_DATE_ON_RECEIVE()));
 			} else {
 				X_SHIP_DATE.setValue(LocalDate.now());
 			}
@@ -680,10 +651,9 @@ public class SalesOrderFormController {
 //					if (OrderStatusValidation.validateOrderStatus(orderFormBean.getX_ORDER_STATUS(), list, dialogStage,this)) {
 //					}
 					orderHeaderUpdateSuccess = orderFormService.saveSalesOrderHeaders(orderFormBean);
-					System.out.println("returned back****************************");
 					if (orderHeaderUpdateSuccess) {
-						orderLineUpdateSuccess = orderFormService.saveSalesOrderLineItems(list, orderFormBean.getX_REFERENCE_ORDER_HEADER_ID(),
-										cancelCompleteOrder, orderFormBean.getX_ORDER_FROM_ID(),orderFormBean.getX_ORDER_TO_ID());
+						orderLineUpdateSuccess = orderFormService.saveSalesOrderLineItems(list,cancelCompleteOrder,
+								orderFormBean.getX_ORDER_FROM_ID(),orderFormBean.getX_ORDER_TO_ID());
 					}					
 				}
 				salesOrderMain.refreshOrderTable();
@@ -767,6 +737,8 @@ public class SalesOrderFormController {
 						addOrderLineFormBean.setX_LINE_SHIP_QTY(String.valueOf(tempTotalIssueQty));
 						addOrderLineFormBean.setX_LINE_SHIP_DATE(LocalDate.now().toString());
 						addOrderLineFormBean.setX_LINE_SHIP_DATE_2(LocalDate.now().toString());
+						x_SHIPPED_DATE_ON_RECEIVE.setValue(LocalDate.now());
+						
 					}
 					if (tempTotalIssueQty > 0) {
 						this.getX_SHIPPED_QTY_COL().setVisible(true);
@@ -829,6 +801,7 @@ public class SalesOrderFormController {
 		}
 		// inserting transactions
 		orderFormService.insertOrderItemsTransactions(tList);
+//		setList(orderLineList);
 		x_ORDER_LINE_ITEMS_TABLE.setItems(orderLineList);
 
 		int orderLineListIndex = 0;
