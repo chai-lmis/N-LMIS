@@ -54,9 +54,6 @@ public class MyLogger {
 					+ "-" + LocalDate.now() + "-"
 					+ CalendarUtil.getCurrentTimeInHyphenFormat() + ".html";
 			fileHTML = new FileHandler(htmlLogFilePath);
-			// fileHTML = new
-			// FileHandler(pathpattern+"/"+username+"-"+lgaName+" "
-			// +LocalDate.now()+"-"+CalendarUtil.getCurrentTimeInHyphenFormat()+".html");
 
 			// create an HTML formatter
 			formatterHTML = new MyHtmlFormatter();

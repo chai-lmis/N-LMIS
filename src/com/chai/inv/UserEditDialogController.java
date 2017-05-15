@@ -1,7 +1,9 @@
 package com.chai.inv;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.logging.Level;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -16,6 +18,7 @@ import javafx.stage.Stage;
 
 import org.controlsfx.dialog.Dialogs;
 
+import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.LabelValueBean;
 import com.chai.inv.model.UserBean;
 import com.chai.inv.service.CommonService;
@@ -156,7 +159,7 @@ public class UserEditDialogController {
 		});
 	}
 
-	public void setUserBeanFields(LabelValueBean labelValueBean) {
+	public void setUserBeanFields(LabelValueBean labelValueBean) throws SQLException {
 		//for display roleName in RoleDropDown
 		String roleName="";
 		x_FIRST_NAME.setText(userBean.getX_FIRST_NAME());
@@ -230,22 +233,30 @@ public class UserEditDialogController {
 	}
 
 	@FXML
-	public void handleUserTypeChange(){
+	public void handleUserTypeChange() {
 		System.out.println("In UserEditDialogController.handleUserTypeChange() handler");
-		if(x_USER_TYPE_NAME!=null && x_USER_TYPE_NAME.getValue()!=null ){
-			System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-			if(MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO") 
-					&& x_USER_TYPE_NAME.getValue().getLabel().toUpperCase().equals("ADMIN")){
-				System.out.println("hhhhhhhhhhhhhhhhhhhhhhhhhhhhh");
-				//userService.getDropdownList("ROLE",<boolean excludeNto>,<boolean excludeCCO>)
-				x_USER_ROLE.setItems(userService.getDropdownList("ROLE"));
-				new SelectKeyComboBoxListener(x_USER_ROLE);
-			}else if(MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO") 
-					&& x_USER_TYPE_NAME.getValue().getLabel().toUpperCase().equals("EMPLOYEE")){
-				System.out.println("oooooooooooooooooooooooooooooooo");
-				x_USER_ROLE.setItems(userService.getDropdownList("ROLE_CCO"));
-				new SelectKeyComboBoxListener(x_USER_ROLE);
-			}			
+		try {
+			if (x_USER_TYPE_NAME != null && x_USER_TYPE_NAME.getValue() != null) {
+				if (MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO")
+						&& x_USER_TYPE_NAME.getValue().getLabel().toUpperCase().equals("ADMIN")) {
+					// userService.getDropdownList("ROLE",<boolean
+					// excludeNto>,<boolean excludeCCO>)
+					x_USER_ROLE.setItems(userService.getDropdownList("ROLE"));
+					new SelectKeyComboBoxListener(x_USER_ROLE);
+				} else if (MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO")
+						&& x_USER_TYPE_NAME.getValue().getLabel().toUpperCase().equals("EMPLOYEE")) {					
+					x_USER_ROLE.setItems(userService.getDropdownList("ROLE_CCO"));
+					new SelectKeyComboBoxListener(x_USER_ROLE);
+				}
+			}
+		} catch (SQLException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Exception: "+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.owner(getDialogStage())
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}
 	}
 	
@@ -328,94 +339,103 @@ public class UserEditDialogController {
 	}
 
 	@FXML
-	private void handleSubmitUser() throws SQLException {
-		if (isValidate(actionBtnString)) {
-			userBean.setX_ACTIVATED_BY(loggedInUser.getX_USER_ID());// activated-by
-			userBean.setX_CREATED_BY(loggedInUser.getX_USER_ID());
-			userBean.setX_UPDATED_BY(loggedInUser.getX_USER_ID());
-			System.out.println("selected user's user_ID: "+ userBean.getX_USER_ID());
-			System.out.println(userBean.getX_COMPANY_ID());
-			userBean.setX_FIRST_NAME(x_FIRST_NAME.getText());
-			userBean.setX_LAST_NAME(x_LAST_NAME.getText());
-			userBean.setX_LOGIN_NAME(x_LOGIN_NAME.getText());
-			userBean.setX_PASSWORD(x_PASSWORD.getText());
-			userBean.setX_EMAIL(x_EMAIL.getText());
-			userBean.setX_TELEPHONE_NUMBER(x_TELEPHONE_NUMBER.getText());
-			if (x_USER_TYPE_NAME.getValue() != null
-					&& !x_USER_TYPE_NAME.getValue().getLabel().equals("----(select none)----")) {
-				userBean.setX_USER_TYPE_NAME(x_USER_TYPE_NAME.getValue().getLabel());
-				userBean.setX_USER_TYPE_ID(x_USER_TYPE_NAME.getValue().getValue());
-				userBean.setX_COMPANY_ID(x_USER_TYPE_NAME.getValue().getExtra());
-			}
-			if (x_USER_ROLE.getValue() != null && !x_USER_ROLE.getValue().getLabel().equals("----(select none)----")) {
-				userBean.setX_USER_ROLE_ID(x_USER_ROLE.getValue().getValue());
-				if(x_USER_ROLE.getValue().getLabel().equals("NATIONAL")){
-					userBean.setX_USER_ROLE_NAME("NTO");
-				}else{
-					userBean.setX_USER_ROLE_NAME(x_USER_ROLE.getValue().getLabel());
+	private void handleSubmitUser() {
+		try {
+			if (isValidate(actionBtnString)) {
+				userBean.setX_ACTIVATED_BY(loggedInUser.getX_USER_ID());// activated-by
+				userBean.setX_CREATED_BY(loggedInUser.getX_USER_ID());
+				userBean.setX_UPDATED_BY(loggedInUser.getX_USER_ID());
+				System.out.println("selected user's user_ID: "+ userBean.getX_USER_ID());
+				System.out.println(userBean.getX_COMPANY_ID());
+				userBean.setX_FIRST_NAME(x_FIRST_NAME.getText());
+				userBean.setX_LAST_NAME(x_LAST_NAME.getText());
+				userBean.setX_LOGIN_NAME(x_LOGIN_NAME.getText());
+				userBean.setX_PASSWORD(x_PASSWORD.getText());
+				userBean.setX_EMAIL(x_EMAIL.getText());
+				userBean.setX_TELEPHONE_NUMBER(x_TELEPHONE_NUMBER.getText());
+				if (x_USER_TYPE_NAME.getValue() != null
+						&& !x_USER_TYPE_NAME.getValue().getLabel().equals("----(select none)----")) {
+					userBean.setX_USER_TYPE_NAME(x_USER_TYPE_NAME.getValue().getLabel());
+					userBean.setX_USER_TYPE_ID(x_USER_TYPE_NAME.getValue().getValue());
+					userBean.setX_COMPANY_ID(x_USER_TYPE_NAME.getValue().getExtra());
 				}
-				userBean.setX_USER_ROLE_DETAILS(x_USER_ROLE.getValue().getExtra());
-			}
-			userBean.setX_STATUS(x_STATUS.isSelected() ? "A" : "I");
-			userBean.setX_ACTIVATED(x_ACTIVATED.isSelected() ? "Y" : "N");
-			if (x_ACTIVATED.isSelected() && x_ACTIVATED_ON.getValue() != null) {
-				userBean.setX_ACTIVATED_ON(x_ACTIVATED_ON.getValue().toString());
-			} else {
-				userBean.setX_ACTIVATED_ON(null);
-			}
-			if (x_START_DATE.getValue() != null){
-				userBean.setX_START_DATE(x_START_DATE.getValue().toString());
-			}else {
-				userBean.setX_START_DATE(null);
-			}
-			if (x_END_DATE.getValue() != null) {
-				userBean.setX_END_DATE(x_END_DATE.getValue().toString());
-			} else {
-				userBean.setX_END_DATE(null);
-			}
-			if (x_USER_ROLE.getValue() != null
-					&& !MainApp.getUserRole().getLabel().equals("CCO")) {
-				System.out.println("LGA/NTO assigned : "+x_ASSIGN_LGA.getValue().getValue());
-				userBean.setX_ASSIGN_LGA(x_ASSIGN_LGA.getValue().getLabel());
-				userBean.setX_ASSIGN_LGA_ID(x_ASSIGN_LGA.getValue().getValue());
-			}
-			if (userService == null)
-				userService = new UserService();
-			if (actionBtnString.equals("search")) {
-				userMain.refreshUserTable(userService.getSearchList(userBean));
-				okClicked = true;
-				dialogStage.close();
-			} else {
-				String masthead;
-				String message;
-				if (actionBtnString.equals("add")) {
-					masthead = "Successfully Added!";
-					message = "User is Saved to the Users List";
+				if (x_USER_ROLE.getValue() != null && !x_USER_ROLE.getValue().getLabel().equals("----(select none)----")) {
+					userBean.setX_USER_ROLE_ID(x_USER_ROLE.getValue().getValue());
+					if(x_USER_ROLE.getValue().getLabel().equals("NATIONAL")){
+						userBean.setX_USER_ROLE_NAME("NTO");
+					}else{
+						userBean.setX_USER_ROLE_NAME(x_USER_ROLE.getValue().getLabel());
+					}
+					userBean.setX_USER_ROLE_DETAILS(x_USER_ROLE.getValue().getExtra());
+				}
+				userBean.setX_STATUS(x_STATUS.isSelected() ? "A" : "I");
+				userBean.setX_ACTIVATED(x_ACTIVATED.isSelected() ? "Y" : "N");
+				if (x_ACTIVATED.isSelected() && x_ACTIVATED_ON.getValue() != null) {
+					userBean.setX_ACTIVATED_ON(x_ACTIVATED_ON.getValue().toString());
 				} else {
-					masthead = "Successfully Updated!";
-					message = "User is Updated to the Users List";
+					userBean.setX_ACTIVATED_ON(null);
 				}
-				boolean userRoleSaved = false;
-				boolean userWarehouseAssignSaved = false;
-				boolean userSaved = userService.saveUser(userBean,actionBtnString);
-				if (userSaved) {
-					System.out.println("userBean.getX_USER_ID()"+ userBean.getX_USER_ID());
-					userRoleSaved = userService.setRoleIDMapping(userBean, actionBtnString);
-					userWarehouseAssignSaved = userService.setWarehouseIdAssingment(userBean, actionBtnString);
+				if (x_START_DATE.getValue() != null){
+					userBean.setX_START_DATE(x_START_DATE.getValue().toString());
+				}else {
+					userBean.setX_START_DATE(null);
 				}
-				userMain.refreshUserTableGrid();
-				okClicked = true;
-				if (userSaved && userRoleSaved && userWarehouseAssignSaved) {
-					Dialogs.create().owner(getDialogStage())
-							.title("Information").masthead(masthead)
-							.message(message).showInformation();
+				if (x_END_DATE.getValue() != null) {
+					userBean.setX_END_DATE(x_END_DATE.getValue().toString());
+				} else {
+					userBean.setX_END_DATE(null);
+				}
+				if (x_USER_ROLE.getValue() != null
+						&& !MainApp.getUserRole().getLabel().equals("CCO")) {
+					System.out.println("LGA/NTO assigned : "+x_ASSIGN_LGA.getValue().getValue());
+					userBean.setX_ASSIGN_LGA(x_ASSIGN_LGA.getValue().getLabel());
+					userBean.setX_ASSIGN_LGA_ID(x_ASSIGN_LGA.getValue().getValue());
+				}
+				if (userService == null)
+					userService = new UserService();
+				if (actionBtnString.equals("search")) {
+					userMain.refreshUserTable(userService.getSearchList(userBean));
+					okClicked = true;
 					dialogStage.close();
 				} else {
-					Dialogs.create().owner(getDialogStage()).title("Error")
-							.masthead("User record not saved").showError();
-					dialogStage.close();
+					String masthead;
+					String message;
+					if (actionBtnString.equals("add")) {
+						masthead = "Successfully Added!";
+						message = "User is Saved to the Users List";
+					} else {
+						masthead = "Successfully Updated!";
+						message = "User is Updated to the Users List";
+					}
+					boolean userRoleSaved = false;
+					boolean userWarehouseAssignSaved = false;
+					boolean userSaved = userService.saveUser(userBean,actionBtnString);
+					if (userSaved) {
+						System.out.println("userBean.getX_USER_ID()"+ userBean.getX_USER_ID());
+						userRoleSaved = userService.setRoleIDMapping(userBean, actionBtnString);
+						userWarehouseAssignSaved = userService.setWarehouseIdAssingment(userBean, actionBtnString);
+					}
+					userMain.refreshUserTableGrid();
+					okClicked = true;
+					if (userSaved && userRoleSaved && userWarehouseAssignSaved) {
+						Dialogs.create().owner(getDialogStage())
+								.title("Information").masthead(masthead)
+								.message(message).showInformation();
+						dialogStage.close();
+					} else {
+						Dialogs.create().owner(getDialogStage()).title("Error")
+								.masthead("User record not saved").showError();
+						dialogStage.close();
+					}
 				}
 			}
+		} catch (ClassNotFoundException | IOException | SQLException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error occured while closing Connection:"+MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.owner(getDialogStage())
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}
 	}
 
@@ -424,7 +444,7 @@ public class UserEditDialogController {
 		dialogStage.close();
 	}
 
-	public boolean isValidate(String actionBtnString) throws SQLException {
+	public boolean isValidate(String actionBtnString) throws SQLException, ClassNotFoundException, IOException {
 		boolean loginFlag = false;
 		if (!actionBtnString.equals("search")) {
 			String errorMessage = "";
@@ -447,7 +467,7 @@ public class UserEditDialogController {
 			if (x_LOGIN_NAME.getText() == null || x_LOGIN_NAME.getText().length() == 0) {
 				errorMessage += "Login Name cannot be left empty\n";
 			} else if (!x_LOGIN_NAME.getText().equals(userBean.getX_LOGIN_NAME())) {
-				if (CreateLogin.internetAvailable()) {
+				if (MainApp.isInternetAvailable(true)) {
 					if (CreateLogin.checkIsUserNameExist(x_LOGIN_NAME.getText())) {
 						errorMessage += "Please enter a different login-name.\n Other edited details will be saved.\n";
 						loginFlag = true;

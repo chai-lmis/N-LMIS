@@ -49,8 +49,8 @@ public class TransactionService {
 					+ " ORDER BY WAREHOUSE_NAME";
 			break;
 		case "customer":
-			x_QUERY = "  SELECT CUSTOMER_ID, " + "         CUSTOMER_NAME "
-					+ "    FROM CUSTOMERS " + "   WHERE STATUS = 'A' "
+			x_QUERY = "  SELECT CUSTOMER_ID,  CUSTOMER_NAME "
+					+ "    FROM CUSTOMERS  WHERE SHOW_FLAG='Y' AND STATUS = 'A' "
 					+ "	  ORDER BY CUSTOMER_NAME ";
 			break;
 		case "transaction_Types":

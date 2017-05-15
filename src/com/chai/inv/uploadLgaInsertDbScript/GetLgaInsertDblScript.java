@@ -33,8 +33,8 @@ public class GetLgaInsertDblScript {
 	public static boolean getLgaInsertScriptSqlFile() {
 		boolean insertDbScript = false;
 		try {
-//			String folderName = "insertDbScript_for_training";
-			String folderName = "insertDbScript";
+			String folderName = "insertDbScript_for_training";
+//			String folderName = "insertDbScript";
 			String mySqlPath = new CheckForUpdates().getBinDirectoryPath();
 			mySqlPath = mySqlPath.replaceFirst("mysql", "");
 			System.out.println("sql Path: " + mySqlPath);
@@ -91,8 +91,8 @@ public class GetLgaInsertDblScript {
 	public static boolean sendDbScriptZipToServer() {
 		boolean sendSqlfileTOServerFlag;
 		try {
-//			String folderName = "insertDbScript_for_training";
-			String folderName = "insertDbScript";
+			String folderName = "insertDbScript_for_training";
+//			String folderName = "insertDbScript";
 			String SqlScriptFilePath = "";
 			directorypath = GetPath.get("temp");
 			Process process = Runtime.getRuntime().exec("cmd /c echo " + directorypath + "\\"+folderName+"\\");
@@ -240,8 +240,8 @@ public class GetLgaInsertDblScript {
 	 */
 	public static boolean importLgaInsertScriptSqlFile() {
 		boolean insertDbScript = false;
-//		String folderName = "insertDbScript_for_training";
-		String folderName = "insertDbScript";
+		String folderName = "insertDbScript_for_training";
+//		String folderName = "insertDbScript";
 		try {
 			directorypath = GetPath.get("temp");
 			String mySqlPath = new CheckForUpdates().getBinDirectoryPath();

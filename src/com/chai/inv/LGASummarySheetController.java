@@ -245,12 +245,12 @@ public class LGASummarySheetController {
 				x_GRID_PANE.getChildren().clear();
 				}
 		} catch (Exception e) {
-			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+			fp.close();
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 			e.printStackTrace();
 		}
-		fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+		fp.close();
 		}
 	@FXML
 	public void handleExportAction() {

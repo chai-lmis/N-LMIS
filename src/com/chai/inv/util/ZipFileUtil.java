@@ -25,8 +25,8 @@ public class ZipFileUtil {
 	 */
 public static  boolean creatZipFile(){
 	 boolean operationFlag;
-//	 String folderName = "insertDbScript_for_training";
-		String folderName = "insertDbScript";
+	 String folderName = "insertDbScript_for_training";
+//		String folderName = "insertDbScript";
 	try {
 		directoryPath=GetPath.get("temp");
 		// input file 

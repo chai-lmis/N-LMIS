@@ -33,18 +33,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleProductsCategoryDashBoardBtn" prefHeight="115.0" prefWidth="142.0" styleClass="dark-blue-button" text="Products Categories" textAlignment="CENTER" wrapText="true" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" fx:id="x_PRODUCT_CATEGORIES">
-               <graphic>
-                  <ImageView fitHeight="58.0" fitWidth="85.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/icons/Product-Categories.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
             <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleDeviceAssociationGrid" prefHeight="112.0" prefWidth="146.0" styleClass="dark-blue-button" text="Device Association" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BASELINE" fx:id="x_DEVICE_ASSOCIATION">
                <cursor>
                   <Cursor fx:constant="HAND" />

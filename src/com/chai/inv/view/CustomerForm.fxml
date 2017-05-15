@@ -114,7 +114,7 @@
                   </Label>
                   <Label layoutX="288.0" layoutY="240.0" text="Target Population" GridPane.rowIndex="10" GridPane.valignment="BOTTOM">
                      <font>
-                        <Font size="15.0" />
+                        <Font name="System Bold" size="15.0" />
                      </font>
                      <GridPane.margin>
                         <Insets left="20.0" />

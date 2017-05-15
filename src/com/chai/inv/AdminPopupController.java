@@ -18,8 +18,8 @@ public class AdminPopupController {
 
 	@FXML
 	private Button x_CATEGORIES_BTN;
-	@FXML
-	private Button x_TYPES_BTN;
+//	@FXML
+//	private Button x_TYPES_BTN;
 	@FXML
 	private Button x_USERS_BTN;
 	@FXML
@@ -115,12 +115,12 @@ public class AdminPopupController {
 		//getRootLayoutController().handleCategoryMenuAction();
 	}
 
-	@FXML
-	public void handleTypesDashBoardBtn() {
-		popup.hide();
-		System.out.println("entered handleTypesDashBoardBtn()");
-		getRootLayoutController().handleTypeMenuAction();
-	}
+//	@FXML
+//	public void handleTypesDashBoardBtn() {
+//		popup.hide();
+//		System.out.println("entered handleTypesDashBoardBtn()");
+//		getRootLayoutController().handleTypeMenuAction();
+//	}
 
 	@FXML
 	public void handleHomeDashBoardBtn() {
@@ -137,13 +137,13 @@ public class AdminPopupController {
 			// x_GRID_PANE.add(x_USERS_BTN, 0, 0);
 			// x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			// BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;
 		case "CCO": // EMPLOYEE - LGA cold chin officer - access to each and
 					// every module.
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;
@@ -152,7 +152,7 @@ public class AdminPopupController {
 					// x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			// x_GRID_PANE.getChildren().remove(x_USERS_BTN);
 			// x_GRID_PANE.add(x_USERS_BTN, 0, 0);
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;
@@ -161,7 +161,7 @@ public class AdminPopupController {
 					// x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			// x_GRID_PANE.getChildren().remove(x_USERS_BTN);
 			// x_GRID_PANE.add(x_USERS_BTN, 0, 0);
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;
@@ -171,7 +171,7 @@ public class AdminPopupController {
 					// x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			// x_GRID_PANE.getChildren().remove(x_USERS_BTN);
 			// x_GRID_PANE.add(x_USERS_BTN, 0, 0);
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;
@@ -182,7 +182,7 @@ public class AdminPopupController {
 						// x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			// x_GRID_PANE.getChildren().remove(x_USERS_BTN);
 			// x_GRID_PANE.add(x_USERS_BTN, 0, 0);
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;
@@ -191,7 +191,7 @@ public class AdminPopupController {
 						// x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			// x_GRID_PANE.getChildren().remove(x_USERS_BTN);
 			// x_GRID_PANE.add(x_USERS_BTN, 0, 0);
-			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
+//			x_GRID_PANE.getChildren().remove(x_TYPES_BTN);
 			x_GRID_PANE.getChildren().remove(x_CATEGORIES_BTN);
 			BorderPane.setAlignment(x_GRID_PANE, Pos.TOP_CENTER);
 			break;

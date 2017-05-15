@@ -59,18 +59,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleTypesDashBoardBtn" prefHeight="116.0" prefWidth="146.0" styleClass="dark-blue-button" text="Types" GridPane.columnIndex="2" fx:id="x_TYPES_BTN">
-               <graphic>
-                  <ImageView fitHeight="89.0" fitWidth="101.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../../../../resources/icons/type.png" />
-                     </image>
-                  </ImageView>
-               </graphic>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor>
-            </Button>
             <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#handleUsersDashBoardBtn" prefHeight="116.0" prefWidth="146.0" styleClass="dark-blue-button" text="Users" GridPane.columnIndex="1" GridPane.rowIndex="1" fx:id="x_USERS_BTN">
                <graphic>
                   <ImageView fitHeight="89.0" fitWidth="101.0" pickOnBounds="true" preserveRatio="true">

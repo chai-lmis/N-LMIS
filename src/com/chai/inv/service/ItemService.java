@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 
+import org.controlsfx.dialog.Dialogs;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -330,6 +332,9 @@ public class ItemService {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe("An error occured while item list, error:\n"+
 					MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);			
 		} finally {
 			System.out.println("Products Select Query : " + pstmt.toString());
 		}

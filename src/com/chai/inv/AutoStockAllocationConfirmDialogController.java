@@ -12,7 +12,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.CustomerBean;
 import com.chai.inv.model.UserBean;
@@ -88,7 +87,7 @@ public class AutoStockAllocationConfirmDialogController {
 	@FXML
 	void handleOk() {
 		System.out.println("In AutoStockAllocationConfirmDialogController.handleOk()");
-		CheckCustomerMothlyProductDetail.doSync=true;
+//		CheckCustomerMothlyProductDetail.doSync=true;
 		okClicked = true;
 		customerService.setCurrentStockAllocDataInactive(custBean.getX_CUSTOMER_ID(),ChooseProductAllocationController.selectedRadioText);
 		getDialogStage().close();

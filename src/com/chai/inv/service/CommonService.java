@@ -6,6 +6,8 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.controlsfx.dialog.Dialogs;
+
 import com.chai.inv.MainApp;
 import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.logger.MyLogger;
@@ -105,11 +107,12 @@ public class CommonService {
 				dao = DatabaseOperation.getDbo();
 			}
 		} catch (SQLException e) {
-			System.out.println("ERROR OCCURED IN CommonService.getHistoryDetails() : "
-		+e.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("ERROR OCCURED IN CommonService.getHistoryDetails() : "+
-			MyLogger.getStackTrace(e));
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("ERROR OCCURED IN CommonService.getHistoryDetails() : "+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}
 		String updated_by_column = "LAST_UPDATED_ON";
 		if (historyBean.isCallByOrderProcessController()) {
@@ -166,12 +169,14 @@ public class CommonService {
 								: rs.getString("UPDATED_BY")));
 			}
 		} catch (Exception ex) {
-			System.out.println("Error Occured while getting history for "
-					+ "Table:" + historyBean.getX_TABLE_NAME() + ", "
-					+ "Record Column: " + historyBean.getX_PRIMARY_KEY_COLUMN()
-					+ ", " + "");
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error Occured while getting history for "
+					+ "Table:" + historyBean.getX_TABLE_NAME() + ", "
+					+ "Record Column: " + historyBean.getX_PRIMARY_KEY_COLUMN()+", Exception : "+ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		}
 		return historyBean;
 	}

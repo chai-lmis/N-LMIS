@@ -149,8 +149,7 @@ public class TransactionRegisterController {
 		}
 		if(x_LGA_DRPDN.getValue()!=null){
 			transactionRegisterBean.setX_TO_SOURCE_ID(x_LGA_DRPDN.getValue().getValue());
-		}
-		
+		}		
 	}
 	@FXML public void onChangeProduct(){
 		x_TRANSACTION_TYPE_DROP_DOWN.getSelectionModel().clearSelection();

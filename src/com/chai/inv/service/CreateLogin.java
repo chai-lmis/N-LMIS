@@ -390,31 +390,14 @@ public class CreateLogin {
 								+ "(USER_ID, WAREHOUSE_ID, START_DATE, "
 								+ "	END_DATE, STATUS, CREATED_BY, CREATED_ON, "
 								+ " UPDATED_BY, LAST_UPDATED_ON,SYNC_FLAG,WAREHOUSE_USER_ID,COMPANY_ID) "
-								+ " VALUES ("
-								+ userBean.getX_USER_ID()
-								+ ","
-								+ userBean.getX_USER_WAREHOUSE_ID()
-								+ ","
-								+ " '"
-								+ userBean.getX_START_DATE()
-								+ "', "
-								+ " NULL," // END_DATE
-								+ " '"
-								+ userBean.getX_STATUS()
-								+ "', "
-								+ userBean.getX_USER_ID()
+								+ " VALUES ("+ userBean.getX_USER_ID()+ ","+ userBean.getX_USER_WAREHOUSE_ID()+ ","
+								+ " '"+ userBean.getX_START_DATE()+ "', "+ " NULL," // END_DATE
+								+ " '"+ userBean.getX_STATUS()+ "', "+ userBean.getX_USER_ID()
 								+ ", " // CREATED_BY
-								+ " '"
-								+ userBean.getX_START_DATE()
-								+ "'," // CREATED_ON
-								+ userBean.getX_USER_ID()
-								+ "," // UPDATED_BY
-								+ " '"
-								+ userBean.getX_START_DATE()
-								+ "'," // LAST_UPDATED_ON
-								+ "'N',"
-								+ userBean.getX_WAREHOUSE_USER_ID_PK()
-								+ "," + userBean.getX_COMPANY_ID() + ")");
+								+ " '"+ userBean.getX_START_DATE()+ "'," // CREATED_ON
+								+ userBean.getX_USER_ID()+ "," // UPDATED_BY
+								+ " '"+ userBean.getX_START_DATE()+ "'," // LAST_UPDATED_ON
+								+ "'N',"+ userBean.getX_WAREHOUSE_USER_ID_PK()+ "," + userBean.getX_COMPANY_ID() + ")");
 				int rowCount = localPstmt.executeUpdate();
 				if (rowCount > 0) {
 					flag = true;

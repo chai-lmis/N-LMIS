@@ -8,6 +8,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
+import org.controlsfx.dialog.Dialogs;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -15,7 +17,7 @@ import com.chai.inv.CustomChoiceDialog;
 import com.chai.inv.CustomerMainController;
 import com.chai.inv.MainApp;
 import com.chai.inv.DAO.DatabaseOperation;
-import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
+//import com.chai.inv.SyncProcess.CheckCustomerMothlyProductDetail;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.CustomerBean;
@@ -127,12 +129,14 @@ public class CustomerService {
 		try {
 			return DatabaseOperation.getDropdownList(x_QUERY);
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("An error occured while getting Customer form "+ " drop down menu lists, error: "
-		+ ex.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("An error occured while getting Customer form "
-					+ " drop down menu lists, error: \n"+
-			MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("An error occured while getting Customer form drop down menu lists, error: "
+					+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);			
+			
 		}
 		System.out.println("return null");
 		return null;
@@ -152,6 +156,7 @@ public class CustomerService {
 				+ "  from customers_monthly_product_detail  "
 				+ " where customer_id=? "
 				+ "   and upper(ALLOCATION_TYPE) = 'WEEKLY' "
+				+ " 	 and YEAR = YEAR(NOW())  "
 				+ " 	 and WEEK = WEEKOFYEAR(NOW()) "
 				+ "   and order_created_flag = 'Y' ";
 		if (x_VIEW_PRODUCT_ALLOCATION_AS.toUpperCase().equals("MONTHLY")) {
@@ -175,15 +180,16 @@ public class CustomerService {
 				}
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occur In checkPreExistenceOfProdDetail() method.."
-		+ ex.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occur In checkPreExistenceOfProdDetail() method..\n"
-			+MyLogger.getStackTrace(ex));
-			
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error occur In checkPreExistenceOfProdDetail() method"+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("x_VIEW_PRODUCT_ALLOCATION_AS : "+ x_VIEW_PRODUCT_ALLOCATION_AS);
-			System.out.println("checkPreExistenceOfProdDetail query : "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.severe("In checkPreExistenceOfProdDetail() method"+ "x_VIEW_PRODUCT_ALLOCATION_AS : "+ x_VIEW_PRODUCT_ALLOCATION_AS);
+			MainApp.LOGGER.severe("In checkPreExistenceOfProdDetail() method"+ pstmt.toString());
 		}
 		return flag;
 	}
@@ -294,11 +300,15 @@ public class CustomerService {
 				customerData.add(customerBean);
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("An error occured while Customer list, error: "+ ex.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("An error occured while Customer list, error:..\n"+MyLogger.getStackTrace(ex));	
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - CustomerService HF list, Exception:"+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);			
 		} finally {
-			System.out.println("finally block : Customers Select Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("CustomerService HF Query:"+pstmt.toString());
 		}
 		return customerData;
 	}
@@ -398,12 +408,16 @@ public class CustomerService {
 			if (rowCount > 0) {
 				System.out.println("In CustomerService: rows affected - "+ rowCount);
 			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Saving Health Facility: "+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("finally block : Customers Insert/Update Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("finally block : Customers Insert/Update Query: "+ pstmt.toString());
 		}
 		return flag;
 	}
@@ -486,13 +500,16 @@ public class CustomerService {
 				searchData.add(customerBean2);
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("An error occured while user search list, error: "
-		+ ex.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("An error occured while user search list, error: \n"
-					+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("An error occured while user HF search list, error: "
+					+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("finally block : Customers Search Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("finally block : Customers Search Query: "+ pstmt.toString());
 		}
 		return searchData;
 	}
@@ -527,12 +544,17 @@ public class CustomerService {
 				cpcb.setX_ALLOCATION_TYPE(rs.getString("ALLOCATION_TYPE"));
 				list.add(cpcb);
 			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("An error occured while getting Customer Product Consumption List, error: "
+					+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("Health Facility Product consumption List Query: \n"+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("finally block : Health Facility Product consumption List Query: \n "+ pstmt.toString());
 		}
 		return list;
 	}
@@ -542,23 +564,28 @@ public class CustomerService {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
-			pstmt = dao.getPreparedStatement("UPDATE customers_monthly_product_detail SET CURRENT_DATA_FLAG = 'I', "
+			pstmt = dao.getPreparedStatement("UPDATE customers_monthly_product_detail SET CURRENT_DATA_FLAG = 'I', SYNC_FLAG='N', "
 							+ " ORDER_CREATED_FLAG = 'N' "
 							+ " WHERE CUSTOMER_ID = "+ value[0]
 							+ " AND CURRENT_DATA_FLAG='A' "
-							+ "  AND ALLOCATION_TYPE = '" + value[1] + "' ");
+							+ "  AND ALLOCATION_TYPE = '" + value[1] + "' and warehouse_id = "+MainApp.getUSER_WAREHOUSE_ID());
 			int count = pstmt.executeUpdate();
 			if (count > 0) {
 				System.out.println(" set Current StockAlloc Data Inactive done. ");
 			} else {
 				System.out.println(" set Current StockAlloc Data Inactive NOT done. ");
 			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("An error occured in setCurrentStockAllocDataInactive(), error: "
+					+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("Health Facility AutoStock Allocation Confirmation current generated data set inactive Query: \n"
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("finally block : Health Facility AutoStock Allocation Confirmation current generated data set inactive Query: \n"
 							+ pstmt.toString());
 		}
 	}
@@ -614,12 +641,18 @@ public class CustomerService {
 				cpmd.setX_ALLOCATION_TYPE(rs.getString("ALLOCATION_TYPE"));
 				list.add(cpmd);
 			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("An error occured in getAutoStockAllocationConfirmationList(), error: "
+					+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("Health Facility get AutoStock Allocation Confirmation List Query: \n"+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("finally block : Health Facility get AutoStock Allocation Confirmation List Query: \n"
+							+ pstmt.toString());
 		}
 		return list;
 	}
@@ -680,12 +713,18 @@ public class CustomerService {
 				cpmd.setX_ALLOCATION_DATE(rs.getString("ALLOCATION_DATE"));
 				list.add(cpmd);
 			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+		} catch (SQLException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("An error occured in getCustProdMonthlyDetailList(), error: "
+					+ ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("Health Facility Product Monthly detail List Query: \n"+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("finally block : Health Facility Product Monthly detail List Query: \n"
+							+ pstmt.toString());
 		}
 		return list;
 	}
@@ -698,7 +737,7 @@ public class CustomerService {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
-			CheckCustomerMothlyProductDetail.doSync=false;
+//			CheckCustomerMothlyProductDetail.doSync=false;
 			System.out.println("customer_id: " + customer_id);
 			System.out.println("user_warehouse_id: " + user_warehouse_id);
 			System.out.println("product_alloc_type: " + product_alloc_type);
@@ -716,12 +755,13 @@ public class CustomerService {
 			System.out.println("After cs.execute() cust_monthly_prod_detail_PRC ... customerService");
 			flag = true;
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error: occur while calling Customers DB PROCEDURE : error--> "
-		+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error: occur while calling Customers DB PROCEDURE : error--> \n"
+			MainApp.LOGGER.severe("Error: occur while calling Customers DB PROCEDURE - cust_monthly_prod_detail_PRC: \n"
 					+MyLogger.getStackTrace(ex));
-			ex.printStackTrace();
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
 			try {
 				System.out.println("Going to call SYRINGE_BOX_ALLOC_CAL_PRC(?,?,?)");
@@ -732,9 +772,15 @@ public class CustomerService {
 				cs.executeUpdate();
 				System.out.println("After cs.execute() SYRINGE_BOX_ALLOC_CAL_PRC... customerService");
 			} catch (SQLException | NullPointerException excp) {
-				System.out.println("Error occured while executing Procedure SYRINGE_BOX_ALLOC_CAL_PRC:\n"+ excp.getMessage());
 				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Error occured while executing Procedure SYRINGE_BOX_ALLOC_CAL_PRC\n"+MyLogger.getStackTrace(excp));	
+				MainApp.LOGGER.severe("Error: occur while calling Customers DB PROCEDURE - SYRINGE_BOX_ALLOC_CAL_PRC: \n"
+						+MyLogger.getStackTrace(excp));
+				MainApp.LOGGER.severe(MyLogger.getStackTrace(excp));
+				Dialogs.create()
+				.title("Error")
+				.message(excp.getMessage()).showException(excp);				
+			}finally{
+//				preventAllocationSync(user_warehouse_id,customer_id,product_alloc_type);
 			}
 		}
 		return flag;
@@ -747,27 +793,29 @@ public class CustomerService {
 			dao = DatabaseOperation.getDbo();
 		}
 		try {
-			pstmt = dao.getPreparedStatement("SELECT YEAR_ID,  TRANSACTION_YEAR FROM TRANSACTION_YEARS ");
+			pstmt = dao.getPreparedStatement("SELECT YEAR_ID, TRANSACTION_YEAR FROM TRANSACTION_YEARS ");
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
 				System.out.println("transaction year: "+ rs.getString("TRANSACTION_YEAR"));
 				yearsList.add(new LabelValueBean(rs.getString("TRANSACTION_YEAR"), rs.getString("YEAR_ID")));
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("error occured while getTransactionYears List, error: "+ ex.getMessage());
-			System.out.println("transaction years list select query:\n"+ pstmt.toString());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("transaction years list select query:\n"+ pstmt.toString()
-					+MyLogger.getStackTrace(ex));	
+			MainApp.LOGGER.severe("Error: occured while getTransactionYears List, error: "
+					+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("finally block: transaction years list select query:\n"+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: transaction years list select query:\n"+ pstmt.toString());
 		}
 		return yearsList;
 	}
 
 	public boolean callAutoGenerateSalesOrderPrc(String x_USER_WAREHOUSE_ID,
 			String x_CUSTOMER_ID, String allocation_type) {
-		System.out.println("In callAutoGenerateSalesOrderPrc()... customerService");
 		boolean flag = false;
 		try {
 			if (dao == null || dao.getConnection().isClosed()) {
@@ -790,20 +838,18 @@ public class CustomerService {
 			System.out.println("** After cs.execute() auto_generate_sales_order_proc ... customerService .. **");
 			flag = true;
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error: occur while calling Customers DB Sales order PROCEDURE : error--> "
-		+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error: occur while calling Customers DB Sales order PROCEDURE : error-->"
-					+MyLogger.getStackTrace(ex));	
-			ex.printStackTrace();
+			MainApp.LOGGER.severe("Error: occur while calling HF generate order PROCEDURE : "
+					+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		}
 		return flag;
 	}
 
 	public boolean checkForRecordAvailablility(String x_USER_WAREHOUSE_ID, String x_CUSTOMER_ID) {
-		System.out.println("In CustomerService.checkForRecordAvailablility()");
 		boolean flag = false;
-
 		String query = "SELECT COUNT(*) "
 				+ " FROM CUSTOMERS_MONTHLY_PRODUCT_DETAIL CUSTDTL "
 				+ " LEFT OUTER JOIN "
@@ -835,9 +881,15 @@ public class CustomerService {
 			System.out.println("After CustomerService.checkForRecordAvailablility() ");
 		} catch (SQLException | NullPointerException ex) {
 			flag = false;
-			System.out.println("Error: occur while calling Customers DB Sales order PROCEDURE : error--> "+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error: occur while calling Customers DB Sales order PROCEDURE : error-->"+MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("Error: occur while calling checkForRecordAvailablility(): "
+					+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
+		}finally{
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: CustomerService.checkForRecordAvailablility() select query:\n"+ pstmt.toString());
 		}
 		return flag;
 	}
@@ -864,13 +916,15 @@ public class CustomerService {
 			int[] batchExecuteCount = pstmt.executeBatch();
 		} catch (SQLException | NullPointerException ex) {
 			flag = false;
-			System.out.println("Exception occur while saving the Manual HF's Stock Entry :\n "
-			+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Exception occur while saving the Manual HF's Stock Entry :\n "
+			MainApp.LOGGER.severe("Exception occur while saving the Manual HF's Stock Entry: "
 					+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("MANUAL STOCK FOR HF : Insert Query : \n"+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: CustomerService MANUAL STOCK FOR HF : Insert Query : \n"+ pstmt.toString());
 		}
 		return flag;
 	}
@@ -894,17 +948,50 @@ public class CustomerService {
 			int count = pstmt.executeUpdate();
 			if (count > 0) {
 				System.out.println("Deleted Record Count : "+ count);
-				CheckCustomerMothlyProductDetail.doSync=true;
+//				CheckCustomerMothlyProductDetail.doSync=true;
 				flag = true;
 			}
-		} catch (SQLException | NullPointerException e) {
-			System.out.println("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails(): "
-		+ e.getMessage());
+		} catch (SQLException | NullPointerException ex) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails() \n "
-					+MyLogger.getStackTrace(e));
+			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails(): "+ ex.getMessage());
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("" + pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: CustomerService deleteCalculatedMinMaxAllocDetails() Query : \n"+ pstmt.toString());
+		}
+		return flag;
+	}
+	
+	public boolean preventAllocationSync(String x_USER_WAREHOUSE_ID, String x_CUSTOMER_ID, String ALLOCATION_TYPE) {
+		System.out.println("CustomerService.preventAllocationSync()");
+		boolean flag = false;
+		try {
+			if (dao == null || dao.getConnection().isClosed()) {
+				dao = DatabaseOperation.getDbo();
+			}
+			pstmt = dao.getPreparedStatement("UPDATE CUSTOMERS_MONTHLY_PRODUCT_DETAIL SET SYNC_FLAG='Y' "
+							+ " WHERE WAREHOUSE_ID = ? AND CUSTOMER_ID = ? "
+							+ " AND UPPER(ALLOCATION_TYPE) = '"+ ALLOCATION_TYPE.toUpperCase()+"' "
+							+ " AND CURRENT_DATA_FLAG = 'A' "
+							+ " AND MONTH = DATE_FORMAT(NOW(),'%b') AND YEAR = DATE_FORMAT(NOW(),'%Y')");
+			pstmt.setString(1, x_USER_WAREHOUSE_ID);
+			pstmt.setString(2, x_CUSTOMER_ID);
+			int count = pstmt.executeUpdate();
+			if (count > 0) {
+				System.out.println("Deleted Record Count : "+ count);
+				flag = true;
+			}
+		} catch (SQLException | NullPointerException ex) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.preventAllocationSync(): "+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
+		} finally {
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: CustomerService.preventAllocationSync() Query : \n"+ pstmt.toString());
 		}
 		return flag;
 	}
@@ -927,18 +1014,20 @@ public class CustomerService {
 			} else {
 				id = Integer.toString(Integer.parseInt("1"+ MainApp.getUSER_WAREHOUSE_ID() + "1"));
 			}
-		} catch (SQLException| NullPointerException e) {
-			System.out.println("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails(): "+ 
-		e.getMessage());
+		} catch (SQLException| NullPointerException ex) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails() \n "
-					+MyLogger.getStackTrace(e));	
+			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.getRecordCount(): "+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
+		}finally{
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: CustomerService.getRecordCount() Query : \n"+ pstmt.toString());
 		}
 		return id;
 	}
 
 	public void outReachProductMonthlyDetailEntry(CustProdMonthlyDetailBean custProdMonthlyDetailBean) {
-		System.out.println("CustomerService.outReachProductMonthlyDetailEntry()");
 		boolean flag = false;
 		try {
 			if (dao == null || dao.getConnection().isClosed()) {
@@ -975,14 +1064,16 @@ public class CustomerService {
 			if (pstmt.executeUpdate() > 0) {
 				flag = true;
 			}
-		} catch (SQLException | NullPointerException e) {
-			System.out.println("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails(): "
-		+ e.getMessage());
+		} catch (SQLException | NullPointerException ex) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.deleteCalculatedMinMaxAllocDetails() \n "
-					+MyLogger.getStackTrace(e));
+			MainApp.LOGGER.severe("Exception ocuurs in CustomerService.outReachProductMonthlyDetailEntry(): "+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
 			System.out.println("Out-Reach Product Allocation insert Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: Out-Reach Product Allocation insert Query : \n"+ pstmt.toString());
 		}
 	}
 
@@ -1014,9 +1105,10 @@ public class CustomerService {
 			System.out.println("Error: occur while calling Customers DB Out-Reach Sales order PROCEDURE : error--> "
 		+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error: occur while calling Customers DB Out-Reach Sales order PROCEDURE : error-->) \n "
-					+MyLogger.getStackTrace(ex));
-			ex.printStackTrace();
+			MainApp.LOGGER.severe("Exception occurs in CustomerService DB Out-Reach Sales order PROCEDURE(generate_outreach_sales_order_proc): "+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		}
 		return flag;
 	}
@@ -1034,12 +1126,15 @@ public class CustomerService {
 				lvb.setLabel(rs.getString("state_name"));
 				lvb.setValue(rs.getString("state_id"));
 			}
-		}catch(SQLException | NullPointerException e){
-			System.out.println("Exception occure while getting the STATE of the LGA's HF : "
-		+e.getMessage());
+		}catch(SQLException | NullPointerException ex){
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Exception occure while getting the STATE of the LGA's HF : \n "
-					+MyLogger.getStackTrace(e));	
+			MainApp.LOGGER.severe("Exception occure while getting the STATE of the LGA's HF : "+MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
+		}finally{
+			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("finally block: STATE of the LGA's HF : getStateLvb() Query : \n"+ pstmt.toString());
 		}
 		return lvb;
 	}

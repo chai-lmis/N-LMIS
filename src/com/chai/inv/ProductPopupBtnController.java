@@ -21,7 +21,7 @@ public class ProductPopupBtnController {
 	private GridPane x_GRID_PANE;
 	@FXML private Button x_PRODUCT_OVERVIEW;
 	@FXML private Button x_DEVICE_ASSOCIATION;
-	@FXML private Button x_PRODUCT_CATEGORIES;
+//	@FXML private Button x_PRODUCT_CATEGORIES;
 	public MainApp mainApp;
 	private ItemService itemService;
 	private RootLayoutController rootLayoutController;
@@ -101,33 +101,34 @@ public class ProductPopupBtnController {
 		}
 	}
 
-	@FXML
-	public void handleProductsCategoryDashBoardBtn() {
-		System.out
-				.println("**In handleProductsCategoryDashBoardBtn action handler**");
-		popup.hide();
-		// TODO: implementation pending!
-		System.out.println("Category Menu Action Called..");
-		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/CategoryMain.fxml"));
-		try {
-			BorderPane categoryOverviewPage = (BorderPane) loader.load();
-			categoryOverviewPage.setUserData(loader);
-			new SetTransitionOnScreen().setTransition(mainBorderPane,"parrallelFadeTranslate", movePageDirection);
-			mainBorderPane.setCenter(categoryOverviewPage);
-			CategoryMainController controller = loader.getController();
-			controller.setRootLayoutController(rootLayoutController);
-			controller.setHomePageController(homePageController);
-			controller.setProdPopBtnCont(this);
-			controller.setMainApp(mainApp);
-			controller.setRole(role);
-			controller.setUserBean(userBean);
-			controller.setCategoryBean(null);
-			controller.setPrimaryStage(primaryStage);
-		} catch (Exception ex) {
-			System.out.println("Error occured while loading category main layout.. "+ ex.getMessage());
-			ex.printStackTrace();
-		}
-	}	
+//	@FXML
+//	public void handleProductsCategoryDashBoardBtn() {
+//		System.out
+//				.println("**In handleProductsCategoryDashBoardBtn action handler**");
+//		popup.hide();
+//		// TODO: implementation pending!
+//		System.out.println("Category Menu Action Called..");
+//		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/CategoryMain.fxml"));
+//		try {
+//			BorderPane categoryOverviewPage = (BorderPane) loader.load();
+//			categoryOverviewPage.setUserData(loader);
+//			new SetTransitionOnScreen().setTransition(mainBorderPane,"parrallelFadeTranslate", movePageDirection);
+//			mainBorderPane.setCenter(categoryOverviewPage);
+//			CategoryMainController controller = loader.getController();
+//			controller.setRootLayoutController(rootLayoutController);
+//			controller.setHomePageController(homePageController);
+//			controller.setProdPopBtnCont(this);
+//			controller.setMainApp(mainApp);
+//			controller.setRole(role);
+//			controller.setUserBean(userBean);
+//			controller.setCategoryBean(null);
+//			controller.setPrimaryStage(primaryStage);
+//		} catch (Exception ex) {
+//			System.out.println("Error occured while loading category main layout.. "+ ex.getMessage());
+//			ex.printStackTrace();
+//		}
+//	}	
+	
 	@FXML
 	public boolean handleDeviceAssociationGrid() {
 		System.out.println("In IssuesSubMenuController.handleDeviceAssociationGrid()");
@@ -155,28 +156,28 @@ public class ProductPopupBtnController {
 		switch (role.getLabel()) {
 		case "CCO": // EMPLOYEE - LGA cold chin officer - access to each and
 					// every module.	
-			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
+//			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
 			break;
 		case "LIO": // - LGA level admin access restricted to
 					// particular views.
-			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
+//			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
 			break;
 		case "MOH": // - LGA level admin access restricted to
 					// particular views.
-			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
+//			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
 			break;
 		case "SIO": // Should have state level admin access ( they can correct
 					// orders placed/ monitor data entered by the CCOs as well
 					// as having a general summary of reports from all LGAs
-			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
+//			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
 			break;
 		case "SCCO": // Should have state level admin access ( they can correct
 						// orders placed/ monitor data entered by the CCOs as
 						// well as having a general summary of reports from all
-			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
+//			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
 			break;
 		case "SIFP": // State immunization Focal person: Should have State admin read only access
-			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
+//			x_GRID_PANE.getChildren().remove(x_PRODUCT_CATEGORIES);
 			break;
 		}
 	}

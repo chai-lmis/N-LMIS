@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.URISyntaxException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,19 +14,14 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -38,18 +32,13 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
-import org.controlsfx.control.ButtonBar;
-import org.controlsfx.control.ButtonBar.ButtonType;
 import org.controlsfx.control.PopOver;
-import org.controlsfx.control.action.AbstractAction;
 import org.controlsfx.control.action.Action;
 import org.controlsfx.dialog.Dialog;
 import org.controlsfx.dialog.Dialogs;
 import org.json.JSONException;
 
 import com.chai.inv.DAO.DatabaseOperation;
-import com.chai.inv.SyncProcess.CheckData;
-import com.chai.inv.loader.ProgressIndicatorTest;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.logger.SendLogToServer;
 import com.chai.inv.model.LabelValueBean;
@@ -57,10 +46,10 @@ import com.chai.inv.model.UserBean;
 import com.chai.inv.model.UserWarehouseLabelValue;
 import com.chai.inv.model.VersionInfoBean;
 import com.chai.inv.service.CommonService;
-import com.chai.inv.service.UserService;
 import com.chai.inv.update.CheckForUpdates;
 import com.chai.inv.update.CompareVersionInfo;
 import com.chai.inv.update.UpdateProgressBar;
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 
 public class RootLayoutController {
 	String movePageDirection = "farward";
@@ -97,8 +86,8 @@ public class RootLayoutController {
 	private MenuItem x_CHANGE_FACILITY_MENUITEM;
 	@FXML
 	private MenuItem x_USER_MENU_ITEM;
-	@FXML
-	private MenuItem x_TYPE_MENU_ITEM;
+//	@FXML
+//	private MenuItem x_TYPE_MENU_ITEM;
 	@FXML
 	private MenuItem x_CATEGORY_MENU_ITEM;
 	@FXML
@@ -117,8 +106,8 @@ public class RootLayoutController {
 	private Menu x_MAINTENANCE_MENU;
 	@FXML
 	private Menu x_ANALYSIS_MENU;
-	@FXML
-	private MenuItem x_UNREGISTER_USER_MENU_ITEM;
+//	@FXML
+//	private MenuItem x_UNREGISTER_USER_MENU_ITEM;
 	@FXML
 	private MenuItem x_ORDERS_MENU_ITEM;
 
@@ -217,27 +206,27 @@ public class RootLayoutController {
 			MainApp.LOGGER.severe("Error occured while loading usermain layout.."+MyLogger.getStackTrace(ex));
 		}
 	}
-	@FXML
-	public void handleTypeMenuAction() {
-		System.out.println("Type Menu Action Called..");
-		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/TypeMain.fxml"));
-		try {
-			BorderPane typeOverviewPage = (BorderPane) loader.load();
-			typeOverviewPage.setUserData(loader);
-			new SetTransitionOnScreen().setTransition(mainBorderPane,"parrallelFadeTranslate", movePageDirection);
-			mainBorderPane.setCenter(typeOverviewPage);
-			TypeMainController controller = loader.getController();
-			controller.setRootLayoutController(this);
-			controller.setHomePageController(homePageController);
-			controller.setMainApp(mainApp);
-			controller.setRole(role);
-			controller.setUserBean(userBean);
-			controller.setPrimaryStage(primaryStage);
-		} catch (IOException | NullPointerException  ex) {
-			System.out.println("Error occured while loading typemain layout.. "+ ex.getMessage());
-			ex.printStackTrace();
-		}
-	}
+//	@FXML
+//	public void handleTypeMenuAction() {
+//		System.out.println("Type Menu Action Called..");
+//		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/TypeMain.fxml"));
+//		try {
+//			BorderPane typeOverviewPage = (BorderPane) loader.load();
+//			typeOverviewPage.setUserData(loader);
+//			new SetTransitionOnScreen().setTransition(mainBorderPane,"parrallelFadeTranslate", movePageDirection);
+//			mainBorderPane.setCenter(typeOverviewPage);
+//			TypeMainController controller = loader.getController();
+//			controller.setRootLayoutController(this);
+//			controller.setHomePageController(homePageController);
+//			controller.setMainApp(mainApp);
+//			controller.setRole(role);
+//			controller.setUserBean(userBean);
+//			controller.setPrimaryStage(primaryStage);
+//		} catch (IOException | NullPointerException  ex) {
+//			System.out.println("Error occured while loading typemain layout.. "+ ex.getMessage());
+//			ex.printStackTrace();
+//		}
+//	}
 	@FXML
 	public void handleFacilityMenuAction() {
 		System.out.println("LGA Menu Action Called..");
@@ -256,8 +245,7 @@ public class RootLayoutController {
 			controller.setUserBean(userBean);
 			controller.setPrimaryStage(primaryStage);
 		} catch (Exception ex) {
-			System.out
-					.println("Error occured while loading facilitymain layout.. "
+			System.out.println("Error occured while loading facilitymain layout.. "
 							+ ex.getMessage());
 			ex.printStackTrace();
 		}
@@ -355,13 +343,12 @@ public class RootLayoutController {
 			case "DeviceAssociationGridController":
 				DeviceAssociationGridController.productPopupBtnController.handleDeviceAssociationGrid();
 				break;
-
-			case "TypeMainController":
-				handleTypeMenuAction();
-				break;
-			case "CategoryMainController":
-				CategoryMainController.productPopupBtnController.handleProductsCategoryDashBoardBtn();
-				break;
+//			case "TypeMainController":
+//				handleTypeMenuAction();
+//				break;
+//			case "CategoryMainController":
+//				CategoryMainController.productPopupBtnController.handleProductsCategoryDashBoardBtn();
+//				break;
 			case "ItemMainController":
 				ItemMainController.productPopupBtnController.handleProductsOverviewDashBoardBtn();
 				break;
@@ -379,9 +366,6 @@ public class RootLayoutController {
 				break;
 			case "SalesOrderMainController":
 				handleSalesOrderMenuAction();
-				break;
-			case "PurchaseOrderMainController":
-				handlePurchaseOrderMenuAction();
 				break;
 			case "LGAReportsSubController":
 				LGAReportsSubController.reportsButtonPopupController.setRole(this.role);
@@ -521,9 +505,7 @@ public class RootLayoutController {
 	@FXML
 	public void handleSalesOrderMenuAction() {
 		System.out.println("Hey We are in handleSalesOrderMenuAction Handler");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/SalesOrderMain.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/SalesOrderMain.fxml"));
 		try {
 			BorderPane orderOverview = (BorderPane) loader.load();
 			orderOverview.setUserData(loader);
@@ -545,34 +527,6 @@ public class RootLayoutController {
 	}
 
 	@FXML
-	public void handlePurchaseOrderMenuAction() {
-		System.out
-				.println("Hey We are in handlePurchaseOrderMenuAction Handler");
-//		FXMLLoader loader = new FXMLLoader(
-//				MainApp.class
-//						.getResource("/com/chai/inv/view/PurchaseOrderMain.fxml"));
-//		try {
-//			BorderPane orderOverview = (BorderPane) loader.load();
-//			orderOverview.setUserData(loader);
-//			new SetTransitionOnScreen().setTransition(mainBorderPane,
-//					"parrallelFadeTranslate", movePageDirection);
-//			mainBorderPane.setCenter(orderOverview);
-//			PurchaseOrderMainController controller = loader.getController();
-//			controller.setPrimaryStage(primaryStage);
-//			controller.setRootLayoutController(this);
-//			controller.setHomePageController(homePageController);
-//			// controller.setRole(role);
-//			controller.setMainApp(mainApp);
-//			controller.setUserBean(userBean);
-//			controller.setOrderListData();
-//		} catch (Exception ex) {
-//			System.out.println("Error occured while loading Order Overview.. "
-//					+ ex.getMessage());
-//			ex.printStackTrace();
-//		}
-	}
-
-	@FXML
 	public void handleLogoutAction() {
 		System.out.println("In Logout Action");
 		Action response = Dialogs.create().owner(getPrimaryStage())
@@ -583,11 +537,26 @@ public class RootLayoutController {
 			//mainApp.setLogoutFlag(true);
 			MainApp.logoutFlag=false;
 			MainApp.LOGGER.setLevel(Level.INFO);
-			MainApp.LOGGER.info("####.Logout Action.. About to Call mainApp.start(primaryStage)..");
+			MainApp.LOGGER.info("Logged out from application.");
 			mainApp.start(primaryStage);
 			logoutFlag = true;
-			CheckData.threadFlag = false;
-			DatabaseOperation.getDbo().closeConnection();
+			try {
+				DatabaseOperation.getDbo().closeConnection();
+			} catch (CommunicationsException e) {
+				MainApp.LOGGER.setLevel(Level.SEVERE);			
+				MainApp.LOGGER.severe("Exception when login: "+e.getMessage());
+				MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+				Dialogs.create()
+				.title("Error")
+				.message(e.getMessage()).showException(e);
+			} catch (SQLException e) {
+				MainApp.LOGGER.setLevel(Level.SEVERE);			
+				MainApp.LOGGER.severe("Exception when login: "+e.getMessage());
+				MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+				Dialogs.create()
+				.title("Error")
+				.message(e.getMessage()).showException(e);
+			}
 		}
 	}
 
@@ -601,7 +570,6 @@ public class RootLayoutController {
 		try {
 			p.load(in);
 			String applicationFor=p.getProperty("applicationFor");
-
 			Dialogs.create()
 			.owner(getPrimaryStage())
 			.title("About N-LIMS")
@@ -609,8 +577,12 @@ public class RootLayoutController {
 			.message("N-LIMS: Desktop application developed using JavaFx 8 Technology, by Yusata Infotech Pvt. Ltd. Jaipur, Rajasthan, India")
 			.showInformation();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("CheckForUpdates: Exception: "+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}
 	}
 	
@@ -643,6 +615,7 @@ public class RootLayoutController {
 			ex.printStackTrace();
 		}
 	}
+	
 	@FXML
 	public boolean handleExitMenuAction() {
 		SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
@@ -673,7 +646,6 @@ public class RootLayoutController {
 				SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
 				mainApp.start(getPrimaryStage());
 				getPrimaryStage().close();
-				CheckData.threadFlag = false;
 				System.exit(0);
 				return true;
 			} else {
@@ -690,30 +662,30 @@ public class RootLayoutController {
 			x_STOCK_MANAGEMENT_MENU.setVisible(false);
 			x_MAINTENANCE_MENU.setVisible(false);
 			x_ADMIN_MENU.setVisible(false);
-			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
+//			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
 			this.setChangeFacilityMenuitemVisible(false);
 			break;
 		case "MOH": // LIO - SUPER USER
 			// set disabled for now/time being 10-12-2014
 			x_STOCK_MANAGEMENT_MENU.setVisible(false);
-			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
+//			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
 			this.setChangeFacilityMenuitemVisible(false);
 			break;
 		case "SIO": // SIO
 			x_STOCK_MANAGEMENT_MENU.setVisible(false);
-			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
+//			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
 			this.setChangeFacilityMenuitemVisible(true);
 			break;
 		case "SCCO": // SCCO
 			// set disabled for now/time being 10-12-2014
-			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
+//			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
 			x_ORDERS_MENU_ITEM.setVisible(false);
 			this.setChangeFacilityMenuitemVisible(true);
 			break;
 		case "SIFP": // SIO
 			// set disabled for now/time being 10-12-2014
 			x_STOCK_MANAGEMENT_MENU.setVisible(false);
-			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
+//			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
 			this.setChangeFacilityMenuitemVisible(true);
 			break;
 		case "CCO":
@@ -722,7 +694,7 @@ public class RootLayoutController {
 			break;
 		case "NTO":
 			x_ORDERS_MENU_ITEM.setVisible(false);
-			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
+//			x_UNREGISTER_USER_MENU_ITEM.setVisible(false);
 			this.setChangeFacilityMenuitemVisible(true);
 			break;
 		}
@@ -732,87 +704,6 @@ public class RootLayoutController {
 		x_CHANGE_FACILITY_MENUITEM.setVisible(boolValue);
 		x_CHNG_LGA_BTN.setVisible(boolValue);
 	}
-
-	public boolean handleRemoveDatabase() {
-		UserService userService = new UserService();
-		ProgressIndicatorTest pit = new ProgressIndicatorTest();
-		System.out.println("In RootLayoutController.handleUnregisterUser() method/handler");
-		Action response = Dialogs.create().owner(getPrimaryStage())
-				.title("Un-Register CCO User")
-				.masthead("Are you sure to remove database from this system")
-				.message("Click Yes to remove database.")
-				.actions(Dialog.Actions.YES, Dialog.Actions.NO).showConfirm();
-		if (response == Dialog.Actions.YES) {
-			// TODO : write code for asking the user's password for second level
-			// validation.
-			// TODO: if password true then, display dialog with msg
-			// "Removing Database..."
-			TextField username = new TextField();
-			PasswordField password = new PasswordField();
-			username.setPromptText("enter username");
-			password.setPromptText("enter password");
-			UserBean bean = new UserBean();
-			GridPane grid = new GridPane();
-			grid.setHgap(10);
-			grid.setVgap(10);
-			grid.setPadding(new Insets(0, 10, 0, 10));
-			grid.add(new Label("Username"), 0, 0);
-			grid.add(username, 1, 0);
-			grid.add(new Label("Password"), 0, 1);
-			grid.add(password, 1, 1);
-			final Action actionRemoveDatabase = new AbstractAction("Remove Database") {
-				// This method is called when the login button is clicked ...
-				@Override
-				public void handle(ActionEvent ae) {
-					RootLayoutController.removeDBDialog = (Dialog) ae.getSource();
-					// Change Password here.
-					String errorMessage = "";
-					if (username.getText() == null
-							|| username.getText().length() == 0) {
-						errorMessage += "please enter username.\n";
-					}
-					if (password.getText() == null
-							|| password.getText().length() == 0) {
-						errorMessage += "please enter password.\n";
-					}
-					if (!(errorMessage.length() == 0)) {
-						Dialogs.create().owner(getPrimaryStage())
-								.title("Invalid Fields")
-								// .masthead("blank field(s) are not allowed!")
-								.message(errorMessage).showWarning();
-					} else {
-						bean.setX_LOGIN_NAME(username.getText());
-						bean.setX_PASSWORD(password.getText());
-						if (userService.validateUser(bean)) {
-							pit.showProgessIndicator(getPrimaryStage(), mainApp);
-							// control will reach to below code if the notify()
-							// method get called in PIT object's
-							// progressThread is completes it's execution.
-							System.out.println("After CurrentThread wait over.........................");
-						} else {
-							Dialogs.create()
-									.owner(getPrimaryStage())
-									.title("Error")
-									.masthead("Cannot proceed to remove database!")
-									.message("wrong username or password.. please try again!")
-									.showError();
-							DatabaseOperation.getDbo().closeConnection();
-						}
-					}
-				}
-			};
-			ButtonBar.setType(actionRemoveDatabase, ButtonType.OK_DONE);
-			Dialog dlg = new Dialog(getPrimaryStage(), "Database Remove");
-			dlg.setMasthead("Enter username & password to remove database.");
-			dlg.setContent(grid);
-			dlg.getActions().addAll(actionRemoveDatabase, Dialog.Actions.CANCEL);
-			dlg.show();
-		} else {
-			System.out.println("Un-Register user/remove dATABASE is cancelled");
-		}
-		return pit.isRemoveDBSuccessFlag();
-	}
-
 	
 	public static void copy(InputStream input, OutputStream output,
 			int bufferSize) throws IOException {
@@ -844,9 +735,9 @@ public class RootLayoutController {
 			e.printStackTrace();
 		}
 	}
-	public void setPathDirectory(Boolean dbVersionStatus,Boolean appVersionStatus,Properties p) throws IOException{
+	public void setPathDirectory(Boolean dbVersionStatus,Boolean appVersionStatus) throws IOException{
 		try {
-			downloadURL =p.getProperty("downloadURL")+"?dbstatus="+dbVersionStatus+"&appstatus=" + appVersionStatus;
+			downloadURL =DatabaseOperation.p.getProperty("downloadURL")+"?dbstatus="+dbVersionStatus+"&appstatus=" + appVersionStatus;
 			exeDownloadPath = "";
 			tempFolderPath="";
 			appDataPath = "";
@@ -869,166 +760,126 @@ public class RootLayoutController {
 	}
 	
 	@FXML
-	public void checkForUpdates() throws IOException, JSONException,
-			URISyntaxException, InterruptedException, SQLException {
-		String mysqlpath = new CheckForUpdates().getBinDirectoryPath();	
-		Dialogs dlg=Dialogs.create().masthead("No updates available");
-		Properties p = new Properties();
-		InputStream in = getClass().getResourceAsStream("/com/chai/inv/DAO/rst_connection.properties");
-		p.load(in);
+	public void checkForUpdates() {
+		String mysqlpath = new CheckForUpdates().getBinDirectoryPath();
+		Dialogs dlg = Dialogs.create().masthead("No updates available");
 		MainApp.LOGGER.setLevel(Level.INFO);
 		MainApp.LOGGER.info("property file loaded");
-		//step-1
-		//work done 1
-		if (CheckForUpdates.isInternetReachable()) {
-			VersionInfoBean versionInfoBean=new CheckForUpdates().checkVersions(p.getProperty("versioninfoprovider"),mainApp);		
-			switch(MainApp.getUserRole().getLabel().toUpperCase()){
-			case "CCO" :
-					if(versionInfoBean!=null){
-					//  starting point of progress bar
-					progressBarScreen=new Stage();
-					progressBarScreen.initOwner(getPrimaryStage());
-					progressBarScreen.initModality(Modality.WINDOW_MODAL);
-					progressBarScreen.initStyle(StageStyle.TRANSPARENT);
-					progressBarScreen.centerOnScreen();
-					progressBarScreen.setOnCloseRequest(new EventHandler<WindowEvent>() {			
-						@Override
-						public void handle(WindowEvent event) {
-							System.out.println("progressBarScreen - Consuming Window Event on CloseRequest");
-							event.consume();
-						}
-					});					
-					RootLayoutController.workdone=0;
-					++RootLayoutController.workdone; //1
-					MainApp.LOGGER.setLevel(Level.INFO);
-					MainApp.LOGGER.info("version information fetched : work done = "+(RootLayoutController.workdone));
-					//step-2
-					//work done 2
-					CompareVersionInfo compareVersionInfo = new CompareVersionInfo(versionInfoBean);		
-					Boolean dbVersionStatus = compareVersionInfo.compareDbVersion();
-					Boolean appVersionStatus = compareVersionInfo.compareAppVersion();					
-					System.out.println("appVersionStatus status : " + appVersionStatus);
-					System.out.println("dbVersionStatus status : " + dbVersionStatus);
-					++RootLayoutController.workdone; //2
-					MainApp.LOGGER.setLevel(Level.INFO);
-					MainApp.LOGGER.info("App and DB version compared : work done = "+(RootLayoutController.workdone));
-					if(dbVersionStatus || appVersionStatus){
-						Action response = Dialogs.create().owner(getPrimaryStage())
-								.title("Update is Available")
-								.masthead("Do you want to Update Application?")
-								.message("Click Yes to Update Application.")
-								.actions(Dialog.Actions.YES, Dialog.Actions.NO).showConfirm();
-						if(response==Dialog.Actions.YES){
-							new UpdateProgressBar().startProgressBar(progressBarScreen);
-							new Thread(){
-								@Override
-								public void run(){
-									try{
-										//step-3
-										//work done 3
-										setPathDirectory(dbVersionStatus,appVersionStatus,p);		
-										while (true) {
-											System.out.println("");
-											if(CheckData.completeThreadCount==18){
-												CheckData.threadFlag=false;//for stop thread
-												if (dbVersionStatus && appVersionStatus) {
-													//step-4 | TOTAL_WORK = 18 - new count on 24DEC2016 is 19
-													//work done 4
-													// update both file
-													UpdateProgressBar.TOTAL_WORK=CheckForUpdates.APP_DB_UPDATE_TOTAL_WORK;
-													System.out.println("versionInfoBean.getDB_VERSION() ="+versionInfoBean.getDB_VERSION());
-													System.out.println("versionInfoBean.getAPPLICATION_VERSION()= "+versionInfoBean.getAPPLICATION_VERSION());
-													new CheckForUpdates().updateDatabase(false,exeDownloadPath, downloadURL +"&dbDownload="+ "dbImportScript", mysqlpath,mainApp,versionInfoBean.getDB_VERSION(),progressBarScreen);
-													new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL +"&dbDownload="+ "exe",mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);
-												} else if (dbVersionStatus) {
-//														step-4 | TOTAL_WORK = 10
-													//work done 4
-													UpdateProgressBar.TOTAL_WORK=CheckForUpdates.DB_UPDATE_TOTAL_WORK;
-													new CheckForUpdates().updateDatabase(true,exeDownloadPath, downloadURL, mysqlpath,mainApp,versionInfoBean.getDB_VERSION(),progressBarScreen);
-//														if(updateDbOnly){
-														// below start method will redirect to login screen
-														//mainApp.setLogoutFlag(true);
-													MainApp.logoutFlag=false;
-														//logoutFlag = true;
-//															primaryStage.hide();
-														Platform.runLater(new Runnable() {
-															@Override
-															public void run() {
-																mainApp.start(mainApp.getPrimaryStage());
-																DatabaseOperation.getDbo().closeConnection();
-															}
-														});
-//														}
-												} else if (appVersionStatus) {
-//															step-4 | TOTAL_WORK = 8 -- new count is 9 on 24DEC2016
-													//work done 4
-													UpdateProgressBar.TOTAL_WORK=CheckForUpdates.APPLICATION_UPDATE_TOTAL_WORK;
-													new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL,mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);
-												} else{
-													RootLayoutController.workdone=0;
-													MainApp.LOGGER.setLevel(Level.INFO);
-													MainApp.LOGGER.info("No file is updated");
-												}
-												break;
-											}
-										}
-										
-									}catch(Exception e){
-										System.out.println("Update progress worker thread : "+e.getMessage());
-										MainApp.LOGGER.setLevel(Level.SEVERE);
-										MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-										e.printStackTrace();
+		// step-1
+		// work done 1
+		try {
+			if (CheckForUpdates.isInternetReachable()) {
+				VersionInfoBean versionInfoBean = new CheckForUpdates().checkVersions(DatabaseOperation.p.getProperty("versioninfoprovider"));
+				switch (MainApp.getUserRole().getLabel().toUpperCase()) {
+				case "CCO":
+					if (versionInfoBean != null) {
+						// starting point of progress bar
+						progressBarScreen = new Stage();
+						progressBarScreen.initOwner(getPrimaryStage());
+						progressBarScreen.initModality(Modality.WINDOW_MODAL);
+						progressBarScreen.initStyle(StageStyle.TRANSPARENT);
+						progressBarScreen.centerOnScreen();
+						progressBarScreen.setOnCloseRequest(new EventHandler<WindowEvent>() {
+									@Override
+									public void handle(WindowEvent event) {
+										System.out.println("progressBarScreen - Consuming Window Event on CloseRequest");
+										event.consume();
 									}
-								}
-							}.start();
-						}else{
-							MainApp.LOGGER.setLevel(Level.INFO);
-							MainApp.LOGGER.info("updtate Processed Canceled");
-							RootLayoutController.workdone=0;
-						}
-						
-						
-					}else{
-						dlg.showInformation();
-						RootLayoutController.workdone=0;
-						System.out.println("No updates available");
-					}
-				}else{
-					
-					System.out.println("Server not responding,connection refused versionInfoBean=null");
-				}
-					
-				break;
-				default :
-					if(MainApp.getUserRole().getLabel().toUpperCase().equals("NTO")
-					   || MainApp.getUserRole().getLabel().toUpperCase().equals("SCCO")
-					   || MainApp.getUserRole().getLabel().toUpperCase().equals("SIFP")
-					   || MainApp.getUserRole().getLabel().toUpperCase().equals("SIO")
-					   || MainApp.getUserRole().getLabel().toUpperCase().equals("LIO")
-					   || MainApp.getUserRole().getLabel().toUpperCase().equals("MOH")){
-						
-						DatabaseOperation.getDbo().closeConnection();
-						DatabaseOperation.CONNECT_TO_SERVER=true;
-						Boolean appAdminStatus=new CompareVersionInfo(versionInfoBean).compareAppVersionAdmin();
-						if(appAdminStatus){
-							setPathDirectory(false,appAdminStatus,p);
-							new CheckForUpdates().updateApplication(tempFolderPath, exeDownloadPath, downloadURL,mainApp,versionInfoBean.getAPPLICATION_VERSION(),progressBarScreen);	
-						}else{
+								});
+						RootLayoutController.workdone = 0;
+						++RootLayoutController.workdone; // 1
+						MainApp.LOGGER.setLevel(Level.INFO);
+						MainApp.LOGGER.info("version information fetched : work done = "+ (RootLayoutController.workdone));
+						// step-2
+						// work done 2
+						CompareVersionInfo compareVersionInfo = new CompareVersionInfo(versionInfoBean);
+					Boolean dbVersionStatus = compareVersionInfo.compareDbVersion();
+						Boolean appVersionStatus = compareVersionInfo.compareAppVersion();
+						System.out.println("appVersionStatus status : "+ appVersionStatus);
+//					System.out.println("dbVersionStatus status : "+ dbVersionStatus);
+						++RootLayoutController.workdone; // 2
+						MainApp.LOGGER.setLevel(Level.INFO);
+						MainApp.LOGGER.info("App and DB version compared : work done = "+ (RootLayoutController.workdone));
+						if (appVersionStatus) {
+							Action response = Dialogs.create()
+									.owner(getPrimaryStage())
+									.title("Update is Available")
+									.masthead("Do you want to Update Application?")
+									.message("Click Yes to Update Application.")
+									.actions(Dialog.Actions.YES, Dialog.Actions.NO)
+									.showConfirm();
+							if (response == Dialog.Actions.YES) {
+								new UpdateProgressBar().startProgressBar(progressBarScreen);
+								new Thread() {
+									@Override
+									public void run() {
+										try {
+											// step-3 work done 3
+											setPathDirectory(false, appVersionStatus);
+												// step-4 | TOTAL_WORK = 8 -- new count is 9 on 24DEC2016
+												// work done 4
+											UpdateProgressBar.TOTAL_WORK = CheckForUpdates.APPLICATION_UPDATE_TOTAL_WORK;
+											new CheckForUpdates().updateApplication(
+															tempFolderPath,
+															exeDownloadPath,
+															downloadURL,														
+															versionInfoBean.getAPPLICATION_VERSION(),
+															progressBarScreen);
+										} catch (Exception e) {
+											MainApp.LOGGER.setLevel(Level.SEVERE);			
+											MainApp.LOGGER.severe("CheckForUpdates: Exception: "+e.getMessage());
+											MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+											Dialogs.create()
+											.title("Error")
+											.message(e.getMessage()).showException(e);
+										}
+									}
+								}.start();
+							} else {
+								MainApp.LOGGER.setLevel(Level.INFO);
+								MainApp.LOGGER.info("updtate Processed Canceled");
+								RootLayoutController.workdone = 0;
+							}
+						} else {
 							dlg.showInformation();
-							System.out.println("No updates available");
+							RootLayoutController.workdone = 0;
+							MainApp.LOGGER.setLevel(Level.SEVERE);			
+							MainApp.LOGGER.severe("CheckForUpdates: No updates available");
 						}
-					}			
-				break;
+					} else {
+						MainApp.LOGGER.setLevel(Level.SEVERE);			
+						MainApp.LOGGER.severe("CheckForUpdates: Exception: Server not responding,connection refused, versionInfoBean=null");
+						Dialogs.create()
+						.title("Warning")
+						.message("Failed to fetch update information, please try again!").showWarning();
+					}
+					break;
+				}
+			} else {
+				Dialogs.create().message("No Internet Connection").showWarning();
+				MainApp.LOGGER.info("CheckForUpdates.isInternetReachable(): fasle : No Internet Connection");
 			}
-		}else{
-			Dialogs.create().masthead("No Internet Connection").showInformation();
-			MainApp.LOGGER.info("No Internet Connection");
+		} catch (SecurityException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("CheckForUpdates: Exception: "+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
+		} catch (IOException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("CheckForUpdates: Exception: "+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
+		} catch (JSONException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("CheckForUpdates: Exception: "+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}
-	
-		
-	}
-	
-	public void doUpdate(){
-	
 	}
 }

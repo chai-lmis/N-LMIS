@@ -90,11 +90,11 @@ public class StockOrdersSubMenuController {
 		getRootLayoutController().handleSalesOrderMenuAction();
 	}
 
-	@FXML
-	public void handlePurchaseOrderDashBoardBtn() {
-		System.out.println("entered handlePurchaseOrderDashBoardBtn()");
-		getRootLayoutController().handlePurchaseOrderMenuAction();
-	}
+//	@FXML
+//	public void handlePurchaseOrderDashBoardBtn() {
+//		System.out.println("entered handlePurchaseOrderDashBoardBtn()");
+//		getRootLayoutController().handlePurchaseOrderMenuAction();
+//	}
 
 	public void setRole(LabelValueBean role) {
 		this.role = role;
@@ -119,10 +119,10 @@ public class StockOrdersSubMenuController {
 		getRootLayoutController().handleHomeMenuAction();
 	}
 
-	@FXML
-	public void handleBackToStockOrdersSubMenu() throws Exception {
-		//homePageController.handleStockManagementDashBoardBtn();
-	}
+//	@FXML
+//	public void handleBackToStockOrdersSubMenu() throws Exception {
+//		//homePageController.handleStockManagementDashBoardBtn();
+//	}
 
 	public void setHomePageController(HomePageController homePageController) {
 		this.homePageController = homePageController;

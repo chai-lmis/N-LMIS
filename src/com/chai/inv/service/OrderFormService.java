@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 
+import org.controlsfx.dialog.Dialogs;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -35,45 +37,11 @@ public class OrderFormService {
 		this.operationMessage = operationMessage;
 	}
 
-	public void setAUTO_COMMIT_FALSE() {
-		try {
-			if (dao == null) {
-				System.out.println("In setAUTO_COMMIT_FALSE  if block - - - - dao is null ");
-				dao = DatabaseOperation.getDbo();
-				System.out.println("dao.getClass(): " + dao.getClass());
-				dao.getConnection().setAutoCommit(false);
-				System.out.println("1. AUTO COMMIT = false");
-			} else if (dao.getConnection() == null) {
-				System.out.println("In setAUTO_COMMIT_FALSE  else-if block - - - - dao.getConnection() ==  null ");
-				dao.closeConnection();
-				DatabaseOperation.setDbo(null);
-				dao = DatabaseOperation.getDbo();
-				dao.getConnection().setAutoCommit(false);
-				System.out.println("2. AUTO COMMIT = false");
-				// System.out.println("set auto commit false is unsucessfull............................................");
-			} else {
-				System.out.println("In setAUTO_COMMIT_FALSE  else block - - - - dao not null");
-				dao.closeConnection();
-				DatabaseOperation.setDbo(null);
-				dao = DatabaseOperation.getDbo();
-				dao.getConnection().setAutoCommit(false);
-				System.out.println("3. AUTO COMMIT = false");
-			}
-			System.out.println("setAUTO_COMMIT_FALSE() called.");
-		} catch (SQLException e) {
-			System.out.println("Error in setting Auto commit false....");
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error in setting Auto commit false....\n"+
-					MyLogger.getStackTrace(e));
-			e.printStackTrace();
-		}
-	}
-
 	public ObservableList<LabelValueBean> getDropdownList(String... action) {
 		String x_QUERY = null;
 		switch (action[0]) {
 		case "StoreType":
-			x_QUERY = "SELECT TYPE_ID, " + "		  TYPE_NAME "
+			x_QUERY = "SELECT TYPE_ID, TYPE_NAME "
 					+ "  FROM VIEW_TYPES "
 					+ " WHERE STATUS = 'A' AND SOURCE_TYPE = 'WAREHOUSE TYPES'"
 					+ " ORDER BY TYPE_NAME ";
@@ -93,8 +61,8 @@ public class OrderFormService {
 					+ action[1] + " ORDER BY WAREHOUSE_NAME ";
 			break;
 		case "Customer":
-			x_QUERY = "  SELECT CUSTOMER_ID, " + "         CUSTOMER_NAME "
-					+ "    FROM CUSTOMERS " + "   WHERE STATUS = 'A' "
+			x_QUERY = "  SELECT CUSTOMER_ID,  CUSTOMER_NAME "
+					+ "    FROM CUSTOMERS WHERE SHOW_FLAG='Y' AND STATUS = 'A' "
 					+ "	  ORDER BY CUSTOMER_NAME ";
 			break;
 		case "SOOrderStatus":
@@ -106,9 +74,9 @@ public class OrderFormService {
 			break;
 
 		case "item":
-			x_QUERY = "SELECT ITEM_ID, " + "		  ITEM_NUMBER,"
-					+ "		  ITEM_DESCRIPTION," + "		  TRANSACTION_BASE_UOM "
-					+ "	 FROM ITEM_MASTERS " + " WHERE STATUS = 'A' "
+			x_QUERY = "SELECT ITEM_ID,  ITEM_NUMBER,"
+					+ "		  ITEM_DESCRIPTION, TRANSACTION_BASE_UOM "
+					+ "	 FROM ITEM_MASTERS WHERE STATUS = 'A' "
 					+ " ORDER BY ITEM_NUMBER";
 			break;
 		case "uom":
@@ -135,8 +103,12 @@ public class OrderFormService {
 		try {
 			return DatabaseOperation.getDropdownList(x_QUERY);
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - OrderFormService getDropdownList, Exception:"+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);	
 		}
 		return null;
 	}
@@ -150,8 +122,7 @@ public class OrderFormService {
 				+ "         (SELECT DVIW2.WAREHOUSE_TYPE_CODE FROM VIEW_INVENTORY_WAREHOUSES DVIW2 "
 				+ "           WHERE DVIW2.WAREHOUSE_ID=VIW.DEFAULT_ORDERING_WAREHOUSE_ID) AS DEFAULT_WAREHOUSE_TYPE_CODE  "
 				+ "    FROM VIEW_INVENTORY_WAREHOUSES VIW  "
-				+ "   WHERE VIW.STATUS = 'A' AND VIW.WAREHOUSE_ID="
-				+ warehouseID;
+				+ "   WHERE VIW.STATUS = 'A' AND VIW.WAREHOUSE_ID="+ warehouseID;
 		try {
 			if (dao == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
@@ -164,12 +135,16 @@ public class OrderFormService {
 				lvb.setExtra(rs.getString("DEFAULT_WAREHOUSE_TYPE_CODE"));
 				lvb.setExtra1(rs.getString("DEFAULT_WAREHOUSE_TYPE_ID"));
 			}
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+		}catch (SQLException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - OrderFormService getDefaultOrderingStore, Exception:"+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
-		} finally {
-			System.out.println("order form : get default ordering store query: "+ pstmt.toString());
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);	
+		}finally{
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("OrderFormService getDefaultOrderingStore Query: "+ pstmt.toString());
 		}
 		return lvb;
 	}
@@ -233,20 +208,21 @@ public class OrderFormService {
 			int rowCount = pstmt.executeUpdate();
 		} catch (SQLException | NullPointerException ex) {
 			dao.runRollback();
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while saving Order Headers, error\n"
-			+MyLogger.getStackTrace(ex));
-			System.out.println("Error occured while saving Order Headers, error: "+ ex.getMessage());
-			ex.printStackTrace();
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - OrderFormService saving Order Headers, Exception: "+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);			
 			return false;
 		} finally {
-			System.out.println("save sales order header query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Loading - OrderFormService saving Order Headers, Query: "+pstmt.toString());
 		}
 		return true;
 	}
 
-	public boolean saveSalesOrderLineItems(
-			ObservableList<AddOrderLineFormBean> list,
+	public boolean saveSalesOrderLineItems(ObservableList<AddOrderLineFormBean> list,
 			boolean cancelCompleteOrder,
 			String order_from_id, String order_to_id) throws SQLException {
 		String query = "UPDATE ORDER_LINES SET "
@@ -306,17 +282,19 @@ public class OrderFormService {
 				pstmt.setString(13, order_to_id);
 				pstmt.setString(14, addOrderLineFormBean.getX_ORDER_LINE_ID());
 				pstmt.setString(15, addOrderLineFormBean.getX_ORDER_HEADER_ID());
-				int rowCount = pstmt.executeUpdate();
-				System.out.println("********Save Sales order Line items query*** :\n "+ pstmt.toString());
+				int rowCount = pstmt.executeUpdate();				
 			} catch (SQLException | NullPointerException ex) {
-				System.out.println("Error occured while saving SALES ORDER LINE Items, error: "
-			+ ex.getMessage());
-				System.out.println("1. query print: " + pstmt.toString());
-				MainApp.LOGGER.setLevel(Level.SEVERE);
+				dao.runRollback();
+				MainApp.LOGGER.setLevel(Level.SEVERE);			
+				MainApp.LOGGER.severe("Error Loading - OrderFormService saveSalesOrderLineItems, Exception: "+ex.getMessage());
 				MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+				Dialogs.create()
+				.title("Error")
+				.message(ex.getMessage()).showException(ex);			
 				return false;
 			} finally {
-				System.out.println("save sales order line query: "+ pstmt.toString());
+				MainApp.LOGGER.setLevel(Level.SEVERE);			
+				MainApp.LOGGER.severe("Loading - OrderFormService saveSalesOrderLineItems, Query: "+pstmt.toString());
 			}
 		}
 		return true;
@@ -408,18 +386,17 @@ public class OrderFormService {
 				pstmt.executeBatch();
 			}
 			System.out.println("After insertMiscReceiveRecord ");
-		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occured while inserting Miscellaneous "
-		+ transaction_type_code + " data, error:"+ ex.getMessage());
-			setOperationMessage("Error occured while inserting Miscellaneous Order-Items-Lots-Transactions "
-			+ transaction_type_code + " data, error:" 
-			+ ex.getMessage());
+		}catch (SQLException | NullPointerException ex) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error Loading - OrderFormService insertOrderItemsTransactions "+ transaction_type_code + " data, error: Exception: "+ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
-			ex.getStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);		
 			flag = false;
 		} finally {
-			System.out.println("insert item transaction query:\n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Inserting - insertOrderItemsTransactions, Query: "+pstmt.toString());
 		}
 		return flag;
 	}
@@ -554,18 +531,20 @@ public class OrderFormService {
 				searchData.add(orderFormBean);
 			}
 		} catch (SQLException sex) {
-			System.out.println("Error occur while searching PO Order, error : "
-		+ sex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occur while searching PO Order, error\n"+
-			MyLogger.getStackTrace(sex));
+			MainApp.LOGGER.severe("Error Loading - PO OrderFormService getSearchList data, error: Exception: "+sex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(sex));
+			Dialogs.create()
+			.title("Error")
+			.message(sex.getMessage()).showException(sex);
 		} finally {
-			System.out.println("PO Order Search query: \n" + pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Loading - PO OrderFormService getSearchList data, Query: "+pstmt.toString());
 		}
 		return searchData;
 	}
 
-	public ObservableList<OrderFormBean> getOrderList(String order_type,String warehouse_id, String ShowOrderListFor,LabelValueBean filterBean) throws SQLException {
+	public ObservableList<OrderFormBean> getOrderList(String order_type, String warehouse_id, String ShowOrderListFor, LabelValueBean filterBean) throws SQLException {
 		String conditionForShowOrderList="";
 		String cutomerIdCondition="";
 		String monthCondition="";
@@ -764,12 +743,14 @@ public class OrderFormService {
 			}
 		} catch (SQLException | NullPointerException ex) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while getting Orders List, error\n"+
-			MyLogger.getStackTrace(ex));
-			System.out.println("Error occured while getting Orders List, error: "+ ex.getMessage());
+			MainApp.LOGGER.severe("Error Loading - OrderFormService getOrderList data, error: Exception: "+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("stock ordering main grid select query: \n\n "+ pstmt.toString());
-			System.out.println("closing dao and setting null.. in getOrderList()...................");
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService getOrderList data, Query: "+pstmt.toString());			
 		}
 		return ordersData;
 	}
@@ -778,7 +759,6 @@ public class OrderFormService {
 			String month) throws SQLException {
 		ObservableList<OrderFormBean> ordersData = FXCollections.observableArrayList();
 		if (dao == null || dao.getConnection().isClosed()) {
-			System.out.println("dao found null or closed in getOrderListByFilter()... setting dao=getDbo()..");
 			dao = DatabaseOperation.getDbo();
 		}
 		String WHERE_CONDITION_FOR_CUSTOMER = "";
@@ -875,14 +855,15 @@ public class OrderFormService {
 				ordersData.add(orderFormBean);
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occured while getting Orders List, error: "
-		+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while getting Orders List, error\n"+
-			MyLogger.getStackTrace(ex));
+			MainApp.LOGGER.severe("Error Loading - OrderFormService getOrderListByFilter data, error: Exception: "+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("stock ordering main grid select query: \n\n "+ pstmt.toString());
-			System.out.println("closing dao and setting null.. in getOrderList()...................");
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService getOrderListByFilter data, Query: "+pstmt.toString());
 		}
 		return ordersData;
 	}
@@ -1025,12 +1006,15 @@ public class OrderFormService {
 				}
 			}
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occured while getting Order Lines List, error: "+ ex.getMessage());
-			ex.printStackTrace();
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error Loading - OrderFormService Order Lines List - getOrderLineList, error: Exception: "+ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		} finally {
-			System.out.println("finally block : Order Lines select query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService Order Lines List - getOrderLineList, Query: "+pstmt.toString());
 		}
 		orderLineCount = orderLinesData.size();
 		return orderLinesData;
@@ -1052,14 +1036,16 @@ public class OrderFormService {
 			} else
 				flag = false;
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occur while updating consumption_id consumption_id = "+x_CONSUMPTION_ID
-					+" order_created_flag.,"
-					+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error Loading - OrderFormService updateOrderCreatedFlag, error: Exception: "+ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);			
 			flag = false;
 		} finally {
-			System.out.println("updateOrderCreatedFlag() select Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService updateOrderCreatedFlag, Query: "+pstmt.toString());
 		}
 		return flag;
 	}
@@ -1080,20 +1066,22 @@ public class OrderFormService {
 			} else
 				flag = false;
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occur while deleting CUST_PRODUCT_DETAIL_ID = "
-		+x_CUST_PRODUCT_DETAIL_ID+", "
-					+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error Deleting - OrderFormService updateCalculatedMinMaxDetails, error: Exception: "+ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 			flag = false;
 		} finally {
-			System.out.println("updateCalculatedMinMaxDetails() select Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService updateCalculatedMinMaxDetails, Query: "+pstmt.toString());
 		}
 		return flag;
 	}
 	
 	public boolean updateInactivateOrderLineItem(String x_ORDER_LINE_ID) {
-		System.out.println("OrderFormService.updateOrderLineItem() method called");
+		System.out.println("OrderFormService.updateInactivateOrderLineItem() method called");
 		boolean flag = false;
 		String query = "UPDATE ORDER_LINES SET "
 				+ " SYNC_FLAG='N', STATUS='I'"
@@ -1109,21 +1097,23 @@ public class OrderFormService {
 			} else
 				flag = false;
 		} catch (SQLException | NullPointerException ex) {
-			System.out.println("Error occur while deleting(in-activating) ORDER_LINE_ID = "+x_ORDER_LINE_ID+", "
-					+ ex.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Error deleting(in-activating) - ORDER_LINE_ID = "+x_ORDER_LINE_ID+": OrderFormService updateInactivateOrderLineItem, error: Exception: "+ex.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 			flag = false;
 		} finally {
 			System.out.println("upadteOrderLineItem() select Query: "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService updateInactivateOrderLineItem, Query: "+pstmt.toString());
 		}
 		return flag;
 	}
 
-	public ObservableList<TransactionBean> getShipItemLotPopUp(
-			String warehouseID, String itemID) {
-		ObservableList<TransactionBean> list = FXCollections
-				.observableArrayList();
+	public ObservableList<TransactionBean> getShipItemLotPopUp(String warehouseID, String itemID) {
+		ObservableList<TransactionBean> list = FXCollections.observableArrayList();
 		String query = "SELECT ITEM_ID,"
 				+ "	TRANSACTION_BASE_UOM,"
 				+ " SUBINVENTORY_ID, "
@@ -1139,8 +1129,7 @@ public class OrderFormService {
 				+ " WHERE ITEM_ID=? AND WAREHOUSE_ID=? AND (EXPIRATION_DATE > NOW() OR EXPIRATION_DATE is null) "
 				+ " ORDER BY ITEM_ONHAND_QUANTITIES_VW.EXPIRATION_DATE";
 		try {
-			if (dao == null || dao.getConnection() == null
-					|| dao.getConnection().isClosed()) {
+			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
 			pstmt = dao.getPreparedStatement(query);
@@ -1152,11 +1141,9 @@ public class OrderFormService {
 				lspb.setX_ITEM_ID(rs.getString("ITEM_ID"));
 				lspb.setX_TRANSACTION_UOM(rs.getString("TRANSACTION_BASE_UOM"));
 				lspb.setX_FROM_SUBINVENTORY_ID(rs.getString("SUBINVENTORY_ID"));
-				lspb.setX_FROM_SUBINVENTORY_CODE(rs
-						.getString("SUBINVENTORY_CODE"));
+				lspb.setX_FROM_SUBINVENTORY_CODE(rs.getString("SUBINVENTORY_CODE"));
 				lspb.setX_FROM_BIN_LOCATION_ID(rs.getString("BIN_LOCATION_ID"));
-				lspb.setX_FROM_BIN_LOCATION_CODE(rs
-						.getString("BIN_LOCATION_CODE"));
+				lspb.setX_FROM_BIN_LOCATION_CODE(rs.getString("BIN_LOCATION_CODE"));
 				lspb.setX_ONHAND_QUANTITY(rs.getString("ONHAND_QUANTITY"));
 				lspb.setX_LOT_NUMBER(rs.getString("LOT_NUMBER"));
 				lspb.setX_SELF_LIFE(rs.getString("SELF_LIFE"));
@@ -1166,11 +1153,14 @@ public class OrderFormService {
 			}
 		} catch (SQLException | NullPointerException ex) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error occur while getting Lot_subinv-Pop-up data, error\n"+
-			MyLogger.getStackTrace(ex));
-			System.out.println("error occur while getting Lot_subinv-Pop-up data, error: "+ ex.getMessage());
+			MainApp.LOGGER.severe("Error OrderFormService - getShipItemLotPopUp, error: Exception: "+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
 		}finally{
-			System.out.println("OrderFormService.getShipItemLotPopUp() : "+pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Loading - OrderFormService getShipItemLotPopUp, Query: "+pstmt.toString());
 		}
 		return list;
 	}	

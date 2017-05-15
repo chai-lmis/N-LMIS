@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import org.controlsfx.dialog.Dialogs;
+
 import com.chai.inv.CustomChoiceDialog;
 import com.chai.inv.MainApp;
 import com.chai.inv.DAO.DatabaseOperation;
@@ -58,7 +60,7 @@ public class DashboardService {
 			   + " '' LGA_NAME,   CUSTOMER_ID,  CUSTOMER_NAME, '' ITEM_ID,  "
 			   + " '' ITEM_NUMBER, '' STOCK_RECEIVED_DATE,  0 STOCK_BALANCE, "
 			   + " 0 MIN_STOCK,0  MAX_STOCK,  'R' LEGEND_FLAG,  'red' LEGEND_COLOR" 
-			   +" from customers where customer_id not in( SELECT CUSTOMER_ID "
+			   +" from customers where (SHOW_FLAG='Y' OR SHOW_FLAG IS NULL) AND customer_id not in( SELECT CUSTOMER_ID "
 			   + " FROM hf_stock_performance_dashbord_v"+x_WHERE_CONDITION+")"
 			   + "AND default_store_id=IFNULL("+MainApp.getUSER_WAREHOUSE_ID()+",default_store_id)"
 			   		+ " AND STATUS='A'" ;
@@ -98,11 +100,15 @@ public class DashboardService {
 				lgaDashboardlist.add(bean);
 			}
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("DashBoard Service getLgaDashboard: Exception: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}finally{
-			System.out.println("dashboard check Query: \n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.info("DashBoard Service: getLgaDashboard check Query: \n "+ pstmt.toString());
 		}
 		return lgaDashboardlist;
 	}
@@ -158,11 +164,15 @@ public class DashboardService {
 				lgaStockSummarylist.add(databean);
 			}
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("DashBoard Service getLgaStockSummary: Exception: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}finally{
-			System.out.println("dashboard check Query: \n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.info("DashBoard Service: getLgaStockSummary check Query: \n "+ pstmt.toString());
 		}
 		return lgaStockSummarylist;
 	}
@@ -366,11 +376,15 @@ public class DashboardService {
 				stateStkStatuslist.add(databean);
 			}
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("DashBoard Service getStateStockStatusList: Exception: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}finally{
-			System.out.println("dashboard check Query: \n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.info("DashBoard Service: getStateStockStatusList check Query: \n "+ pstmt.toString());
 		}
 		return stateStkStatuslist;
 	}
@@ -384,7 +398,6 @@ public class DashboardService {
 		String yearForSumm="";
 		String x_WHERE_CONDFORSUMM="";
 		ObservableList<LgaDashBoardPerfBean > lgaDashboardlist=FXCollections.observableArrayList();
-		//
 		if(MainApp.getUserRole().getLabel().equals("SCCO")
 				|| MainApp.getUserRole().getLabel().equals("SIO")
 				|| MainApp.getUserRole().getLabel().equals("SIFP")
@@ -563,11 +576,15 @@ public class DashboardService {
 				lgaDashboardlist.add(databean);
 			}
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("DashBoard Service getLgaStkPerfDashBoard: Exception: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}finally{
-			System.out.println("dashboard check Query: \n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.info("DashBoard Service: getLgaStkPerfDashBoard check Query: \n "+ pstmt.toString());
 		}
 		return lgaDashboardlist;
 	}
@@ -589,8 +606,7 @@ public class DashboardService {
 			}
 			yearForSumm=bean.getX_YEAR();
 		}
-		x_WHERE_CONDFORSUMM = " WHERE YEAR="+yearForSumm
-				+" AND WEEK="+weekForSumm ;
+		x_WHERE_CONDFORSUMM = " WHERE YEAR="+yearForSumm+" AND WEEK="+weekForSumm ;
 		
 		String x_WHERE_CONDITION = " WHERE YEAR="+bean.getX_YEAR()
 				+" AND WEEK="+bean.getX_WEEK() ;
@@ -681,11 +697,15 @@ public class DashboardService {
 				stateStkSummSheet.add(databean);
 			}
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("DashBoard Service getstateStockSummSheet: Exception: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}finally{
-			System.out.println("dashboard check Query: \n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.info("DashBoard Service: getstateStockSummSheet check Query: \n "+ pstmt.toString());
 		}
 		return stateStkSummSheet;
 	}
@@ -805,11 +825,15 @@ public class DashboardService {
 				stateStkPrefData.add(databean);
 			}
 		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("DashBoard Service getstateStkSummdata: Exception: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 		}finally{
-			System.out.println("dashboard check Query: \n "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);			
+			MainApp.LOGGER.info("DashBoard Service: getstateStkSummdata check Query: \n "+ pstmt.toString());
 		}
 		return stateStkPrefData;
 	}

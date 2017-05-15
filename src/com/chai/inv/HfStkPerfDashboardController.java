@@ -7,8 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
-import javafx.application.Preloader.StateChangeNotification;
-import javafx.application.Preloader.StateChangeNotification.Type;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -41,6 +40,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 
 import com.chai.inv.loader.FirstPreloader;
+import com.chai.inv.loader.ProgressIndicatorTest;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.model.CustProdMonthlyDetailBean;
 import com.chai.inv.model.LabelValueBean;
@@ -56,7 +56,9 @@ public class HfStkPerfDashboardController {
 	private Stage primaryStage;
 	private LabelValueBean role;
 	private BorderPane mainBorderPane;
-	private Stage loadingScreenStage=null;
+	
+	private ProgressIndicatorTest pit = new ProgressIndicatorTest(); ;
+	public static boolean hideLoader = true;
 	FirstPreloader fp=new FirstPreloader();
 	int columnSize=0;
 	//data list from database
@@ -74,7 +76,7 @@ public class HfStkPerfDashboardController {
 	private MainApp mainApp;
 	public static DashboardPopupController dashboardPopupController;
 	
-	@FXML public void handleLGADashboardRefresh(){
+	@FXML public void handleLGADashboardRefresh() throws Exception{
 		boolean searchDataFlag=true;
 		Alert alert=new Alert(AlertType.INFORMATION);
 		alert.initOwner(primaryStage);
@@ -94,9 +96,16 @@ public class HfStkPerfDashboardController {
 			searchDataFlag=false;
 		}
 		if(searchDataFlag){
-		setDefaults();
-		}
-		
+			fp.start(getPrimaryStage());
+			Platform.runLater(new Runnable() {
+				@Override
+				public void run() {
+					System.out.println("Platform.runLater(dashboard builder)");
+					setDefaults();
+					fp.close();
+				}
+			});			
+		}		
 	}
 	
 	@FXML public void onYearChange(){
@@ -112,8 +121,7 @@ public class HfStkPerfDashboardController {
 	}
 	
 	public void setDefaults(){
-		try {
-			fp.start(new Stage());
+		try {	
 			System.out.println("in setdefaults");
 			//x_GRID_PANE.getChildren().clear();
 			double maxWidth = 0;
@@ -140,7 +148,6 @@ public class HfStkPerfDashboardController {
 					Productlbl.setEditable(false);
 					Productlbl.setText(lbvb.getLabel());
 					Productlbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,11));
-//					System.out.println("productName:="+lbvb.getLabel());
 					x_GRID_PANE.addColumn(productIndex+1, Productlbl);
 					GridPane.setHalignment(Productlbl, HPos.CENTER);
 					productIndex++;
@@ -166,19 +173,14 @@ public class HfStkPerfDashboardController {
 						lgalbl.setStyle("-fx-border-color:black");
 						lgalbl.setPrefHeight(8);
 						GridPane.setHgrow(lgalbl, Priority.ALWAYS);
-						//System.out.println("LgaName:="+LgaName);
-//					GridPane.setMargin(hflbl, new Insets(0, 10, 0, 10));
 						x_GRID_PANE.addRow(lgaNameIndex+1,lgalbl);
 						maxWidth = (lgalbl.getMaxWidth()>maxWidth?lgalbl.getMaxWidth():maxWidth);
 						GridPane.setHalignment(lgalbl, HPos.LEFT);				
 						lgaNameIndex++;
 					}
-					//System.out.println("list of Lga"+lgaNameList.size());
 					stateNameLbl.setText(lgaDashboardList.get(0).getX_STATE_NAME());
 					stateNameLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
-//				GridPane.setMargin(lgaLbl, new Insets(0, 0, 0, 10));
 					stateNameLbl.setStyle("-fx-background-color:#efefef;"+"-fx-border-color:black;");
-					//lgaLbl.setTextFill(Paint.valueOf("#0b7c3e"));
 					stateNameLbl.setEditable(false);
 				    x_GRID_PANE.add(stateNameLbl,0, 0);
 				    maxWidth = (stateNameLbl.getMaxWidth()>maxWidth?stateNameLbl.getMaxWidth():maxWidth);
@@ -186,7 +188,6 @@ public class HfStkPerfDashboardController {
 				    ColumnConstraints constraint = x_GRID_PANE.getColumnConstraints().get(0);
 				    constraint.setFillWidth(true);
 				    //for add data
-				    //System.out.println("dataset");
 				    int i=1;
 				    String color="";
 				    for (String lgaName : lgaNameList) {
@@ -223,7 +224,7 @@ public class HfStkPerfDashboardController {
 				    GridPane.setHgrow(stateNameLbl, Priority.ALWAYS);
 
 				}else{
-					//for hf list and count hf no
+					//for hf list and count hf no.
 					SortedSet<String> hfNameList=new TreeSet<>();
 					for (int i = 0; i < lgaDashboardList.size(); i++) {
 						System.out.println("hfNameList["+i+"]"+lgaDashboardList.get(i).getX_CUSTOMER()+", Product Stock Balance: "+lgaDashboardList.get(i).getX_STOCK_BALANCE());
@@ -240,29 +241,22 @@ public class HfStkPerfDashboardController {
 						hflbl.setStyle("-fx-border-color:black");
 						hflbl.setPrefHeight(8);
 						GridPane.setHgrow(hflbl, Priority.ALWAYS);
-						//System.out.println("hfName:="+hfName);
-//					GridPane.setMargin(hflbl, new Insets(0, 10, 0, 10));
 						x_GRID_PANE.addRow(hfNameIndex+1,hflbl);
 						maxWidth = (hflbl.getMaxWidth()>maxWidth?hflbl.getMaxWidth():maxWidth);
-						//System.out.println("maxWidth of HF Fields: "+maxWidth);
 						GridPane.setHalignment(hflbl, HPos.LEFT);				
 						hfNameIndex++;
 					}
-					//System.out.println("list of hf"+hfNameList.size());
 					lgaLbl.setText(lgaDashboardList.get(0).getX_LGA_NAME());
 					lgaLbl.setFont(Font.font("Amble Cn", FontWeight.BOLD,14));
-//				GridPane.setMargin(lgaLbl, new Insets(0, 0, 0, 10));
 					lgaLbl.setStyle("-fx-background-color:#efefef;"+"-fx-border-color:black;");
 					//lgaLbl.setTextFill(Paint.valueOf("#0b7c3e"));
 					lgaLbl.setEditable(false);
 				    x_GRID_PANE.add(lgaLbl,0, 0);
 				    maxWidth = (lgaLbl.getMaxWidth()>maxWidth?lgaLbl.getMaxWidth():maxWidth);
-					//System.out.println("maxWidth of LGA Field: "+maxWidth);
 				    GridPane.setHalignment(lgaLbl, HPos.LEFT);
 				    ColumnConstraints constraint = x_GRID_PANE.getColumnConstraints().get(0);
 				    constraint.setFillWidth(true);
 				    //for add data
-				   // System.out.println("dataset");
 				    int i=1;
 				    String color="";
 				    for (String hfName : hfNameList) {
@@ -301,16 +295,13 @@ public class HfStkPerfDashboardController {
 				}
 				
 			}else{
-				//System.out.println("lgaDashboardList.size()==0");
 				x_GRID_PANE.getChildren().clear();
 			}
 		} catch (Exception e) {
-			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 			e.printStackTrace();
 		}
-		fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
 	}
 	
 	@FXML

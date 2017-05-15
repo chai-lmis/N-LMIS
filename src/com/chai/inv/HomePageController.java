@@ -267,12 +267,12 @@ public class HomePageController {
 				System.out.println("After fxml loader..2");
 				mainBorderPane.setCenter(notificationGrid);
 				System.out.println("After fxml loader..3");
-				NotificationController controller = loader.getController();
-				System.out.println("After fxml loader..4");
-				controller.setRootLayoutController(rootLayoutController);
-				controller.setRole(role);
-				controller.setUserBean(userBean);
-				controller.setPrimaryStage(primaryStage);
+//				NotificationController controller = loader.getController();
+//				System.out.println("After fxml loader..4");
+//				controller.setRootLayoutController(rootLayoutController);
+//				controller.setRole(role);
+//				controller.setUserBean(userBean);
+//				controller.setPrimaryStage(primaryStage);
 			}catch (NullPointerException | IOException e) {
 				e.printStackTrace();
 				System.out.println("Exception In HomePageController.handleNotifications() mehtod: ");
@@ -366,14 +366,11 @@ public class HomePageController {
 	@FXML public void handleDashboardBtn() {
 		MainApp.LOGGER.severe("handleDashboardBtn");
 		System.out.println("**In handleDashboardBtn action handler**");
-		FXMLLoader loader = new FXMLLoader(
-				MainApp.class
-						.getResource("/com/chai/inv/view/DashboardPopup.fxml"));
+		FXMLLoader loader = new FXMLLoader(MainApp.class.getResource("/com/chai/inv/view/DashboardPopup.fxml"));
 		try {
 			BorderPane dashboardPopup = (BorderPane) loader.load();
 			dashboardPopup.setUserData(loader);
-			DashboardPopupController controller = loader
-					.getController();
+			DashboardPopupController controller = loader.getController();
 			controller.setRootLayoutController(rootLayoutController);
 			controller.setHomePageController(this);
 			controller.setMainBorderPane(mainBorderPane);
@@ -386,11 +383,9 @@ public class HomePageController {
 			popup.setPrefSize(200, 200);
 			popup.setCornerRadius(25);
 			if(x_DASHBOARD_BTN.getLayoutY()>200){
-				popup.setArrowLocation(ArrowLocation.BOTTOM_CENTER);
-					
+				popup.setArrowLocation(ArrowLocation.BOTTOM_CENTER);					
 			}else{
-				popup.setArrowLocation(ArrowLocation.TOP_CENTER);
-					
+				popup.setArrowLocation(ArrowLocation.TOP_CENTER);					
 			}
 			popup.setContentNode(dashboardPopup);
 			popup.setHideOnEscape(true);

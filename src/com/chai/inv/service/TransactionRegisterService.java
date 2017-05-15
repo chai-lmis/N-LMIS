@@ -8,6 +8,8 @@ import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import org.controlsfx.dialog.Dialogs;
+
 import com.chai.inv.MainApp;
 import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.logger.MyLogger;
@@ -38,11 +40,13 @@ public class TransactionRegisterService {
 		}
 		try {
 			return DatabaseOperation.getDropdownList(x_QUERY);
-		} catch (SQLException ex) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while getting Transaction Register's drop down lists, error: \n"+
-			MyLogger.getStackTrace(ex));
-			System.out.println("Error occured while getting Transaction Register's drop down lists, error: "+ ex.getMessage());
+		} catch (SQLException ex) {			
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error - Transaction Register's drop down list, Exception:"+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);			
 		}
 		return null;
 	}
@@ -113,30 +117,33 @@ public class TransactionRegisterService {
 				list.add(trbean);
 			}
 		} catch (SQLException | NullPointerException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error in TransactionRegisterService while getting list,Error: \n"+
-			MyLogger.getStackTrace(e));
-			System.out.println("error in TransactionRegisterService while getting list,Error: "+ e.getMessage());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - Transaction Register's Grid Data, Exception:"+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);			
 		} finally {
-			System.out.println("transaction register select query (refresh) - "+ pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Transaction Register's Grid Data: "+ pstmt.toString());
 		}
 		return list;
 	}
-	public void disableItemTransactionTriggers(Boolean flag){		
-		try {
-			if(dao==null || dao.getConnection()==null || dao.getConnection().isClosed()){
-				dao = DatabaseOperation.getDbo();
-			}
-			String flagStr = (flag?"T":"F");
-			pstmt = dao.getPreparedStatement("UPDATE SHOW_SYNC_PROGRESS_SCREEN_FLAG SET ITEM_TRANSACTION_TRGS_DISABLE = '"+flagStr+"' ");
-			if(pstmt.executeUpdate()>0){
-				System.out.println("ITEM_TRANSACTION_TRGS_DISABLE = "+flagStr);
-				MainApp.LOGGER.setLevel(Level.INFO);
-				MainApp.LOGGER.info("ITEM_TRANSACTION_TRGS_DISABLE = "+flagStr);
-			}			
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-		}		
-	}
+//	public void disableItemTransactionTriggers(Boolean flag){		
+//		try {
+//			if(dao==null || dao.getConnection()==null || dao.getConnection().isClosed()){
+//				dao = DatabaseOperation.getDbo();
+//			}
+//			String flagStr = (flag?"T":"F");
+//			pstmt = dao.getPreparedStatement("UPDATE SHOW_SYNC_PROGRESS_SCREEN_FLAG SET ITEM_TRANSACTION_TRGS_DISABLE = '"+flagStr+"' ");
+//			if(pstmt.executeUpdate()>0){
+//				System.out.println("ITEM_TRANSACTION_TRGS_DISABLE = "+flagStr);
+//				MainApp.LOGGER.setLevel(Level.INFO);
+//				MainApp.LOGGER.info("ITEM_TRANSACTION_TRGS_DISABLE = "+flagStr);
+//			}			
+//		} catch (SQLException e) {
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+//		}		
+//	}
 }

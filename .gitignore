@@ -4,3 +4,10 @@
 *.project
 *.prefs
 build.fxbuild
+build/build.xml
+src/com/chai/inv/test/DrivingTestType.java
+src/com/chai/inv/test/ParsedMessageData.java
+src/com/chai/inv/test/ParsingTest.java
+src/com/chai/inv/test/test.java
+src/com/chai/inv/test/SensorDatatype.java
+src/com/chai/inv/test/HardwareType.java

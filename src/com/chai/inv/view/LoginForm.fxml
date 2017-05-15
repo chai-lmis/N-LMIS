@@ -91,17 +91,6 @@
                               </Button>
                            </children>
                         </HBox>
-                        <Button mnemonicParsing="false" onAction="#handleActiveUserAction" styleClass="bevel-grey" text="Register User" textFill="#3409a1" fx:id="x_ACTIVE_USER_BTN">
-                           <cursor>
-                              <Cursor fx:constant="HAND" />
-                           </cursor>
-                           <GridPane.margin>
-                              <Insets left="120.0" top="10.0" />
-                           </GridPane.margin>
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Button>
                      </children>
                   </GridPane>
                </children>

@@ -4,27 +4,22 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.lang.management.ManagementFactory;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
-import java.net.UnknownHostException;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -42,7 +37,6 @@ import org.json.JSONObject;
 import com.chai.inv.MainApp;
 import com.chai.inv.RootLayoutController;
 import com.chai.inv.DAO.DatabaseOperation;
-import com.chai.inv.SyncProcess.CheckData;
 import com.chai.inv.logger.MyLogger;
 import com.chai.inv.logger.SendLogToServer;
 import com.chai.inv.model.VersionInfoBean;
@@ -59,8 +53,7 @@ public class CheckForUpdates {
 	
 	public Boolean downloadFileStatus(String filepath){
 		Boolean flag = false;
-		try {
-			
+		try {			
 			MainApp.LOGGER.setLevel(Level.INFO);
 			MainApp.LOGGER.info("file path in downloadFileStatus :"+filepath);
 			long downloadFileSize = 0;			
@@ -133,69 +126,11 @@ public class CheckForUpdates {
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
 		}
 	}
-	public void updateDatabase(boolean updateDbOnly,String exeDownloadPath,String downloadURL,String mysqlpath,MainApp mainApp,String dbVersion,Stage progressBarScreen ) throws IOException{
-		MainApp.LOGGER.setLevel(Level.INFO);
-		MainApp.LOGGER.info("DBScript download file: "+ exeDownloadPath);
-		while(true){
-			System.out.print("");
-			//0. update records as sync flag=Y on server
-			if(CheckData.completeThreadCount==18){						
-				//1. stop sync thread: set syncThreadFlag=false
-				CheckData.threadFlag=false;
-				MainApp.LOGGER.setLevel(Level.INFO);
-				MainApp.LOGGER.info("CheckData.threadFlag=false");
-				//2. do all the flag N status using removeLocalDatabase();
-				//step 4.1
-				//workdone 4
-				DatabaseOperation.removeLocalDatabase(false);
-//				3.process to backup insert queries of required tables
-				//step 4.2
-				//workdone 6
-				List<String> list = backupInsertQueries(mysqlpath);
-				++RootLayoutController.workdone; //6
-				MainApp.LOGGER.setLevel(Level.INFO);
-				MainApp.LOGGER.info("Backup queries taken :  work done : "+(RootLayoutController.workdone));
-//				4. script downloadURL
-				//step 4.3
-				//workdone 7
-				downloadFile(downloadURL,exeDownloadPath + "\\");
-				if(downloadFileStatus(exeDownloadPath+"\\"+filename)){
-	//				5. import script
-					//step 4.4
-					//workdone 9
-					importDBScript(exeDownloadPath,mysqlpath);
-					++RootLayoutController.workdone; // 9
-					MainApp.LOGGER.setLevel(Level.INFO);
-					MainApp.LOGGER.info("Database updated : work done : "+(RootLayoutController.workdone));
-	//				6. run insert queries of required tables
-					//step 4.5
-					//workdone 10
-					runInsertQueries(list);		
-					versionTableUpdateOnLocal("DB",dbVersion);
-					++RootLayoutController.workdone; // 10
-					MainApp.LOGGER.setLevel(Level.INFO);
-					MainApp.LOGGER.info("Backup queries runs & version numbers updated on local db : work done : "+(RootLayoutController.workdone));
-					break;
-				}else{
-					Platform.runLater(new Runnable() {
-						@Override
-						public void run() {
-							progressBarScreen.close();
-							Dialogs.create().masthead("Slow internet, Please try again").showInformation();
-							MainApp.LOGGER.setLevel(Level.INFO);
-							MainApp.LOGGER.info("Internet Goes Slow, update file may be corruptted!, Please Try updating again.");														
-						}
-					});
-				}
-				break;
-			}
-		}
-	}
-	public void updateApplication(String tempFolderPath,String exeDownloadPath,String downloadURL,MainApp mainApp,
+	
+	public void updateApplication(String tempFolderPath,String exeDownloadPath,String downloadURL,
 			String appVersion,Stage progressBarScreen) throws IOException{
 			//step 4.1
 			//workdone 4
-			CheckData.threadFlag=false;
 			Runtime.getRuntime().exec("cmd /c if exist \""+tempFolderPath+"\"(rmdir /q /s \""+tempFolderPath+"\")");
 			Runtime.getRuntime().exec("cmd /c mkdir \""+exeDownloadPath+"\\temp\"");
 			tempFolderPath=exeDownloadPath+"\\temp";
@@ -231,7 +166,6 @@ public class CheckForUpdates {
 				 MainApp.LOGGER.info("Batch file is executed : work done: "+(RootLayoutController.workdone));
 				 versionTableUpdateOnLocal("APP",appVersion);
 				 SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
-//				 System.exit(0);
 			 } else {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -281,8 +215,7 @@ public class CheckForUpdates {
 		}
 	}
 	
-	public VersionInfoBean checkVersions(String versionInfoProvider,MainApp mainApp) throws IOException, JSONException{
-		this.mainApp=mainApp;
+	public VersionInfoBean checkVersions(String versionInfoProvider) throws IOException, JSONException{
 		VersionInfoBean versionInfoBean = new VersionInfoBean();
 		try{
 			HttpURLConnection connection = null;
@@ -362,26 +295,26 @@ public class CheckForUpdates {
 		return ActualMysqlpath;
 	}
 	
-	public void createPropertiesfile(String propertyFilePath, String...propertyArgs ){
-		try (OutputStream out = new FileOutputStream(propertyFilePath+"\\credential.properties");
-			 InputStream in = new FileInputStream(propertyFilePath+"\\credential.properties");			
-			){
-			Properties properties = new Properties();
-			// property[0] - contain username/LoginName
-			properties.setProperty("username",propertyArgs[0]);
-			// property[0] - contain password
-			properties.setProperty("password",propertyArgs[1]);
-			properties.setProperty("checkforupdates","true");
-			properties.store(out, "This is a sample for java properties");			
-			Properties prop = new Properties();
-			prop.load(in);
-			for (String property : prop.stringPropertyNames()) {
-				System.out.println(property + "=" + prop.getProperty(property));
-			}			
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+//	public void createPropertiesfile(String propertyFilePath, String...propertyArgs ){
+//		try (OutputStream out = new FileOutputStream(propertyFilePath+"\\credential.properties");
+//			 InputStream in = new FileInputStream(propertyFilePath+"\\credential.properties");			
+//			){
+//			Properties properties = new Properties();
+//			// property[0] - contain username/LoginName
+//			properties.setProperty("username",propertyArgs[0]);
+//			// property[0] - contain password
+//			properties.setProperty("password",propertyArgs[1]);
+//			properties.setProperty("checkforupdates","true");
+//			properties.store(out, "This is a sample for java properties");			
+//			Properties prop = new Properties();
+//			prop.load(in);
+//			for (String property : prop.stringPropertyNames()) {
+//				System.out.println(property + "=" + prop.getProperty(property));
+//			}			
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//	}
 	public void writeBatchFile(String sourcePath,String destinationPath){
 		System.out.println("in writeBatchFile()");
 		PrintWriter out = null;
@@ -436,151 +369,15 @@ public class CheckForUpdates {
 			}
 		}
 	}
-	public static boolean isInternetReachable() {
-		try {
+	public static boolean isInternetReachable() throws IOException {
 			// make a URL to a known source
-			URL url = new URL("http://www.google.com");
+			URL url = new URL("http://69.64.71.204:8080");			
 			// open a connection to that source
 			HttpURLConnection urlConnect = (HttpURLConnection) url.openConnection();
+			urlConnect.connect();
 			// trying to retrieve data from the source. If there
 			// is no connection, below line-code will fail
 			Object objData = urlConnect.getContent();
-		} catch (UnknownHostException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			System.out.println("Internet not available : "+e.getMessage());
-			return false;
-		} catch (IOException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			System.out.println("I/O : Internet not available: "+e.getMessage());
-			return false;
-		}
 		return true;
-	}
-	
-	public void importDBScript(String exeDownloadPath,String mysqlPath){
-		try{
-			Properties p = new Properties();			
-			p.load(getClass().getResourceAsStream("/com/chai/inv/DAO/rst_connection.properties"));			
-			String sourceimpcmd=exeDownloadPath+"\\Import_Database_Objects_Script.sql";
-			String host=p.getProperty("localhost");
-			String port=p.getProperty("localport");
-			String user=p.getProperty("username");
-			String password=p.getProperty("password");
-			String[] importcmd = new String[]{mysqlPath,"--host="+ host,"--port="+port,"--user="+user,"--password="+password,"vertical","-e"," source "+sourceimpcmd};
-			Process importcmdprocess = Runtime.getRuntime().exec(importcmd);
-			int processComplete = importcmdprocess.waitFor();
-			if(processComplete == 0){
-				System.out.println("Import_Database_Objects_Script taken successfully");
-				MainApp.LOGGER.setLevel(Level.INFO);
-				MainApp.LOGGER.info("Import_Database_Objects_Script imported successfully");
-			} else {
-				MainApp.LOGGER.setLevel(Level.SEVERE);
-				MainApp.LOGGER.severe("Import_Database_Objects_Script not imported successfully!");
-			}
-		}catch(Exception e){
-			System.out.println("Error occured while importing update script :"+e.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-		}
-	}
-	public List<String> backupInsertQueries(String mysqlpath) throws IOException{
-		try {
-			String tableName[]={"ADM_USERS",
-								"ADM_USER_ROLE_MAPPINGS",
-								"INVENTORY_WAREHOUSES",
-								"ADM_USER_WAREHOUSE_ASSIGNMENTS"};
-			MainApp.LOGGER.setLevel(Level.INFO);
-			MainApp.LOGGER.info("backup insertqueries | String object 'mysqlpath' : "+mysqlpath);
-			String command="-ghnta-";
-			for(int i=0;i<tableName.length;i++){
-				command = "\""+mysqlpath+"dump\""
-						+" -u"+DatabaseOperation.dbCredential.getLabel()
-						+" -p"+DatabaseOperation.dbCredential.getValue()
-						+" --compact --no-create-info --skip-set-charset --skip-quote-names"
-						+" --skip-triggers --complete-insert --extended-insert vertical "+tableName[i];
-				MainApp.LOGGER.setLevel(Level.INFO);
-		        MainApp.LOGGER.info("command string : "+command);
-				Process backupInsertProcess=Runtime.getRuntime().exec(command);
-				if(backupInsertProcess.waitFor()==0){
-					BufferedReader br = new BufferedReader(new InputStreamReader(backupInsertProcess.getInputStream()));
-					String insertQuery;
-				    while ((insertQuery = br.readLine()) != null) {
-				        MainApp.LOGGER.setLevel(Level.INFO);
-				        MainApp.LOGGER.info("Back-Up Query : "+insertQuery);
-				        insertQueries.add(insertQuery);
-				    }
-				}
-				
-			}
-		} catch (SecurityException e) {
-//			SecurityException - If a security manager exists and its checkExec method doesn't allow creation of the subprocess
-//			IOException - If an I/O error occurs
-//			NullPointerException - If command is null
-//			IllegalArgumentException			
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while taking backup-insertqueries : SecurityException: "+e.getMessage());
-		}catch(IOException e){
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while taking backup-insertqueries : IOException: "+e.getMessage());
-		}catch(NullPointerException e){
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while taking backup-insertqueries : NullPointerException: "+e.getMessage());
-		}catch(IllegalArgumentException e){
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while taking backup-insertqueries : IllegalArgumentException: "+e.getMessage());
-		}catch(Exception e){
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while taking backup-insertqueries : Exception: "+e.getMessage());
-		}
-		return insertQueries;
-	}
-	
-	public void runInsertQueries(List<String> backupInsertQueries){
-		try {
-			DatabaseOperation.CONNECT_TO_SERVER=false;
-			for(String query:backupInsertQueries)
-				DatabaseOperation.getDbo().getPreparedStatement(query).executeUpdate();
-		} catch (SQLException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error occured while running backup insertqueries: "+e.getMessage());
-		}	
-	}
-	
-	public void uploadLogFile() throws Exception{
-		final int BUFFER_SIZE = 4096;
-		try {
-			//step-4.3.1
-			//workdone 7
-			//URL url = new URL(ftpUrl);
-			//URLConnection conn = url.openConnection();
-			//step-4.3.2
-			//workdone 8
-			//String filename = conn.getHeaderField("filename");
-			//System.out.println("file name = " + conn.getHeaderField("filename"));
-			File file = new File("Logging.html");
-			FileInputStream fis = new FileInputStream(file);
-			System.out.println(file.length());
-			System.out.println("file.getPath();"+file.getPath());
-			System.out.println(" file.getAbsolutePath()="+ file.getAbsolutePath());
-			String ftpUrl = String.format("http://localhost:8084/N-LMIS_APP_DB_VERSION_PROVIDER/WriteFileOnServer?file=fis");
-			URL url = new URL(ftpUrl);
-			URLConnection conn = url.openConnection();
-			System.out.println(conn.getContentLength());
-		//	FileOutputStream outputStream = new FileOutputStream(savePath+filename);
-			byte[] buffer = new byte[BUFFER_SIZE];
-			int bytesRead = -1;
-//			while ((bytesRead = inputStream.read(buffer)) != -1) {
-//				outputStream.write(buffer, 0, bytesRead);
-//			}
-			//outputStream.close();
-		//	inputStream.close();
-			//System.out.println(" File "+filename+" downloaded");
-			FileOutputStream fos=new FileOutputStream("D://j.txt");
-	        fos.write(conn.getContentLength());
-		}catch(Exception e){
-			System.out.println("uploadLogFile() error : "+e.getMessage());
-		}
 	}
 }

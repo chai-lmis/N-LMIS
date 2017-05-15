@@ -29,7 +29,7 @@ public class UserService {
 	ResultSet rs;
 	Statement stmt;
 
-	public ObservableList<LabelValueBean> getDropdownList(String dropDown) {
+	public ObservableList<LabelValueBean> getDropdownList(String dropDown) throws SQLException {
 		// , boolean excludeCCO
 		String x_QUERY = "";
 		switch (dropDown) {
@@ -67,36 +67,65 @@ public class UserService {
 					+ " ORDER BY ROLE_NAME ";
 			break;
 		}
-		try {
+//		try {
 			return DatabaseOperation.getDropdownList(x_QUERY);
-		} catch (SQLException | NullPointerException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+//		} catch (SQLException | NullPointerException e) {
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+//		}
+	}
+	
+	public String getLGADB(UserBean userBean) throws SQLException, ClassNotFoundException{
+		String dbName=null;
+		StringBuilder loginCheckQuery = new StringBuilder();
+		loginCheckQuery.append("SELECT wh.WAREHOUSE_ID, wh.WAREHOUSE_NAME, wh.DB_NAME, ")
+		.append("usr.USER_ID, usr.USER_TYPE_ID, usr.STATUS , usr.ACTIVATED, ")
+		.append("wh.STATUS as WH_STATUS ")
+		.append("FROM INVENTORY_WAREHOUSES wh ")
+		.append("JOIN ADM_USERS usr ")
+		.append("WHERE wh.WAREHOUSE_TYPE_ID = F_GET_TYPE('WAREHOUSE TYPES','LGA STORE') ")
+		.append("AND wh.DB_NAME IS NOT NULL ")
+		.append("AND wh.WAREHOUSE_ID=usr.WAREHOUSE_ID ")
+		.append("AND wh.STATUS='A' ")
+		.append("AND usr.STATUS='A' ")
+		.append("AND usr.ACTIVATED = 'Y' ")
+		.append("AND usr.USER_TYPE_ID = F_GET_TYPE('USER TYPES','EMPLOYEE') ")
+		.append("AND usr.LOGIN_NAME = ? ")
+		.append("AND usr.PASSWORD = ?");
+		if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
+			dao = DatabaseOperation.getDbo();
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("DAO connection created for user: "+userBean.getX_LOGIN_NAME()+", to get it's DB_NAME.");
 		}
-		return null;
+		pstmt = dao.getPreparedStatement(loginCheckQuery.toString());
+		pstmt.setString(1, userBean.getX_LOGIN_NAME());
+		pstmt.setString(2, userBean.getX_PASSWORD());
+		rs = pstmt.executeQuery();
+		if (rs.next()) {
+			dbName = rs.getString("DB_NAME");
+		}
+		DatabaseOperation.CONNECT_TO_SERVER=false;
+		dao.closeConnection();
+		return dbName;
 	}
 
-	public boolean validateUser(UserBean userBean) {
-		boolean validateFlag = false;
-		String query_condition = "";
+	public boolean validateUserNew(UserBean userBean) throws ClassNotFoundException, CommunicationsException, SQLException {
+		boolean validateFlag = false;		
 		try {
-			if (DatabaseOperation.CONNECT_TO_SERVER) {
-				query_condition = " AND UPPER(ROLE_NAME) <> 'CCO' AND USER_TYPE_ID = F_GET_TYPE('USER TYPES','ADMIN') ";
-			}
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
-				System.out.println("In UserService.validateUser() -  else-if block :  ");
 				dao = DatabaseOperation.getDbo();
+				MainApp.LOGGER.setLevel(Level.INFO);
+				MainApp.LOGGER.info("DAO connection created for user: "+userBean.getX_LOGIN_NAME()+", to validate login credentials.");
 			}
 			pstmt = dao.getPreparedStatement("SELECT USER_ID, "
-					+ "  	  COMPANY_ID, " + "  	  FIRST_NAME, "
-					+ "  	  LAST_NAME, " + " 	  ROLE_ID, " + " 	  ROLE_NAME, "
-					+ " 	  USER_TYPE_ID, " + " 	  USER_TYPE_CODE, "
-					+ " 	  USER_TYPE_NAME," + " 	  WAREHOUSE_ID, "
+					+ "  	  COMPANY_ID, FIRST_NAME, "
+					+ "  	  LAST_NAME, ROLE_ID, ROLE_NAME, "
+					+ " 	  USER_TYPE_ID, USER_TYPE_CODE, "
+					+ " 	  USER_TYPE_NAME, WAREHOUSE_ID, "
 					+ "		  WAREHOUSE_NAME " 
 					+ "  FROM ADM_USERS_V "
-					+ " WHERE LOGIN_NAME = ? " + "   AND PASSWORD = ? "
-					+ "   AND STATUS = 'A' " + query_condition);
+					+ " WHERE LOGIN_NAME = ? AND PASSWORD = ? "
+					+ "   AND STATUS = 'A' ");
 			pstmt.setString(1, userBean.getX_LOGIN_NAME());
 			pstmt.setString(2, userBean.getX_PASSWORD());
 			rs = pstmt.executeQuery();
@@ -114,36 +143,32 @@ public class UserService {
 				userBean.setX_USER_WAREHOUSE_NAME(rs.getString("WAREHOUSE_NAME"));
 				validateFlag = true;
 			}
-		} catch (SQLException | NullPointerException ex) {
-			validateFlag = false;
-			System.out.println("An error occured while checking user login, error:"+ ex.getMessage());
-			if (dao != null) {
-				System.out.println("Exception in user login: dao is not null : closing the connection object");
-				dao.closeConnection();
-				dao = null;
-			}
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+//		} catch (SQLException | NullPointerException ex) {
+//			validateFlag = false;
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("Exception whlile validating user login details:: "+userBean.getX_LOGIN_NAME()+", "+ex.getMessage());
+//			if (dao != null) {
+//				dao.closeConnection();
+//				MainApp.LOGGER.setLevel(Level.INFO);
+//				MainApp.LOGGER.severe("Exception whlile validating user login details::closing the connection object:: "+userBean.getX_LOGIN_NAME()+", "+ex.getMessage());
+//				dao = null;
+//			}
 		} finally {
-			System.out.println("user login query : " + pstmt.toString());
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("finally block: user login query : " + pstmt.toString());
 			if (!validateFlag) {
-				System.out.println("1");
 				if (dao != null) {
-					System.out.println("2");
 					dao.closeConnection();
 					DatabaseOperation.getDbo().closeConnection();
 				}
-				System.out.println("3");
 				dao = null;
-				System.out.println("4");
-				System.out.println("7");
 			}
 		}
 		return validateFlag;
 	}
-
+	
 	public List<LabelValueBean> getUserWarehouseList(String x_USER_ID)
-			throws SQLException {
+			throws SQLException, ClassNotFoundException {
 		List<LabelValueBean> listUserWarehouse = null;
 		String x_Query = " SELECT INV.WAREHOUSE_ID, "
 				+ "        CONCAT(INV.WAREHOUSE_NAME, ' (',TYP.TYPE_NAME,')') WAREHOUSE_NAME, "
@@ -159,8 +184,7 @@ public class UserService {
 		return listUserWarehouse;
 	}
 
-	public ObservableList<LabelValueBean> getLGAStoreList(
-			String user_warehouse_id) throws SQLException {
+	public ObservableList<LabelValueBean> getLGAStoreList(String user_warehouse_id) throws SQLException {
 		System.out.println("In getLGAStoreList method ");
 		ObservableList<LabelValueBean> listUserWarehouse = FXCollections.observableArrayList();
 		List<LabelValueBean> list = null;
@@ -196,7 +220,7 @@ public class UserService {
 		return listUserWarehouse;
 	}
 
-	public ObservableList<LabelValueBean> getAssignedUserWarehouseList(String... x_USER_ID) throws SQLException {
+	public ObservableList<LabelValueBean> getAssignedUserWarehouseList(String... x_USER_ID) throws SQLException, ClassNotFoundException {
 		ObservableList<LabelValueBean> listUserWarehouse = FXCollections.observableArrayList();
 		List<LabelValueBean> list = null;
 		String x_Query = null;
@@ -234,16 +258,14 @@ public class UserService {
 		return listUserWarehouse;
 	}
 
-	public void updateUserWarehouseAssignment(String userId,
-			List<LabelValueBean> listlvb, UserBean userBean)
-			throws SQLException {
-		if (dao == null || dao.getConnection() == null
-				|| dao.getConnection().isClosed()) {
+	public void updateUserWarehouseAssignment(String userId, List<LabelValueBean> listlvb, UserBean userBean)
+			throws SQLException, ClassNotFoundException {
+		if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 			dao = DatabaseOperation.getDbo();
 		}
 		pstmt = dao.getPreparedStatement("UPDATE ADM_USER_WAREHOUSE_ASSIGNMENTS"
 						+ "   SET STATUS = ?, SYNC_FLAG='N' 	  "
-						+ " WHERE USER_ID = ?	  " + "   AND WAREHOUSE_ID = ? ");
+						+ " WHERE USER_ID = ? AND WAREHOUSE_ID = ? ");
 		List<String> queries = new ArrayList<>();
 		String query;
 		int i;
@@ -534,9 +556,9 @@ public class UserService {
 		return flag;
 	}
 
-	public ObservableList<UserBean> getWarehouseList() {
+	public ObservableList<UserBean> getWarehouseList() throws ClassNotFoundException, CommunicationsException, SQLException {
 		ObservableList<UserBean> warehouseList = FXCollections.observableArrayList();
-		try {
+//		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
@@ -549,17 +571,17 @@ public class UserService {
 				warehouseBean.setX_WAREHOUSE_ID(rs.getString("WAREHOUSE_ID"));
 				warehouseList.add(warehouseBean);
 			}
-		} catch (SQLException | NullPointerException ex) {
-			System.out.println("error while getting active warehouse list, error: "+ ex);
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error while getting active warehouse list, error:\n"+MyLogger.getStackTrace(ex));
-		} 
+//		} catch (SQLException | NullPointerException ex) {
+//			System.out.println("error while getting active warehouse list, error: "+ ex);
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("error while getting active warehouse list, error:\n"+MyLogger.getStackTrace(ex));
+//		} 
 		return warehouseList;
 	}
 
-	public ObservableList<UserBean> getSearchList(UserBean toSearchUserBean) {
+	public ObservableList<UserBean> getSearchList(UserBean toSearchUserBean) throws ClassNotFoundException, CommunicationsException, SQLException {
 		ObservableList<UserBean> searchData = FXCollections.observableArrayList();
-		try {
+//		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
@@ -638,19 +660,19 @@ public class UserService {
 				userBean.setX_TELEPHONE_NUMBER(rs.getString("TELEPHONE_NUMBER"));
 				searchData.add(userBean);
 			}
-		} catch (SQLException | NullPointerException ex) {
-			System.out.println("An error occured while user search list, error:"
-		+ ex.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("An error occured while user search list, error:\n"
-			+MyLogger.getStackTrace(ex));
-		} finally {
-			System.out.println("user searach query is\n" + pstmt.toString());
-		}
+//		} catch (SQLException | NullPointerException ex) {
+//			System.out.println("An error occured while user search list, error:"
+//		+ ex.getMessage());
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("An error occured while user search list, error:\n"
+//			+MyLogger.getStackTrace(ex));
+//		} finally {
+//			System.out.println("user searach query is\n" + pstmt.toString());
+//		}
 		return searchData;
 	}
 
-	public boolean changePassword(String userID, String oldPasswordStr, String newPasswordStr) {
+	public boolean changePassword(String userID, String oldPasswordStr, String newPasswordStr) throws SQLException {
 		boolean flag = false;
 		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
@@ -690,20 +712,20 @@ public class UserService {
 					flag = false;
 				}
 			}
-		} catch (CommunicationsException exMySql) {
-			System.out.println("Error while changing user password, exMySql error: "
-		+ exMySql.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error while changing user password, exMySql error:\n"
-			+MyLogger.getStackTrace(exMySql));
-			UserMainController.message = "network connection goes down or disconnected!";
-			flag = false;
-		} catch (Exception e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error while changing user password, error:\n"
-			+MyLogger.getStackTrace(e));
-			System.out.println("Error while changing user password, error: "+ e.getMessage());
-			flag = false;
+//		} catch (CommunicationsException exMySql) {
+//			System.out.println("Error while changing user password, exMySql error: "
+//		+ exMySql.getMessage());
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("Error while changing user password, exMySql error:\n"
+//			+MyLogger.getStackTrace(exMySql));
+//			UserMainController.message = "network connection goes down or disconnected!";
+//			flag = false;
+//		} catch (Exception e) {
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("Error while changing user password, error:\n"
+//			+MyLogger.getStackTrace(e));
+//			System.out.println("Error while changing user password, error: "+ e.getMessage());
+//			flag = false;
 		} finally {
 			if (MainApp.getUserRole().getLabel().equals("CCO")) {
 				DatabaseOperation.CONNECT_TO_SERVER = false;
@@ -716,10 +738,10 @@ public class UserService {
 		return flag;
 	}
 
-	public boolean setRoleIDMapping(UserBean userBean, String actionBtnString) {
+	public boolean setRoleIDMapping(UserBean userBean, String actionBtnString) throws ClassNotFoundException, CommunicationsException, SQLException {
 		System.out.println("In setRoleIDMapping()");
 		boolean flag = false;
-		try {
+//		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
 				dao = DatabaseOperation.getDbo();
 			}
@@ -766,18 +788,18 @@ public class UserService {
 				}
 				flag = true;
 			}
-		} catch (SQLException | NullPointerException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error Occured whle saving or editing User Role's, error:\n"
-			+MyLogger.getStackTrace(e));
-			System.out.println("Error Occured whle saving or editing User Role's, error: "+ e.getMessage());
-		} finally {
-			System.out.println("role set query: " + pstmt.toString());
-		}
+//		} catch (SQLException | NullPointerException e) {
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("Error Occured whle saving or editing User Role's, error:\n"
+//			+MyLogger.getStackTrace(e));
+//			System.out.println("Error Occured whle saving or editing User Role's, error: "+ e.getMessage());
+//		} finally {
+//			System.out.println("role set query: " + pstmt.toString());
+//		}
 		return flag;
 	}
 
-	public boolean setWarehouseIdAssingment(UserBean userBean, String actionBtnString) {
+	public boolean setWarehouseIdAssingment(UserBean userBean, String actionBtnString) throws ClassNotFoundException, CommunicationsException, SQLException {
 		System.out.println("In setWarehouseIdAssingment()");
 		boolean flag = false;
 		try {
@@ -836,12 +858,12 @@ public class UserService {
 				}
 				flag = true;
 			}
-		} catch (SQLException | NullPointerException e) {
-			System.out.println("Error Occured whle saving or editing User warehouse assingments, error: "
-		+ e.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error Occured whle saving or editing User warehouse assingments, error:\n"
-			+MyLogger.getStackTrace(e));
+//		} catch (SQLException | NullPointerException e) {
+//			System.out.println("Error Occured whle saving or editing User warehouse assingments, error: "
+//		+ e.getMessage());
+//			MainApp.LOGGER.setLevel(Level.SEVERE);
+//			MainApp.LOGGER.severe("Error Occured whle saving or editing User warehouse assingments, error:\n"
+//			+MyLogger.getStackTrace(e));
 		} finally {
 			System.out.println("User warehouse assingment set query: "+ pstmt.toString());
 			dao.closeConnection();
@@ -851,7 +873,7 @@ public class UserService {
 		return flag;
 	}
 
-	public String getLastInsertUserID() {
+	public String getLastInsertUserID() throws CommunicationsException, ClassNotFoundException, SQLException {
 		dao = DatabaseOperation.getDbo();
 		PreparedStatement pstmt2 = dao.getPreparedStatement("select user_id from adm_users order by user_id desc limit 1");
 		try {
@@ -867,97 +889,6 @@ public class UserService {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 			return null;
-		}
-	}
-
-	public boolean isUserRecordExist() { // checks for user login record, pre-exist or not
-		System.out.println("In UserService.isUserRecordExist()");
-		boolean flag = false;
-		DatabaseOperation.CONNECT_TO_SERVER = false; // to make sure that always local DB will be queried
-		dao = DatabaseOperation.getDbo();
-		pstmt = dao.getPreparedStatement("select count(user_id) from adm_users");
-		String MAPPING_COUNT = "SELECT COUNT(ROLE_USER_ID) FROM ADM_USER_ROLE_MAPPINGS";
-		String INV_WAREHOUSE_COUNT = "SELECT COUNT(WAREHOUSE_ID) FROM INVENTORY_WAREHOUSES";
-		String WAREHOUSE_COUNT = "SELECT COUNT(WAREHOUSE_USER_ID) FROM ADM_USER_WAREHOUSE_ASSIGNMENTS";
-		ResultSet rsMapp, rsInv, rsWarehouse;
-		try {
-			rs = pstmt.executeQuery();
-			if (rs.next() && rs.getInt(1) > 0) {
-				System.out.println("Count User record: " + rs.getInt(1));
-				pstmt = dao.getPreparedStatement(MAPPING_COUNT);
-				rsMapp = pstmt.executeQuery();
-				if (rsMapp.next() && rsMapp.getInt(1) > 0) {
-					System.out.println("Count role_mapping record: "+ rsMapp.getInt(1));
-					pstmt = dao.getPreparedStatement(INV_WAREHOUSE_COUNT);
-					rsInv = pstmt.executeQuery();
-					if (rsInv.next() && rsInv.getInt(1) > 0) {
-						System.out.println("Count inventory_warehouse record: "+ rsInv.getInt(1));
-						pstmt = dao.getPreparedStatement(WAREHOUSE_COUNT);
-						rsWarehouse = pstmt.executeQuery();
-						if (rsWarehouse.next() && rsWarehouse.getInt(1) > 0) {
-							System.out.println("Count warehouse_assignment record: "+ rsWarehouse.getInt(1));
-							flag = true;
-						}
-					}
-				}
-			}
-			
-		}catch(CommunicationsException ex1){
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Count User record Query: " + ex1.toString());
-		}catch (SQLException | NullPointerException e) {
-			flag = false;
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Count User record Query: " + pstmt.toString());
-			MainApp.LOGGER.severe("Exception : UserService.isUserRecordExist() method: "+ e.getMessage());
-			MainApp.LOGGER.severe("Exception : UserService.isUserRecordExist() method StackTrace::\n"+MyLogger.getStackTrace(e));
-		} finally {
-			dao.closeConnection();
-			dao = null;
-			DatabaseOperation.setDbo(null);
-		}
-		return flag;
-	}
-
-	public boolean isShowSyncProgressScreen() throws SQLException {
-		boolean flag = false;
-		if (dao == null || dao.getConnection() == null
-				|| dao.getConnection().isClosed()) {
-			dao = DatabaseOperation.getDbo();
-		}
-		pstmt = dao.getPreparedStatement("SELECT LOGIN_COUNT FROM SHOW_SYNC_PROGRESS_SCREEN_FLAG");
-		rs = pstmt.executeQuery();
-		if (rs.next()) {
-			if (rs.getInt("LOGIN_COUNT") == 1) {
-				flag = true;
-			}
-		} else {
-			System.out.println("getLoginCount() -> resultSet.next() is false. zero records fetched");
-		}
-		//dao.closeConnection();
-		return flag;
-	}
-
-	public void setLoginCount() {
-		try {
-			if (dao == null || dao.getConnection() == null
-					|| dao.getConnection().isClosed()) {
-				dao = DatabaseOperation.getDbo();
-			}
-			pstmt = dao.getPreparedStatement("SELECT LOGIN_COUNT FROM SHOW_SYNC_PROGRESS_SCREEN_FLAG");
-			rs = pstmt.executeQuery();
-			if (rs.next()) {
-				pstmt = dao.getPreparedStatement("UPDATE SHOW_SYNC_PROGRESS_SCREEN_FLAG "
-											     + " SET LOGIN_COUNT = "+ (rs.getInt("LOGIN_COUNT") + 1));
-			} else {
-				pstmt = dao.getPreparedStatement("INSERT INTO SHOW_SYNC_PROGRESS_SCREEN_FLAG (LOGIN_COUNT) VALUES(1)");
-			}
-			int updateCount = pstmt.executeUpdate();
-			//dao.closeConnection();
-		} catch (SQLException | NullPointerException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
 		}
 	}
 }

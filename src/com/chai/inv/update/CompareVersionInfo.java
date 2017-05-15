@@ -2,6 +2,7 @@ package com.chai.inv.update;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.logging.Level;
 
 import com.chai.inv.MainApp;
@@ -23,12 +24,12 @@ public class CompareVersionInfo {
 	}
 
 	public boolean compareDbVersion() {
-		String query = "SELECT UPDATED_BY, " + "  START_DATE, "
-				+ "  LAST_UPDATED_ON, " + "  JAR_DEPENDENT_ON_DB, "
-				+ "  JAR_DB_DEPENDENCY, " + "  END_DATE, " + "  DB_VERSION, "
-				+ "  DB_DEPENDENT_ON_JAR, " + "  CREATED_ON, "
-				+ "  CREATED_BY, " + "  APPLICATION_VERSION, "
-				+ "  APP_VERSION_ID " + " FROM APPLICATION_VERSION_CONTROL ";
+		String query = "SELECT UPDATED_BY, START_DATE, "
+				+ "  LAST_UPDATED_ON, JAR_DEPENDENT_ON_DB, "
+				+ "  JAR_DB_DEPENDENCY, END_DATE, DB_VERSION, "
+				+ "  DB_DEPENDENT_ON_JAR, CREATED_ON, "
+				+ "  CREATED_BY, APPLICATION_VERSION, "
+				+ "  APP_VERSION_ID FROM APPLICATION_VERSION_CONTROL ";
 		try {
 			dao = DatabaseOperation.getDbo();
 			pstmt = dao.getPreparedStatement(query);
@@ -48,11 +49,17 @@ public class CompareVersionInfo {
 			}
 
 		} catch (Exception e) {
-			System.out.println("error is :" + e.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
+			MainApp.LOGGER.severe("Exception - compareDbVersion:error is :" + e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 		} finally {
-			dao.closeConnection();
+			try {
+				dao.closeConnection();
+			} catch (SQLException e) {
+				MainApp.LOGGER.setLevel(Level.SEVERE);
+				MainApp.LOGGER.severe("Exception - compareDbVersion:error in closing connection :" + e.getMessage());
+				MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			}
 		}
 		return flag;
 	}

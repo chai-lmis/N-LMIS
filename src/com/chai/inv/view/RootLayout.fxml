@@ -27,7 +27,6 @@
                         <MenuItem mnemonicParsing="false" onAction="#handleTransactionRegisterMenuAction" text="Transaction Register" />
                         <Menu mnemonicParsing="false" text="Orders" fx:id="x_ORDERS_MENU_ITEM">
                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#handlePurchaseOrderMenuAction" text="Stock Ordering" />
                               <MenuItem mnemonicParsing="false" onAction="#handleSalesOrderMenuAction" text="Order Fulfillment" />
                           </items>
                         </Menu>
@@ -48,13 +47,7 @@
                 <Menu mnemonicParsing="false" text="Admin" visible="false" fx:id="x_ADMIN_MENU">
                   <items>
                     <MenuItem mnemonicParsing="false" onAction="#handleUserMenuAction" text="User" fx:id="x_USER_MENU_ITEM" />
-                        <MenuItem mnemonicParsing="false" onAction="#handleTypeMenuAction" text="Type" fx:id="x_TYPE_MENU_ITEM" />
                         <MenuItem mnemonicParsing="false" text="Category" fx:id="x_CATEGORY_MENU_ITEM" />
-                  </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                  <items>
-                        <MenuItem mnemonicParsing="false" onAction="#handleRemoveDatabase" text="Remove Database" fx:id="x_UNREGISTER_USER_MENU_ITEM" />
                   </items>
                 </Menu>
                   <Menu mnemonicParsing="false" text="Update">
@@ -90,6 +83,11 @@
                   </ImageView>
                   <VBox alignment="CENTER" GridPane.columnIndex="1">
                      <children>
+<!--                         <Label alignment="CENTER" text="Test Application" textFill="#f80000" fx:id="x_ROOT_COMMON_LABEL1"> -->
+<!--                            <font> -->
+<!--                               <Font size="24.0" /> -->
+<!--                            </font> -->
+<!--                         </Label> -->
                         <Label alignment="CENTER" text="Label" textFill="#05005b" GridPane.columnIndex="1" fx:id="x_ROOT_COMMON_LABEL">
                            <font>
                               <Font name="System Bold" size="24.0" />

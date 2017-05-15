@@ -38,7 +38,7 @@ import com.chai.inv.service.TypeService;
 	@FXML private ComboBox<String> x_ADJUSTMENT_TYPE;
 	
 	private ArrayList<TextField> wastageQuantityField = new ArrayList<>();
-	private TypeService typeservice=new TypeService();
+	private TypeService typeService=new TypeService();
 	private ArrayList<String> itemIdField = new ArrayList<>();
 	private ArrayList<TextArea> wastageCommentField = new ArrayList<>();
 	private ArrayList<TextField> newStockBalField = new ArrayList<>();
@@ -84,9 +84,9 @@ import com.chai.inv.service.TypeService;
 		ObservableList<LabelValueBean> wastageTypeList = FXCollections.observableArrayList();
 		ObservableList<LabelValueBean> wastageTypeListForDevice = FXCollections.observableArrayList();
 		vvmStageList = new LGAStockReceiptService().getVVMStageList();
-		wastageTypeListForDevice =typeservice.getDropdownList("STOCK WASTAGES","FORDEVICE");
-		String typeid=typeservice.getType("PRODUCT", "DEVICE");
-		wastageTypeList = typeservice.getDropdownList("STOCK WASTAGES",null);
+		wastageTypeListForDevice =typeService.getDropdownList("STOCK WASTAGES","FORDEVICE");
+		String typeid=typeService.getType("PRODUCT", "DEVICE");
+		wastageTypeList = typeService.getDropdownList("STOCK WASTAGES",null);
 		int i = 0;
 		// the concept in here to set the form defaults is, the itemList1 from
 		// item_masters table/view and

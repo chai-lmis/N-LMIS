@@ -223,6 +223,7 @@ public class UserMainController {
 			String newPasswordStr = newPassword.getText();
 			String confirmPasswordStr = confirmPassword.getText();
 			String errorMessage = "";
+			System.out.println("");
 			if (oldPasswordStr == null || oldPasswordStr.length() == 0) {
 				errorMessage += "Old password cannot be left blank.\n";
 			}
@@ -243,26 +244,36 @@ public class UserMainController {
 			} else {
 				String userID = userChangePasswordBean.getX_USER_ID();
 				System.out.println("userID = " + userID);
-				boolean passwordChanged = userService.changePassword(userID, oldPasswordStr, newPasswordStr);
-				if (passwordChanged) {
-					System.out.println("Password Changed!");
-					Dialogs.create()
-							.owner(new Stage())
-							.title("Information")
-							.masthead("Password Changed!")
-							.message("New password is set for the selected user.")
-							.showInformation();
-					d.hide();
-					try {
-						refreshUserTableGrid();
-					} catch (SQLException e) {
-						System.out.println("Error occured while changing user's password: "+e.getMessage());
+				boolean passwordChanged;
+				try {
+					passwordChanged = userService.changePassword(userID, oldPasswordStr, newPasswordStr);
+					if (passwordChanged) {
+						System.out.println("Password Changed!");
+						Dialogs.create()
+								.owner(new Stage())
+								.title("Information")
+								.masthead("Password Changed!")
+								.message("New password is set for the selected user.")
+								.showInformation();
+						d.hide();
+						try {
+							refreshUserTableGrid();
+						} catch (SQLException e) {
+							System.out.println("Error occured while changing user's password: "+e.getMessage());
+						}
+					} else {
+						Dialogs.create().owner(new Stage()).title("Error")
+								.masthead("Error in changing the Password")
+								.message(UserMainController.message).showError();
 					}
-				} else {
-					Dialogs.create().owner(new Stage()).title("Error")
-							.masthead("Error in changing the Password")
-							.message(UserMainController.message).showError();
-				}
+				} catch (SQLException e1) {
+					MainApp.LOGGER.setLevel(Level.SEVERE);			
+					MainApp.LOGGER.severe("Exception in Change Password: "+e1.getMessage());
+					MainApp.LOGGER.severe(MyLogger.getStackTrace(e1));
+					Dialogs.create()
+					.title("Error")
+					.message(e1.getMessage()).showException(e1);
+				}				
 			}
 		}
 	};
@@ -348,10 +359,13 @@ public class UserMainController {
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 			return controller.isOkClicked();
-		} catch (IOException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+		} catch (IOException | SQLException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Exception In Add User Form: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 			return false;
 		}
 	}
@@ -395,10 +409,14 @@ public class UserMainController {
 					// Show the dialog and wait until the user closes it
 					dialogStage.showAndWait();
 					return controller.isOkClicked();
-				} catch (IOException e) {
-					MainApp.LOGGER.setLevel(Level.SEVERE);
+				} catch (IOException | SQLException e) {
+					MainApp.LOGGER.setLevel(Level.SEVERE);			
+					MainApp.LOGGER.severe("Exception In Edit User Form: "+e.getMessage());
 					MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-					e.printStackTrace();
+					Dialogs.create()
+					.title("Error")
+					.message(e.getMessage()).showException(e);
+					return false;
 				}
 			} else {
 				Dialogs.create()
@@ -442,10 +460,13 @@ public class UserMainController {
 			// Show the dialog and wait until the user closes it
 			dialogStage.showAndWait();
 			return controller.isOkClicked();
-		} catch (IOException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
+		} catch (IOException | SQLException e) {
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Exception In Search User Form: "+e.getMessage());
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
-			e.printStackTrace();
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);
 			return false;
 		}
 	}

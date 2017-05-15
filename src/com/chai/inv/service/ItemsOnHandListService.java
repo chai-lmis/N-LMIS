@@ -9,6 +9,8 @@ import java.util.logging.Level;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import org.controlsfx.dialog.Dialogs;
+
 import com.chai.inv.MainApp;
 import com.chai.inv.DAO.DatabaseOperation;
 import com.chai.inv.logger.MyLogger;
@@ -38,12 +40,14 @@ public class ItemsOnHandListService {
 		}
 		try {
 			return DatabaseOperation.getDropdownList(x_QUERY);
-		} catch (SQLException ex) {
-			System.out.println("Error occured while getting Items-On-Hand List drop down lists, error: "
-		+ ex.getMessage());
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occured while getting Items-On-Hand List drop down lists, error:\n"+
-					MyLogger.getStackTrace(ex));
+		} catch (SQLException ex) {		
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - Product-Onhand drop down lists, Exception:"+ex.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(ex));
+			Dialogs.create()
+			.title("Error")
+			.message(ex.getMessage()).showException(ex);
+			
 		}
 		return null;
 	}
@@ -77,11 +81,15 @@ public class ItemsOnHandListService {
 				onHandbean.setX_ITEMS_BELOW_SAFETY_STOCK(rs.getString("ITEMS_BELOW_SAFETY_STOCK"));
 				list.add(onHandbean);			}
 		} catch (SQLException | NullPointerException e) {
-			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("error in ItemsOnHandListService while getting list,Error:\n"+
-					MyLogger.getStackTrace(e));
-			System.out.println("error in ItemsOnHandListService while getting list,Error: "
-					+ e.getMessage());
+			MainApp.LOGGER.setLevel(Level.SEVERE);			
+			MainApp.LOGGER.severe("Error Loading - Product-Onhand Grid Data, Exception:"+e.getMessage());
+			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
+			Dialogs.create()
+			.title("Error")
+			.message(e.getMessage()).showException(e);	
+		}finally{
+			MainApp.LOGGER.setLevel(Level.INFO);
+			MainApp.LOGGER.info("Product-Onhand Grid Data: "+ pstmt.toString());
 		}
 		return list;
 	}
@@ -124,8 +132,7 @@ public class ItemsOnHandListService {
 				list.add(onHandbean);
 			}
 		} catch (SQLException | NullPointerException e) {
-			System.out.println("error in ItemsOnHandListService while getting list,Error: "
-		+ e.getMessage());
+			System.out.println("error in ItemsOnHandListService while getting list,Error: "+ e.getMessage());
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe("error in ItemsOnHandListService while getting list,Error:\n"+
 					MyLogger.getStackTrace(e));
@@ -134,7 +141,6 @@ public class ItemsOnHandListService {
 	}
 
 	public String getDefaultOrderStoreId(String p_source_warehouse_id) throws SQLException {
-		System.out.println("In getDefaultOrderStoreId............ ");
 		if (dao == null || dao.getConnection().isClosed()) {
 			dao = DatabaseOperation.getDbo();
 		}
@@ -148,10 +154,7 @@ public class ItemsOnHandListService {
 			}
 		} catch (SQLException e) {
 			MainApp.LOGGER.setLevel(Level.SEVERE);
-			MainApp.LOGGER.severe("Error occur while In getDefaultOrderStoreId(), exception:\n"+
-					MyLogger.getStackTrace(e));
-			System.out.println("Error occur while In getDefaultOrderStoreId(), exception: "+ e.getMessage());
-			e.printStackTrace();
+			MainApp.LOGGER.severe("Error occur while In getDefaultOrderStoreId(), exception: "+e.getMessage());
 		}
 		return "0";
 	}

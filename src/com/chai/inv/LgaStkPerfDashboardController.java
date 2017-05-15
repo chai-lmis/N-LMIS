@@ -354,12 +354,12 @@ public class LgaStkPerfDashboardController {
 			}
 			
 		} catch (Exception e) {
-			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+			fp.close();
 			MainApp.LOGGER.setLevel(Level.SEVERE);
 			MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 			e.printStackTrace();
 		}
-		fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+		fp.close();
 	}
 	@FXML public void handleSummary(){
 		System.out.println("lgaStkperfDashBordreport.handleSummary()");
@@ -457,12 +457,12 @@ public class LgaStkPerfDashboardController {
 					rowIndex++;
 				}
 			} catch (Exception e) {
-				fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+				fp.close();
 				MainApp.LOGGER.setLevel(Level.SEVERE);
 				MainApp.LOGGER.severe(MyLogger.getStackTrace(e));
 				e.printStackTrace();
 			}
-			fp.handleStateChangeNotification(new StateChangeNotification(Type.BEFORE_START));
+			fp.close();
 		}
 	}
 	
