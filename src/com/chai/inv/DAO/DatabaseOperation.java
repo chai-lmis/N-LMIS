@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import org.controlsfx.dialog.Dialogs;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -91,22 +89,7 @@ public class DatabaseOperation {
 		}
 		return con;
 	}
-
-	// @Override
-	// protected void finalize() throws Throwable {
-	// try{
-	// System.out.println("closing a Dbo connections");
-	// dbo.closeConnection();
-	// DatabaseOperation.setDbo(null);
-	// }catch(Throwable t){
-	// throw t;
-	// }finally{
-	// System.out.println("garbage collection is started...");
-	// super.finalize();
-	// }
-	//
-	// }
-
+	
 	public static DatabaseOperation getDbo() throws CommunicationsException, SQLException {
 			MainApp.LOGGER.setLevel(Level.INFO);
 			if (dbo == null) {
@@ -243,7 +226,6 @@ public class DatabaseOperation {
 		ResultSet rs = dbo.getResult(x_QUERY);
 		ResultSetMetaData rsmd = rs.getMetaData();
 		int columnsNumber = rsmd.getColumnCount();
-//		try {
 			while (rs.next()) {
 				if (columnsNumber == 3) {
 					listItems.add(new LabelValueBean(rs.getString(3), rs
@@ -253,15 +235,6 @@ public class DatabaseOperation {
 							.getString(1)));
 				}
 			}
-		
-//		} catch (Exception e) {
-//			System.out.println("Error occured while getting dropdown data:"
-//					+ e.getMessage());
-//			MainApp.LOGGER.setLevel(Level.SEVERE);
-//			MainApp.LOGGER.severe("Error occured while getting dropdown data:"
-//			+MyLogger.getStackTrace(e));
-//			e.printStackTrace();
-//		}
 		return listItems;
 	}
 
@@ -273,49 +246,23 @@ public class DatabaseOperation {
 			dbo = DatabaseOperation.getDbo();
 		}
 		ResultSet rs = dbo.getResult(x_QUERY);
-//		try {
 			while (rs.next()) {
 				listItems.add(new LabelValueBean(rs.getString(2), rs
 						.getString(1), rs.getString(3)));
 			}
-//		} catch (Exception e) {
-//			System.out.println("Error occured while getting dropdown data:"
-//					+ e.getMessage());
-//			MainApp.LOGGER.setLevel(Level.SEVERE);
-//			MainApp.LOGGER.severe("Error occured while getting dropdown data:"
-//			+MyLogger.getStackTrace(e));
-//			e.printStackTrace();
-//		}
 		return listItems;
 	}
 
 	public static String getSingleValue(String x_QUERY) throws SQLException {
 		String val = null;
-//		try {
 			if (dbo == null || dbo.getConnection() == null
 					|| dbo.getConnection().isClosed()) {
 				dbo = DatabaseOperation.getDbo();
 			}
-//		} catch (SQLException e1) {
-//			MainApp.LOGGER.setLevel(Level.SEVERE);
-//			MainApp.LOGGER.severe(MyLogger.getStackTrace(e1));
-//			e1.printStackTrace();
-//		}
 		ResultSet rs = dbo.getResult(x_QUERY);
-//		try {
 			if (rs.next()) {
 				val = rs.getString(1);
 			}
-//		} catch (Exception e) {
-//			System.out.println("Error occured while getting dropdown data:"
-//					+ e.getMessage());
-//			MainApp.LOGGER.setLevel(Level.SEVERE);
-//			MainApp.LOGGER.severe("Error occured while getting dropdown data:"
-//			+MyLogger.getStackTrace(e));
-//			e.printStackTrace();
-//		} finally {
-//			dbo.closeConnection();
-//		}
 		return val;
 	}
 
@@ -345,7 +292,6 @@ public class DatabaseOperation {
 	}
 
 	public void closeConnection() throws SQLException {
-//		try {
 		MainApp.LOGGER.setLevel(Level.INFO);
 			if (stmt != null && !stmt.isClosed()) {
 				stmt.close();
@@ -364,12 +310,5 @@ public class DatabaseOperation {
 			}
 			
 			MainApp.LOGGER.info("connection closed..(pstmt and stmt and rs objects closed)");
-//		} catch (Exception e) {
-//			System.out.println("Error occured while closing the connection:"
-//					+ e.getMessage());
-//			MainApp.LOGGER.setLevel(Level.SEVERE);
-//			MainApp.LOGGER.severe("Error occured while closing Connection:"
-//			+MyLogger.getStackTrace(e));
-//		}
 	}
 }

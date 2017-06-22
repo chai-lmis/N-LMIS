@@ -19,6 +19,7 @@ public class CommonService {
 	public String getVersionNumber(){
 		String appVersionNumber;
 		try {
+			DatabaseOperation.CONNECT_TO_SERVER=false;
 			ResultSet rs = DatabaseOperation.getDbo().getConnection()
 			.prepareStatement("SELECT APPLICATION_VERSION FROM APPLICATION_VERSION_CONTROL").executeQuery();
 			if(rs.next()){
@@ -32,6 +33,7 @@ public class CommonService {
 		}
 		return appVersionNumber;
 	}
+	
 	public static boolean isInteger(String value) {
 		boolean result = false;
 		if (value != null) {

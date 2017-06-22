@@ -47,6 +47,9 @@ public class ChooseProductAllocationController {
 		x_OUT_REACH.setToggleGroup(group);
 		x_WEEKLY.setToggleGroup(group);
 		x_MONTHLY.setToggleGroup(group);
+		if(customerBean.getX_VACCINE_FLAG().equalsIgnoreCase("N") || customerBean.getX_VACCINE_FLAG().equalsIgnoreCase("No")){
+			x_MONTHLY.setVisible(false);
+		}
 	}
 
 	@FXML

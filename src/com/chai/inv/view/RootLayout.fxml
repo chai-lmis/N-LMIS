@@ -83,6 +83,7 @@
                   </ImageView>
                   <VBox alignment="CENTER" GridPane.columnIndex="1">
                      <children>
+<!--                     FOR PROVIDING DEMO APPLICATION -  -->
 <!--                         <Label alignment="CENTER" text="Test Application" textFill="#f80000" fx:id="x_ROOT_COMMON_LABEL1"> -->
 <!--                            <font> -->
 <!--                               <Font size="24.0" /> -->

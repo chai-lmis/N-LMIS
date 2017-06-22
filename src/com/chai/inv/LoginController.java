@@ -62,6 +62,8 @@ public class LoginController {
 				UserService userService = new UserService();
 				DatabaseOperation.CONNECT_TO_SERVER=true;
 				MainApp.dbName=userService.getLGADB(userBean);
+				MainApp.LOGGER.info("MainApp.dbName!=null: "+(MainApp.dbName!=null));
+				MainApp.LOGGER.info("MainApp.dbName.length()!=0: "+(MainApp.dbName.length()!=0));
 				if(MainApp.dbName!=null && MainApp.dbName.length()!=0)
 				{
 					DatabaseOperation.CONNECT_TO_SERVER=false;

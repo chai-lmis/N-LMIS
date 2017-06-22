@@ -103,6 +103,7 @@ public class UserService {
 		rs = pstmt.executeQuery();
 		if (rs.next()) {
 			dbName = rs.getString("DB_NAME");
+			MainApp.LOGGER.info("DB_NAME for user: "+dbName);
 		}
 		DatabaseOperation.CONNECT_TO_SERVER=false;
 		dao.closeConnection();
@@ -113,6 +114,7 @@ public class UserService {
 		boolean validateFlag = false;		
 		try {
 			if (dao == null || dao.getConnection() == null || dao.getConnection().isClosed()) {
+				System.out.println("isClosed: "+dao.getConnection().isClosed());
 				dao = DatabaseOperation.getDbo();
 				MainApp.LOGGER.setLevel(Level.INFO);
 				MainApp.LOGGER.info("DAO connection created for user: "+userBean.getX_LOGIN_NAME()+", to validate login credentials.");

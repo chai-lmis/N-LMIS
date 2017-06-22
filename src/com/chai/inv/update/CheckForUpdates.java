@@ -160,12 +160,12 @@ public class CheckForUpdates {
 				 MainApp.LOGGER.info("Copy command written in Batch file : work done: "+(RootLayoutController.workdone));
 				//step 4.5
 				//workdone 8
+				 versionTableUpdateOnLocal(appVersion);
+				 SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
 				 Process processReplace=Runtime.getRuntime().exec("cmd /c \""+tempFolderPath+"\\ADMIN_RIGHTS.bat\"");
 				 ++RootLayoutController.workdone; //9
 				 MainApp.LOGGER.setLevel(Level.INFO);
 				 MainApp.LOGGER.info("Batch file is executed : work done: "+(RootLayoutController.workdone));
-				 versionTableUpdateOnLocal("APP",appVersion);
-				 SendLogToServer.sendLogToServer(MyLogger.htmlLogFilePath);
 			 } else {
 				Platform.runLater(new Runnable() {
 					@Override
@@ -179,23 +179,18 @@ public class CheckForUpdates {
 				});							
 			 }
 		}
-	public void versionTableUpdateOnLocal(String... version){
+	public void versionTableUpdateOnLocal(String version){
 		String x_column = "";
 		String x_TABLENAME = " ADM_USERS ";
 		if(MainApp.getUserRole().getLabel().toUpperCase().equals("CCO")){
 			x_TABLENAME="APPLICATION_VERSION_CONTROL";
 		}
-		switch(version[0]){
-		case "APP": x_column=", APPLICATION_VERSION="+version[1];
-			break;
-		case "DB": x_column=", DB_VERSION="+version[1];
-			break;
-		}
+		
 		String query="UPDATE "+x_TABLENAME
 				+ " SET SYNC_FLAG='N' "
 				+ ", UPDATED_BY="+MainApp.getUserId()
 				+ ", LAST_UPDATED_ON=NOW()"
-				+ x_column;		
+				+ ", APPLICATION_VERSION="+version;		
 		try{
 			if(DatabaseOperation.getDbo().getPreparedStatement(query).executeUpdate()>0){
 				MainApp.LOGGER.setLevel(Level.INFO);
@@ -211,7 +206,7 @@ public class CheckForUpdates {
 		}
 		finally{
 			MainApp.LOGGER.setLevel(Level.INFO);
-			MainApp.LOGGER.info("Updated "+version[0]+", version[1]="+version[1]+"\nversionTableUpdateOnLocal update query :"+query);
+			MainApp.LOGGER.info("Updated APP version="+version+"\nversionTableUpdateOnLocal update query :"+query);
 		}
 	}
 	
@@ -295,26 +290,6 @@ public class CheckForUpdates {
 		return ActualMysqlpath;
 	}
 	
-//	public void createPropertiesfile(String propertyFilePath, String...propertyArgs ){
-//		try (OutputStream out = new FileOutputStream(propertyFilePath+"\\credential.properties");
-//			 InputStream in = new FileInputStream(propertyFilePath+"\\credential.properties");			
-//			){
-//			Properties properties = new Properties();
-//			// property[0] - contain username/LoginName
-//			properties.setProperty("username",propertyArgs[0]);
-//			// property[0] - contain password
-//			properties.setProperty("password",propertyArgs[1]);
-//			properties.setProperty("checkforupdates","true");
-//			properties.store(out, "This is a sample for java properties");			
-//			Properties prop = new Properties();
-//			prop.load(in);
-//			for (String property : prop.stringPropertyNames()) {
-//				System.out.println(property + "=" + prop.getProperty(property));
-//			}			
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
-//	}
 	public void writeBatchFile(String sourcePath,String destinationPath){
 		System.out.println("in writeBatchFile()");
 		PrintWriter out = null;
